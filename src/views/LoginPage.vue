@@ -43,7 +43,7 @@
                   <v-card color="background">
                     <v-card-actions class="action__container">
                       <v-layout column>
-                        <v-checkbox color="white" dark label="REMEMBER ME"></v-checkbox>
+                        <v-checkbox v-model="remember" color="white" dark label="REMEMBER ME"></v-checkbox>
                         <v-btn block large color="accent" :disabled="!valid" @click="submit">SIGN IN</v-btn>
                       </v-layout>
                     </v-card-actions>
@@ -70,7 +70,8 @@ export default {
         v => /.+@.+\..+/.test(v) || "Username must be valid"
       ],
       password: "",
-      passwordRules: [v => !!v || "Password is required"]
+      passwordRules: [v => !!v || "Password is required"],
+      remember: false
     };
   },
   mounted() {
@@ -87,8 +88,30 @@ export default {
   },
   methods: {
     submit() {
-      this.$refs.form.validate();
+      const pass = this.$refs.form.validate();
+      console.log(process.env.SERVER_URL);
+      if (pass) {
+        const username = this.username;
+        const password = this.password;
+        const remember = this.remember;
+        this.$store
+          .dispatch("user/login", {
+            username,
+            password,
+            remember
+          })
+          .then(status => {
+            if (status === 1) {
+              this.$router.replace("/");
+            } else {
+              alert("Invalid credential");
+            }
+          });
+      }
     }
+  },
+  loader() {
+    // Add loader component
   }
 };
 </script>
