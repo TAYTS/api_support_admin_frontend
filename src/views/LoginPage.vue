@@ -122,7 +122,7 @@ export default {
     toggle_error() {
       this.error = !this.error;
     },
-    update_error_message(e) {
+    update_error_message() {
       this.error_messages.pop();
     }
   }

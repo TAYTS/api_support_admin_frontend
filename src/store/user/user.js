@@ -50,7 +50,6 @@ const actions = {
             }
           });
       } else {
-        console.log("Authenticate");
         this._vm.$http
           .get("/users/authenticate", {
             headers: {
