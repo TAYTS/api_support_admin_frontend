@@ -16,6 +16,9 @@
                   <v-text-field
                     v-model="username"
                     :rules="usernameRules"
+                    :error-messages="error_messages"
+                    @update:error="toggle_error"
+                    @input="update_error_message"
                     label="USERNAME"
                     solo
                     prepend-inner-icon="person"
@@ -28,6 +31,9 @@
                   <v-text-field
                     v-model="password"
                     :rules="passwordRules"
+                    :error-messages="error_messages"
+                    @update:error="toggle_error"
+                    @input="update_error_message"
                     label="PASSWORD"
                     :type="show ? 'text' : 'password'"
                     :append-icon="show ? 'visibility' : 'visibility_off'"
@@ -64,6 +70,7 @@ export default {
     return {
       show: false,
       valid: false,
+      error: false,
       username: "",
       usernameRules: [
         v => !!v || "Username is required",
@@ -71,7 +78,8 @@ export default {
       ],
       password: "",
       passwordRules: [v => !!v || "Password is required"],
-      remember: false
+      remember: false,
+      error_messages: []
     };
   },
   mounted() {
@@ -89,7 +97,6 @@ export default {
   methods: {
     submit() {
       const pass = this.$refs.form.validate();
-      console.log(process.env.SERVER_URL);
       if (pass) {
         const username = this.username;
         const password = this.password;
@@ -104,14 +111,20 @@ export default {
             if (status === 1) {
               this.$router.replace("/");
             } else {
-              alert("Invalid credential");
+              this.error = true;
+              this.username = "";
+              this.password = "";
+              this.error_messages.push("Invalid username or password!");
             }
           });
       }
+    },
+    toggle_error() {
+      this.error = !this.error;
+    },
+    update_error_message(e) {
+      this.error_messages.pop();
     }
-  },
-  loader() {
-    // Add loader component
   }
 };
 </script>
