@@ -15,6 +15,7 @@ const actions = {
       .then(response => {
         if (response.status === 200 && response.data.status === 1) {
           commit("get_tokens");
+          sessionStorage.setItem("remember", payload.remember);
           return response.data.status;
         } else {
           deleteAllCookies();
@@ -29,23 +30,45 @@ const actions = {
     commit("get_tokens");
     let status;
     if (state.access_token && state.refresh_token) {
-      this._vm.$http
-        .get("/users/refresh", {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": state.refresh_token
-          },
-          withCredentials: true
-        })
-        .then(response => {
-          if (response.status === 200 && response.data.status === 1) {
-            commit("get_tokens");
-            status = 1;
-          } else {
-            status = 0;
-            deleteAllCookies();
-          }
-        });
+      const remember = sessionStorage.getItem("remember");
+      if (remember === "true") {
+        this._vm.$http
+          .get("/users/refresh", {
+            headers: {
+              "Content-Type": "applicati1on/json",
+              "X-CSRF-TOKEN": state.refresh_token
+            },
+            withCredentials: true
+          })
+          .then(response => {
+            if (response.status === 200 && response.data.status === 1) {
+              commit("get_tokens");
+              status = 1;
+            } else {
+              status = 0;
+              deleteAllCookies();
+            }
+          });
+      } else {
+        console.log("Authenticate");
+        this._vm.$http
+          .get("/users/authenticate", {
+            headers: {
+              "Content-Type": "applicati1on/json",
+              "X-CSRF-TOKEN": state.access_token
+            },
+            withCredentials: true
+          })
+          .then(response => {
+            if (response.status === 200 && response.data.status === 1) {
+              commit("get_tokens");
+              status = 1;
+            } else {
+              status = 0;
+              deleteAllCookies();
+            }
+          });
+      }
     } else {
       status = 0;
     }
