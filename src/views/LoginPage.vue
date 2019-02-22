@@ -3,7 +3,11 @@
     <v-container fluid class="login__container">
       <v-layout align-center justify-center row fill-height>
         <v-flex xs7 class="text-xs-right">
-          <img class="logo-main" src="../assets/img/Accenture_Support_Staff.svg" alt>
+          <img
+            class="logo-main"
+            src="../assets/img/Accenture_Support_Staff.svg"
+            alt
+          />
         </v-flex>
         <v-flex xs1 class="text-xs-center">
           <div class="divider"></div>
@@ -43,8 +47,19 @@
                   <v-card color="background">
                     <v-card-actions class="action__container">
                       <v-layout column>
-                        <v-checkbox color="white" dark label="REMEMBER ME"></v-checkbox>
-                        <v-btn block large color="accent" :disabled="!valid" @click="submit">SIGN IN</v-btn>
+                        <v-checkbox
+                          color="white"
+                          dark
+                          label="REMEMBER ME"
+                        ></v-checkbox>
+                        <v-btn
+                          block
+                          large
+                          color="accent"
+                          :disabled="!valid"
+                          @click="submit"
+                          >SIGN IN</v-btn
+                        >
                       </v-layout>
                     </v-card-actions>
                   </v-card>

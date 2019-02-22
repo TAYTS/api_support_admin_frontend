@@ -2,26 +2,34 @@
   <v-navigation-drawer v-model="drawer" fixed permanent absolute width="175">
     <div id="logo-bg">
       <div id="logo-main">
-        <img src="../assets/img/Accenture_Support_Staff.svg" alt>
+        <img src="../assets/img/Accenture_Support_Staff.svg" alt />
       </div>
     </div>
     <div id="name-bg">
       <div id="name-main">
-      <b>{{ adminName }}</b>
+        <b>{{ adminName }}</b>
       </div>
     </div>
     <div>
       <button class="button">
-       <img class="button-image" src="../assets/img/_ionicons_svg_ios-document.svg" alt>
-          <div class="button-text">
-           New Jobs
-           </div>
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_ios-document.svg"
+          alt
+        />
+        <div class="button-text">
+          New Jobs
+        </div>
       </button>
       <button class="button">
-       <img class="button-image" src="../assets/img/_ionicons_svg_md-briefcase.svg" alt>
-          <div class="button-text">
-           My Jobs
-           </div>
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_md-briefcase.svg"
+          alt
+        />
+        <div class="button-text">
+          My Jobs
+        </div>
       </button>
     </div>
   </v-navigation-drawer>
@@ -36,37 +44,36 @@
 #logo-main {
   width: 130px;
   margin: auto;
-  padding-right:4px;
+  padding-right: 4px;
 }
 
 #name-bg {
   background-color: #dedede;
   padding-top: 15px;
   padding-bottom: 15px;
-  
 }
 
 #name-main {
   text-align: center;
 }
 
-.button-image{
+.button-image {
   width: 30px;
-  margin-top:7px;
+  margin-top: 7px;
   float: left;
-  margin-left:30px;
+  margin-left: 30px;
 }
 
-.button-text{
+.button-text {
   text-align: left;
-  padding:10px;
+  padding: 10px;
   margin-left: 60px;
   font-size: 18px;
   color: #000000;
 }
 
 .button {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   display: block;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
@@ -80,23 +87,22 @@
 }
 
 .button:active {
-    background: #ffffff;
-    transition-duration: 0.1s;
+  background: #ffffff;
+  transition-duration: 0.1s;
 }
 
 .button:focus {
-  outline:0;
+  outline: 0;
   background: #f0ddf5;
   transition-duration: 0.1s;
-  }
-
+}
 </style>
 
 <script>
 export default {
   data() {
     return {
-      adminName: "Insert admin name here",
+      adminName: "Insert admin name here"
     };
   }
 };
