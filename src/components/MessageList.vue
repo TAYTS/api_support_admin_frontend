@@ -59,7 +59,7 @@
 
 <style scoped>
 .items {
-  max-height: 93.5%;
+  max-height: calc(100% - 62px);
   overflow: auto;
 }
 #search-bg {
