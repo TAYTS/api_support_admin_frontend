@@ -28,7 +28,7 @@
         </v-container>
       </v-form>
     </div>
-    <v-list three-line>
+    <v-list three-line class="items">
       <template v-for="(item, index) in items">
         <v-subheader v-if="item.header" :key="item.header">
           {{ item.header }}
@@ -58,6 +58,10 @@
 </template>
 
 <style scoped>
+.items {
+  max-height: 93.5%;
+  overflow: auto;
+}
 #search-bg {
   background-color: #f7e8ff;
   padding-top: 10px;
