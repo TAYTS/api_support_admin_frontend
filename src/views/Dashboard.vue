@@ -1,7 +1,7 @@
 <template>
   <div>
-    <navigation-bar></navigation-bar>
-    <message-list id="messagelist"></message-list>
+    <navigation-bar />
+    <message-list id="messagelist" />
   </div>
 </template>
 
