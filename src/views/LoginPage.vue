@@ -16,6 +16,9 @@
                   <v-text-field
                     v-model="username"
                     :rules="usernameRules"
+                    :error-messages="error_messages"
+                    @update:error="toggle_error"
+                    @input="update_error_message"
                     label="USERNAME"
                     solo
                     prepend-inner-icon="person"
@@ -28,6 +31,9 @@
                   <v-text-field
                     v-model="password"
                     :rules="passwordRules"
+                    :error-messages="error_messages"
+                    @update:error="toggle_error"
+                    @input="update_error_message"
                     label="PASSWORD"
                     :type="show ? 'text' : 'password'"
                     :append-icon="show ? 'visibility' : 'visibility_off'"
@@ -43,7 +49,7 @@
                   <v-card color="background">
                     <v-card-actions class="action__container">
                       <v-layout column>
-                        <v-checkbox color="white" dark label="REMEMBER ME"></v-checkbox>
+                        <v-checkbox v-model="remember" color="white" dark label="REMEMBER ME"></v-checkbox>
                         <v-btn block large color="accent" :disabled="!valid" @click="submit">SIGN IN</v-btn>
                       </v-layout>
                     </v-card-actions>
@@ -64,13 +70,16 @@ export default {
     return {
       show: false,
       valid: false,
+      error: false,
       username: "",
       usernameRules: [
         v => !!v || "Username is required",
         v => /.+@.+\..+/.test(v) || "Username must be valid"
       ],
       password: "",
-      passwordRules: [v => !!v || "Password is required"]
+      passwordRules: [v => !!v || "Password is required"],
+      remember: false,
+      error_messages: []
     };
   },
   mounted() {
@@ -87,7 +96,34 @@ export default {
   },
   methods: {
     submit() {
-      this.$refs.form.validate();
+      const pass = this.$refs.form.validate();
+      if (pass) {
+        const username = this.username;
+        const password = this.password;
+        const remember = this.remember;
+        this.$store
+          .dispatch("user/login", {
+            username,
+            password,
+            remember
+          })
+          .then(status => {
+            if (status === 1) {
+              this.$router.replace("/");
+            } else {
+              this.error = true;
+              this.username = "";
+              this.password = "";
+              this.error_messages.push("Invalid username or password!");
+            }
+          });
+      }
+    },
+    toggle_error() {
+      this.error = !this.error;
+    },
+    update_error_message() {
+      this.error_messages.pop();
     }
   }
 };
