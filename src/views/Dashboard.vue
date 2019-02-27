@@ -1,13 +1,18 @@
 <template>
-  <navigation-bar></navigation-bar>
+  <div>
+    <navigation-bar />
+    <message-list id="messagelist" />
+  </div>
 </template>
 
 <script>
 import NavigationBar from "@/components/NavigationBar.vue";
+import MessageList from "@/components/MessageList.vue";
 
 export default {
   components: {
-    NavigationBar
+    NavigationBar,
+    MessageList
   },
   mounted() {
     // 1. Check if the user has been authenticate
@@ -21,3 +26,9 @@ export default {
   }
 };
 </script>
+
+<style>
+#messagelist {
+  margin-left: 175px;
+}
+</style>

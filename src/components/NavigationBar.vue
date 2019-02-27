@@ -2,7 +2,7 @@
   <v-navigation-drawer fixed permanent absolute width="175">
     <div id="logo-bg">
       <div id="logo-main">
-        <img src="../assets/img/Accenture_Support_Staff.svg" alt>
+        <img src="../assets/img/Accenture_Support_Staff.svg" alt />
       </div>
     </div>
     <div id="name-bg">
@@ -12,12 +12,24 @@
     </div>
     <div>
       <button class="button">
-        <img class="button-image" src="../assets/img/_ionicons_svg_ios-document.svg" alt>
-        <div class="button-text">New Jobs</div>
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_ios-document.svg"
+          alt
+        />
+        <div class="button-text">
+          New Jobs
+        </div>
       </button>
       <button class="button">
-        <img class="button-image" src="../assets/img/_ionicons_svg_md-briefcase.svg" alt>
-        <div class="button-text">My Jobs</div>
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_md-briefcase.svg"
+          alt
+        />
+        <div class="button-text">
+          My Jobs
+        </div>
       </button>
     </div>
   </v-navigation-drawer>
@@ -95,3 +107,13 @@ export default {
   transition-duration: 0.1s;
 }
 </style>
+
+<script>
+export default {
+  data() {
+    return {
+      adminName: "Insert admin name here"
+    };
+  }
+};
+</script>
