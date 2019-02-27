@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" fixed permanent absolute width="175">
+  <v-navigation-drawer fixed permanent absolute width="175">
     <div id="logo-bg">
       <div id="logo-main">
         <img src="../assets/img/Accenture_Support_Staff.svg" alt />
@@ -34,6 +34,16 @@
     </div>
   </v-navigation-drawer>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      adminName: "Insert admin name here"
+    };
+  }
+};
+</script>
 
 <style scoped>
 #logo-bg {
