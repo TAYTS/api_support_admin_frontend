@@ -31,12 +31,12 @@
     </div>
     <v-list three-line class="items">
       <template v-for="(item, index) in filteredItems">
-        <v-subheader v-if="item.header" :key="item.header">
-          {{ item.header }}
-        </v-subheader>
+        <v-subheader v-if="item.header" :key="item.header">{{
+          item.header
+        }}</v-subheader>
         <div v-else-if="item.divider" :key="index">
           <v-divider></v-divider>
-          <v-list-tile v-if="item.title" :key="index" @click="">
+          <v-list-tile v-if="item.title" :key="index" @click>
             <v-container class="pa-0 ma-0">
               <v-layout fill-height class="pa-0">
                 <v-list-tile-content>
@@ -80,152 +80,40 @@ export default {
       adminName: "Insert admin name here",
       filter: ["Foo", "Bar", "Fizz", "Buzz"],
       items: [
-        { header: "Today" },
-        {
-          title: "Brunch this weekend?",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Summer BBQ",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Oui oui",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Birthday gift",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Recipe to try",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        { header: "Two Days Ago" },
-        {
-          title: "Brunch this weekend?",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Summer BBQ",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Oui oui",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Birthday gift",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Recipe to try",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        { header: "Three Days Ago" },
-        {
-          title: "Brunch this weekend?",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Summer BBQ",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Oui oui",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Birthday gift",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Recipe to try",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        { header: "Yesterday" },
-        {
-          title: "Brunch this weekend?",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Summer BBQ",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Oui oui",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Birthday gift",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Recipe to try",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        }
+        // {
+        //   title: "Brunch this weekend?",
+        //   subtitle:
+        //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
+        //   divider: true,
+        //   inset: true
+        // },
       ]
     };
+  },
+  mounted() {
+    // Pull data from the database
+    this.$store.dispatch("tickets/getTickets").then(response => {
+      if (response !== 0) {
+        console.log(response.length);
+        var i;
+        for (i = 0; i < response.length; i++) {
+          this.items.push({
+            title: response[i].title,
+            subtitle: response[i].body,
+            divider: true,
+            inset: true
+          });
+        }
+      } else {
+        console.log("Error in fetching the tickets");
+      }
+    });
+
+    // Style the tab view
+    const btn = document.getElementById(0);
+    const contentBox = document.getElementsByClassName("tabview");
+    btn.classList.add("close");
+    contentBox[0].classList.add("close");
   },
   computed: {
     filteredItems: function() {
