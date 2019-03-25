@@ -11,26 +11,30 @@
       </div>
     </div>
     <div>
-      <button class="button">
-        <img
-          class="button-image"
-          src="../assets/img/_ionicons_svg_ios-document.svg"
-          alt
-        />
-        <div class="button-text">
-          New Jobs
-        </div>
-      </button>
-      <button class="button">
-        <img
-          class="button-image"
-          src="../assets/img/_ionicons_svg_md-briefcase.svg"
-          alt
-        />
-        <div class="button-text">
-          My Jobs
-        </div>
-      </button>
+      <router-link to="/newjobs/0">
+        <button class="button" v-on:click="$parent.changeToNewJobs()">
+          <img
+            class="button-image"
+            src="../assets/img/_ionicons_svg_ios-document.svg"
+            alt
+          />
+          <div class="button-text">
+            New Jobs
+          </div>
+        </button>
+      </router-link>
+      <router-link to="/myjobs/0">
+        <button class="button" v-on:click="$parent.changeToMyJobs()">
+          <img
+            class="button-image"
+            src="../assets/img/_ionicons_svg_md-briefcase.svg"
+            alt
+          />
+          <div class="button-text">
+            My Jobs
+          </div>
+        </button>
+      </router-link>
     </div>
   </v-navigation-drawer>
 </template>

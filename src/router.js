@@ -18,6 +18,10 @@ export default new Router({
       path: "/",
       name: "DashboardPage",
       component: Dashboard
+    },
+    {
+      path: "/:jobLevel/:messageID",
+      component: Dashboard
     }
   ]
 });
