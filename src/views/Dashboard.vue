@@ -48,7 +48,8 @@ export default {
   data() {
     return {
       items: [],
-      jobLevel: this.$route.params.jobLevel
+      jobLevel: this.$route.params.jobLevel,
+      messageID: this.$route.params.messageID
     };
   },
   components: {
@@ -74,6 +75,12 @@ export default {
         .dispatch("tickets/getTickets", { jobLevel })
         .then(response => {
           if (response !== 0) {
+            //check if first visit, loads latest message
+            if (this.messageID == "0") {
+              var latestTicketRoute =
+                "/" + jobLevel + "/" + response[0].ticketID;
+              this.$router.replace(latestTicketRoute);
+            }
             var i;
             var headerCheck = {
               Today: 0,
