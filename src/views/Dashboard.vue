@@ -78,15 +78,50 @@ export default {
             var headerCheck = {
               Today: 0,
               Yesterday: 0,
-              Older: 0
+              Older: 0,
+              twoWeeks: 0,
+              oneWeek: 0,
+              thisWeek: 0
             };
             var today = new Date();
             var yesterday = new Date(
               new Date().setDate(new Date().getDate() - 1)
             );
+            var oneWeek = new Date(
+              new Date().setDate(new Date().getDate() - 7)
+            );
+            var twoWeeks = new Date(
+              new Date().setDate(new Date().getDate() - 14)
+            );
 
             for (i = 0; i < response.length; i++) {
-              var postDate = new Date(response[i].dateTime);
+              var postDate = new Date(response[i].last_activity);
+              if (headerCheck["twoWeeks"] == 0 && postDate < twoWeeks) {
+                headerCheck["twoWeeks"] = 1;
+                this.items.push({
+                  header: "Older than two weeks"
+                });
+              }
+              if (
+                headerCheck["oneWeek"] == 0 &&
+                postDate < oneWeek &&
+                postDate > twoWeeks
+              ) {
+                headerCheck["oneWeek"] = 1;
+                this.items.push({
+                  header: "Last week"
+                });
+              }
+              if (
+                headerCheck["thisWeek"] == 0 &&
+                postDate < yesterday &&
+                postDate > oneWeek
+              ) {
+                headerCheck["thisWeek"] = 1;
+                this.items.push({
+                  header: "This week"
+                });
+              }
               if (
                 headerCheck["Today"] == 0 &&
                 postDate.getDate() == today.getDate() &&
@@ -109,23 +144,12 @@ export default {
                   header: "Yesterday"
                 });
               }
-              if (
-                (headerCheck["Older"] == 0 &&
-                  postDate.getDate() < yesterday.getDate()) ||
-                postDate.getMonth() < yesterday.getMonth() ||
-                postDate.getFullYear() < yesterday.getFullYear()
-              ) {
-                headerCheck["Older"] = 1;
-                this.items.push({
-                  header: "Older Tickets"
-                });
-              }
               this.items.push({
                 title: response[i].title,
-                subtitle: response[i].body,
+                subtitle: response[i].last_activity,
                 divider: true,
                 inset: true,
-                postID: response[i].postID
+                postID: response[i].ticketID
               });
             }
           } else {
