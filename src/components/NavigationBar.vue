@@ -12,7 +12,11 @@
     </div>
     <div>
       <router-link to="/newjobs/0">
-        <button class="button" v-on:click="$parent.changeToNewJobs()">
+        <button
+          v-bind:class="[jobLevelIsNewJobs ? buttonInFocus : buttonOutFocus]"
+          class="button"
+          @click="changeToNewJobs()"
+        >
           <img
             class="button-image"
             src="../assets/img/_ionicons_svg_ios-document.svg"
@@ -24,7 +28,11 @@
         </button>
       </router-link>
       <router-link to="/myjobs/0">
-        <button class="button" v-on:click="$parent.changeToMyJobs()">
+        <button
+          v-bind:class="[jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus]"
+          class="button"
+          @click="changeToMyJobs()"
+        >
           <img
             class="button-image"
             src="../assets/img/_ionicons_svg_md-briefcase.svg"
@@ -38,16 +46,6 @@
     </div>
   </v-navigation-drawer>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      adminName: "Insert admin name here"
-    };
-  }
-};
-</script>
 
 <style scoped>
 #logo-bg {
@@ -86,8 +84,14 @@ export default {
   color: #000000;
 }
 
-.button {
+.button-in-focus {
+  background: #f0ddf5;
+}
+
+.button-out-focus {
   background-color: #ffffff;
+}
+.button {
   display: block;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
@@ -116,8 +120,29 @@ export default {
 export default {
   data() {
     return {
-      adminName: "Insert admin name here"
+      adminName: "Insert admin name here",
+      jobLevelIsNewJobs: true,
+      buttonInFocus: "button-in-focus",
+      buttonOutFocus: "button-out-focus"
     };
+  },
+  methods: {
+    changeToMyJobs: function() {
+      this.jobLevelIsNewJobs = false;
+      this.$parent.changeToMyJobs();
+    },
+    changeToNewJobs: function() {
+      this.jobLevelIsNewJobs = true;
+      this.$parent.changeToNewJobs();
+    }
+  },
+  mounted() {
+    var jobLevel = this.$route.params.jobLevel;
+    if (jobLevel == "newjobs") {
+      this.jobLevelIsNewJobs = true;
+    } else {
+      this.jobLevelIsNewJobs = false;
+    }
   }
 };
 </script>

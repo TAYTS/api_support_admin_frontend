@@ -69,7 +69,6 @@ export default {
     },
     refreshMessageList: function() {
       // Pull data from the database
-      console.log("function calledaaaaaaaaaaaaaaaaaaaaaaaaaa");
       var jobLevel = this.jobLevel;
       this.$store
         .dispatch("tickets/getTickets", { jobLevel })

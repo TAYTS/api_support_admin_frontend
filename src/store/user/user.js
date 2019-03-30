@@ -98,7 +98,8 @@ const mutations = {
         refresh_token = cookies[i].match(pattern2)[1];
       }
     }
-
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("refresh_token", refresh_token);
     state.access_token = access_token;
     state.refresh_token = refresh_token;
   }

@@ -1,5 +1,4 @@
 import axios from "../../axios/loginAxios";
-import { stat } from "fs";
 
 const state = {
   open: [],
@@ -9,11 +8,10 @@ const state = {
 const actions = {
   getTickets({ commit }, payload) {
     let status = 0;
-    console.log("getTicket activated");
-    const access_token = sessionStorage.getItem("access_token");
+    const access_token = localStorage.getItem("access_token");
+    console.log(access_token);
     if (true) {
       //change to access_token when login is working
-      console.log("axios activated");
       return axios
         .get("/tickets/retrieve-tickets/" + payload["jobLevel"], {
           headers: {
@@ -40,13 +38,9 @@ const actions = {
   },
   getSingleTicket({ commit }, payload) {
     let status = 0;
-    console.log("getSingleTicket activated");
-    console.log(payload["messageID"]);
-    console.log("endcommit");
-    const access_token = sessionStorage.getItem("access_token");
+    const access_token = localStorage.getItem("access_token");
     if (true) {
       //change to access_token when login is working
-      console.log("axios activated");
       return axios
         .get(
           "/tickets/retrieve-single-ticket/" +
