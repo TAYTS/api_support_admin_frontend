@@ -59,16 +59,15 @@ export default {
   },
   methods: {
     changeToNewJobs: function() {
-      this.items = [];
       this.jobLevel = "newjobs";
       this.refreshMessageList();
     },
     changeToMyJobs: function() {
-      this.items = [];
       this.jobLevel = "myjobs";
       this.refreshMessageList();
     },
     refreshMessageList: function() {
+      this.items = [];
       // Pull data from the database
       var jobLevel = this.jobLevel;
       this.$store
@@ -163,6 +162,23 @@ export default {
             console.log("Error in fetching the tickets");
           }
         });
+    },
+    nextItem: function() {
+      // Loads the next post once current post has been added to 'myjobs'
+      // Todo: Improve code for effeciency
+      var found = false;
+      for (var i = 0; i < this.items.length; i++) {
+        if (this.items[i].postID == this.$route.params.messageID) {
+          found = true;
+        } else if (found) {
+          if (this.items[i].postID != undefined) {
+            this.$router.push(
+              "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
+            );
+            break;
+          }
+        }
+      }
     }
   },
   mounted() {

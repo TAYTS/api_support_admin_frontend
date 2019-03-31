@@ -25,7 +25,7 @@
     </div>
     <div>
       <div v-if="jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button">Add to My Jobs</v-btn>
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
       </div>
       <div v-else class="full-row row-my-jobs">
         <textarea class="text-area"></textarea>
@@ -141,6 +141,23 @@ export default {
             this.messageHeader.sender = response.sender;
             this.messageHeader.body = response.body;
             this.messageHeader.dateTime = response.dateTime;
+          } else {
+            console.log("Error in fetching the tickets");
+          }
+        });
+    },
+    addtoMyJobs: function() {
+      var messageID = this.$route.params.messageID;
+      this.$store
+        .dispatch("tickets/moveToMyJobs", { messageID })
+        .then(status => {
+          if (status !== 0) {
+            // loads next item in list
+            this.$parent.nextItem();
+            // refreshes the current list
+            this.$parent.refreshMessageList();
+            // refreshes the content
+            this.refreshMessageContent();
           } else {
             console.log("Error in fetching the tickets");
           }
