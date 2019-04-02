@@ -11,7 +11,7 @@
       </div>
     </div>
     <div>
-      <router-link to="/newjobs/0">
+      <router-link style="text-decoration: none;" to="/newjobs/0">
         <button
           v-bind:class="[jobLevelIsNewJobs ? buttonInFocus : buttonOutFocus]"
           class="button"
@@ -27,7 +27,7 @@
           </div>
         </button>
       </router-link>
-      <router-link to="/myjobs/0">
+      <router-link style="text-decoration: none;" to="/myjobs/0">
         <button
           v-bind:class="[jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus]"
           class="button"
