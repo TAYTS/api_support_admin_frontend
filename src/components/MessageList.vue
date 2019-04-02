@@ -31,16 +31,18 @@
     </div>
     <v-list three-line class="items">
       <template v-for="(item, index) in filteredItems">
-        <v-subheader v-if="item.header" :key="item.header">{{
-          item.header
-        }}</v-subheader>
+        <v-subheader v-if="item.header" :key="item.header">
+          {{ item.header }}
+        </v-subheader>
         <div v-else-if="item.divider" :key="index">
           <v-divider></v-divider>
           <v-list-tile
+            v-bind:class="[item.selected ? selectedClass : '']"
             v-if="item.title"
             :key="index"
-            @click="openMessage(index)"
+            @click="openMessage(index, item.postID)"
           >
+            <!-- <div v-if="item.selected"> selected </div> -->
             <v-container class="pa-0 ma-0">
               <v-layout fill-height class="pa-0">
                 <v-list-tile-content>
@@ -67,12 +69,9 @@
   background-color: #f7e8ff;
   padding-top: 10px;
 }
-.colorTag {
-  height: 80px;
-  width: 10px;
-  background-color: #9acd32;
-  margin-right: 15px;
-  margin-left: 0;
+
+.selected-class {
+  background-color: rgb(245, 245, 245);
 }
 </style>
 
@@ -83,15 +82,18 @@ export default {
       search: "",
       adminName: "Insert admin name here",
       filter: ["Foo", "Bar", "Fizz", "Buzz"],
-      items: []
+      items: [],
+      selectedClass: "selected-class",
+      lastIndex: 0
     };
   },
   mounted() {
-    // Style the tab view
-    const btn = document.getElementById(0);
-    const contentBox = document.getElementsByClassName("tabview");
-    btn.classList.add("close");
-    contentBox[0].classList.add("close");
+    // for (var i = 0; i < this.$parent.items.length; i++) {
+    //   this.$parent.items[i].postID == this.$route.params.messageID
+    //     ? (this.lastIndex = i)
+    //     : "";
+    //   console.log(this.lastIndex);
+    // }
   },
   computed: {
     filteredItems: function() {
@@ -107,13 +109,15 @@ export default {
     }
   },
   methods: {
-    openMessage: function(index) {
-      this.$router.push(
-        "/" +
-          this.$route.params.jobLevel +
-          "/" +
-          this.$parent.items[index].postID
-      );
+    openMessage: function(index, postID) {
+      this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
+      this.$parent.selectedMsgNo = index;
+      for (var i = 0; i < this.$parent.items.length; i++) {
+        this.$parent.items[i]["selected"] = false;
+      }
+      this.$parent.items[index]["selected"] = true;
+      // this.$parent.items[this.lastIndex]["selected"] = false;
+      // this.lastIndex = index;
     }
   }
 };

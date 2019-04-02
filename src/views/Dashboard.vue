@@ -51,7 +51,8 @@ export default {
       jobLevel: this.$route.params.jobLevel,
       messageID: this.$route.params.messageID,
       lastNewJobs: 0,
-      lastMyJobs: 0
+      lastMyJobs: 0,
+      selectedMsgNo: 0
     };
   },
   components: {
@@ -81,10 +82,13 @@ export default {
           if (response !== 0) {
             //check if first visit, loads latest message
             if (messageID == "0") {
-              var lastTicket = (jobLevel=="myjobs" ? this.lastMyJobs : this.lastNewJobs);
-              lastTicket = (lastTicket==0&&response[0].ticketID ? response[0].ticketID : lastTicket);
-              var latestTicketRoute =
-                "/" + jobLevel + "/" + lastTicket;
+              var lastTicket =
+                jobLevel == "myjobs" ? this.lastMyJobs : this.lastNewJobs;
+              lastTicket =
+                lastTicket == 0 && response[0].ticketID
+                  ? response[0].ticketID
+                  : lastTicket;
+              var latestTicketRoute = "/" + jobLevel + "/" + lastTicket;
               this.$router.replace(latestTicketRoute);
             }
             var i;
@@ -162,7 +166,10 @@ export default {
                 subtitle: response[i].last_activity,
                 divider: true,
                 inset: true,
-                postID: response[i].ticketID
+                postID: response[i].ticketID,
+                selected:
+                  response[i].ticketID ==
+                  (messageID == 0 ? response[0].ticketID : messageID)
               });
             }
           } else {

@@ -25,7 +25,9 @@
     </div>
     <div>
       <div v-if="jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()"
+          >Add to My Jobs</v-btn
+        >
       </div>
       <div v-else class="full-row row-my-jobs">
         <textarea class="text-area"></textarea>
