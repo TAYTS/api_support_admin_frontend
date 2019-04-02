@@ -49,7 +49,9 @@ export default {
     return {
       items: [],
       jobLevel: this.$route.params.jobLevel,
-      messageID: this.$route.params.messageID
+      messageID: this.$route.params.messageID,
+      lastNewJobs: 0,
+      lastMyJobs: 0
     };
   },
   components: {
@@ -60,24 +62,29 @@ export default {
   methods: {
     changeToNewJobs: function() {
       this.jobLevel = "newjobs";
+      this.lastMyJobs = this.$route.params.messageID;
       this.refreshMessageList();
     },
     changeToMyJobs: function() {
       this.jobLevel = "myjobs";
+      this.lastNewJobs = this.$route.params.messageID;
       this.refreshMessageList();
     },
     refreshMessageList: function() {
       this.items = [];
       // Pull data from the database
       var jobLevel = this.jobLevel;
+      var messageID = this.$route.params.messageID;
       this.$store
         .dispatch("tickets/getTickets", { jobLevel })
         .then(response => {
           if (response !== 0) {
             //check if first visit, loads latest message
-            if (this.messageID == "0") {
+            if (messageID == "0") {
+              var lastTicket = (jobLevel=="myjobs" ? this.lastMyJobs : this.lastNewJobs);
+              lastTicket = (lastTicket==0&&response[0].ticketID ? response[0].ticketID : lastTicket);
               var latestTicketRoute =
-                "/" + jobLevel + "/" + response[0].ticketID;
+                "/" + jobLevel + "/" + lastTicket;
               this.$router.replace(latestTicketRoute);
             }
             var i;
