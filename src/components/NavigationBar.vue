@@ -128,20 +128,26 @@ export default {
   },
   methods: {
     changeToMyJobs: function() {
-      this.jobLevelIsNewJobs = false;
-      this.$parent.changeToMyJobs();
+      if (this.$parent.refreshMessageListSingleton) {
+        this.$parent.refreshMessageListSingleton = false;
+        this.jobLevelIsNewJobs = false;
+        this.$parent.changeToMyJobs();
+      }
     },
     changeToNewJobs: function() {
-      this.jobLevelIsNewJobs = true;
-      this.$parent.changeToNewJobs();
-    }
-  },
-  mounted() {
-    var jobLevel = this.$route.params.jobLevel;
-    if (jobLevel == "newjobs") {
-      this.jobLevelIsNewJobs = true;
-    } else {
-      this.jobLevelIsNewJobs = false;
+      if (this.$parent.refreshMessageListSingleton) {
+        this.$parent.refreshMessageListSingleton = false;
+        this.jobLevelIsNewJobs = true;
+        this.$parent.changeToNewJobs();
+      }
+    },
+    mounted() {
+      var jobLevel = this.$route.params.jobLevel;
+      if (jobLevel == "newjobs") {
+        this.jobLevelIsNewJobs = true;
+      } else {
+        this.jobLevelIsNewJobs = false;
+      }
     }
   }
 };

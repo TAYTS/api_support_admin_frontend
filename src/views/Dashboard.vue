@@ -52,7 +52,9 @@ export default {
       messageID: this.$route.params.messageID,
       lastNewJobs: 0,
       lastMyJobs: 0,
-      selectedMsgNo: 0
+      selectedMsgNo: 0,
+      changedCache: false,
+      refreshMessageListSingleton: true
     };
   },
   components: {
@@ -64,11 +66,13 @@ export default {
     changeToNewJobs: function() {
       this.jobLevel = "newjobs";
       this.lastMyJobs = this.$route.params.messageID;
+      this.changedCache = true;
       this.refreshMessageList();
     },
     changeToMyJobs: function() {
       this.jobLevel = "myjobs";
       this.lastNewJobs = this.$route.params.messageID;
+      this.changedCache = true;
       this.refreshMessageList();
     },
     refreshMessageList: function() {
@@ -81,16 +85,19 @@ export default {
         .then(response => {
           if (response !== 0) {
             //check if first visit, loads latest message
-            if (messageID == "0") {
+            if (this.changedCache) {
               var lastTicket =
                 jobLevel == "myjobs" ? this.lastMyJobs : this.lastNewJobs;
+              //loads previous job task if it's its jobs/0
+              //if the loaded job is 0, then load the latest item
               lastTicket =
-                lastTicket == 0 && response[0].ticketID
-                  ? response[0].ticketID
-                  : lastTicket;
-              var latestTicketRoute = "/" + jobLevel + "/" + lastTicket;
-              this.$router.replace(latestTicketRoute);
+                lastTicket == "0" ? response[0].ticketID : lastTicket;
+            } else {
+              lastTicket = messageID == "0" ? response[0].ticketID : messageID;
             }
+            var latestTicketRoute = "/" + jobLevel + "/" + lastTicket;
+            this.$router.replace(latestTicketRoute);
+
             var i;
             var headerCheck = {
               Today: 0,
@@ -132,7 +139,12 @@ export default {
               if (
                 headerCheck["thisWeek"] == 0 &&
                 postDate < yesterday &&
-                postDate > oneWeek
+                postDate > oneWeek &&
+                !(
+                  postDate.getDate() == yesterday.getDate() &&
+                  postDate.getMonth() == yesterday.getMonth() &&
+                  postDate.getFullYear() == yesterday.getFullYear()
+                )
               ) {
                 headerCheck["thisWeek"] = 1;
                 this.items.push({
@@ -169,8 +181,9 @@ export default {
                 postID: response[i].ticketID,
                 selected:
                   response[i].ticketID ==
-                  (messageID == 0 ? response[0].ticketID : messageID)
+                  (lastTicket == 0 ? response[0].ticketID : lastTicket)
               });
+              this.refreshMessageListSingleton = true;
             }
           } else {
             console.log("Error in fetching the tickets");

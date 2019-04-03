@@ -42,7 +42,6 @@
             :key="index"
             @click="openMessage(index, item.postID)"
           >
-            <!-- <div v-if="item.selected"> selected </div> -->
             <v-container class="pa-0 ma-0">
               <v-layout fill-height class="pa-0">
                 <v-list-tile-content>
@@ -87,14 +86,7 @@ export default {
       lastIndex: 0
     };
   },
-  mounted() {
-    // for (var i = 0; i < this.$parent.items.length; i++) {
-    //   this.$parent.items[i].postID == this.$route.params.messageID
-    //     ? (this.lastIndex = i)
-    //     : "";
-    //   console.log(this.lastIndex);
-    // }
-  },
+  mounted() {},
   computed: {
     filteredItems: function() {
       return this.$parent.items.filter(item => {
@@ -113,11 +105,13 @@ export default {
       this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
       this.$parent.selectedMsgNo = index;
       for (var i = 0; i < this.$parent.items.length; i++) {
-        this.$parent.items[i]["selected"] = false;
+        if (this.$parent.items[i]["postID"] == postID) {
+          this.$parent.items[i]["selected"] = true;
+        } else {
+          this.$parent.items[i]["selected"] = false;
+        }
       }
-      this.$parent.items[index]["selected"] = true;
-      // this.$parent.items[this.lastIndex]["selected"] = false;
-      // this.lastIndex = index;
+      console.log(index);
     }
   }
 };
