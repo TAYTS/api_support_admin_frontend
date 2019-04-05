@@ -199,7 +199,7 @@ export default {
 .messages-my-jobs {
   padding-top: 125px;
   height: auto;
-  padding-bottom: 280px;
+  padding-bottom: 210px;
   /* background-color: aqua; */
   /* display: inline-block; */
 }
@@ -221,7 +221,7 @@ export default {
 }
 
 .row-my-jobs {
-  height: 25%;
+  height: 200px;
 }
 .top-outer {
   position: fixed;
