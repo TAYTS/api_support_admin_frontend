@@ -9,7 +9,7 @@ const actions = {
   getTickets({ commit }, payload) {
     let status = 0;
     const access_token = localStorage.getItem("access_token");
-    if (true) {
+    if (access_token) {
       //change to access_token when login is working
       return axios
         .get("/tickets/retrieve-tickets/" + payload["jobLevel"], {
@@ -38,7 +38,7 @@ const actions = {
   getSingleTicket({ commit }, payload) {
     let status = 0;
     const access_token = localStorage.getItem("access_token");
-    if (true) {
+    if (access_token) {
       //change to access_token when login is working
       return axios
         .get(
@@ -73,7 +73,7 @@ const actions = {
   moveToMyJobs({ commit }, payload) {
     let status = 0;
     const access_token = localStorage.getItem("access_token");
-    if (true) {
+    if (access_token) {
       //change to access_token when login is working
       return axios
         .get("/tickets/move-to-my-jobs/" + payload["messageID"], {

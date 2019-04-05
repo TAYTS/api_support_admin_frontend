@@ -2,7 +2,7 @@
   <v-navigation-drawer fixed permanent absolute width="175">
     <div id="logo-bg">
       <div id="logo-main">
-        <img src="../assets/img/Accenture_Support_Staff.svg" alt>
+        <img src="../assets/img/Accenture_Support_Staff.svg" alt />
       </div>
     </div>
     <div id="name-bg">
@@ -16,7 +16,11 @@
         class="button"
         @click="changeToNewJobs()"
       >
-        <img class="button-image" src="../assets/img/_ionicons_svg_ios-document.svg" alt>
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_ios-document.svg"
+          alt
+        />
         <div class="button-text">New Jobs</div>
       </button>
       <button
@@ -24,13 +28,21 @@
         class="button"
         @click="changeToMyJobs()"
       >
-        <img class="button-image" src="../assets/img/_ionicons_svg_md-briefcase.svg" alt>
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_md-briefcase.svg"
+          alt
+        />
         <div class="button-text">My Jobs</div>
       </button>
     </div>
     <div class="logout">
       <button class="button logout-button" @click="signOut()">
-        <img class="button-image" src="../assets/img/_ionicons_svg_ios-log-out.svg" alt>
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_ios-log-out.svg"
+          alt
+        />
         <div class="button-text">Logout</div>
       </button>
     </div>
@@ -122,7 +134,10 @@ export default {
   },
   methods: {
     changeToMyJobs: function() {
-      if (this.$parent.refreshMessageListSingleton && this.$route.params.jobLevel!="myjobs") {
+      if (
+        this.$parent.refreshMessageListSingleton &&
+        this.$route.params.jobLevel != "myjobs"
+      ) {
         this.$parent.refreshMessageListSingleton = false;
         this.$parent.lastNewJobs = this.$route.params.messageID;
         this.jobLevelIsNewJobs = false;
@@ -130,7 +145,10 @@ export default {
       }
     },
     changeToNewJobs: function() {
-      if (this.$parent.refreshMessageListSingleton && this.$route.params.jobLevel!="newjobs") {
+      if (
+        this.$parent.refreshMessageListSingleton &&
+        this.$route.params.jobLevel != "newjobs"
+      ) {
         this.$parent.refreshMessageListSingleton = false;
         this.$parent.lastMyJobs = this.$route.params.messageID;
         this.jobLevelIsNewJobs = true;

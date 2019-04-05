@@ -1,17 +1,19 @@
 <template>
   <div>
-      <div class="top-outer">
-        <div class="px-3 top">
-          <div class="invis-text">{{ $route.params.messageID }}</div>
-          <!-- There for force update -->
-          <h1>{{ messageHeader.title }}</h1>
-          <h2>{{ messageHeader.sender }}</h2>
-          <div>{{ messageHeader.dateTime }}</div>
-        </div>
-        <hr>
+    <div class="top-outer">
+      <div class="px-3 top">
+        <div class="invis-text">{{ $route.params.messageID }}</div>
+        <!-- There for force update -->
+        <h1>{{ messageHeader.title }}</h1>
+        <h2>{{ messageHeader.sender }}</h2>
+        <div>{{ messageHeader.dateTime }}</div>
       </div>
+      <hr />
+    </div>
     <div>
-      <div v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]">
+      <div
+        v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]"
+      >
         <!-- Iterates through messages list for messages -->
 
         <div class="messages__container">
@@ -28,7 +30,9 @@
     </div>
     <div>
       <div v-if="jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()"
+          >Add to My Jobs</v-btn
+        >
       </div>
       <div v-else class="full-row row-my-jobs">
         <v-textarea
@@ -72,8 +76,7 @@ export default {
       },
       message: "",
       channel: null,
-      messages: [
-      ]
+      messages: []
     };
   },
   methods: {
@@ -175,7 +178,6 @@ export default {
     this.refreshMessageContent();
   }
 };
-
 </script>
 
 <style scoped>
@@ -186,19 +188,19 @@ export default {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 2px grey; 
+  box-shadow: inset 0 0 2px grey;
   border-radius: 10px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #d0d0d0; 
+  background: #d0d0d0;
   border-radius: 20px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #808080; 
+  background: #808080;
 }
 
 .message__container {
@@ -209,7 +211,7 @@ export default {
   height: 100%;
 }
 .text-area {
-  padding: 7px;
+  padding: x;
   width: calc(100% - 705px);
   height: 90%;
   resize: none;
@@ -217,7 +219,7 @@ export default {
   border: 1px solid lightgrey;
 }
 .messages-new-jobs {
-    margin: 5px 0 5px 0;
+  margin: 5px 0 5px 0;
   top: 120px;
   height: calc(100% - 165px);
   width: calc(100% - 675px);

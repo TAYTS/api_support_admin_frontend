@@ -1,12 +1,12 @@
 <template>
   <div id="outerDiv">
-    <div class="split left"/>
+    <div class="split left" />
     <div class="split right">
-      <message-content/>
+      <message-content />
     </div>
 
-    <navigation-bar/>
-    <message-list id="messagelist"/>
+    <navigation-bar />
+    <message-list id="messagelist" />
   </div>
 </template>
 
@@ -55,7 +55,7 @@ export default {
       selectedMsgNo: 0,
       changedCache: false,
       refreshMessageListSingleton: true,
-      timer: ''
+      timer: ""
     };
   },
   components: {
@@ -78,6 +78,7 @@ export default {
       // Pull data from the database
       var jobLevel = this.jobLevel;
       var messageID = this.$route.params.messageID;
+      var lastTicket;
       this.$store
         .dispatch("tickets/getTickets", { jobLevel })
         .then(response => {
@@ -85,15 +86,14 @@ export default {
             this.items = [];
             //check if first visit, loads latest message
             if (this.changedCache) {
-              var lastTicket =
+              lastTicket =
                 jobLevel == "myjobs" ? this.lastMyJobs : this.lastNewJobs;
               //loads previous job task if it's its jobs/0
               //if the loaded job is 0, then load the latest item
               lastTicket =
                 lastTicket == "0" ? response[0].ticketID : lastTicket;
             } else {
-              var lastTicket =
-                messageID == "0" ? response[0].ticketID : messageID;
+              lastTicket = messageID == "0" ? response[0].ticketID : messageID;
             }
             var latestTicketRoute = "/" + jobLevel + "/" + lastTicket;
             this.$router.replace(latestTicketRoute);
@@ -219,6 +219,9 @@ export default {
       // 1.2 Redirect to login page if the user is not authenticated
       if (status === 0) {
         this.$router.replace("/login");
+      } else {
+        // Get the Twilio access token (assume that it will success)
+        this.$store.dispatch("messages/initClient");
       }
       // 1.1 Render the user page if the user is authenticated
     });
