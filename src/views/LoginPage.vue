@@ -55,6 +55,7 @@
                       <v-layout column>
                         <v-checkbox
                           color="white"
+                          v-model="remember"
                           dark
                           label="REMEMBER ME"
                         ></v-checkbox>

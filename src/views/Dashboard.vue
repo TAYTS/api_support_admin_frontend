@@ -65,13 +65,11 @@ export default {
   methods: {
     changeToNewJobs: function() {
       this.jobLevel = "newjobs";
-      this.lastMyJobs = this.$route.params.messageID;
       this.changedCache = true;
       this.refreshMessageList();
     },
     changeToMyJobs: function() {
       this.jobLevel = "myjobs";
-      this.lastNewJobs = this.$route.params.messageID;
       this.changedCache = true;
       this.refreshMessageList();
     },
@@ -93,7 +91,7 @@ export default {
               lastTicket =
                 lastTicket == "0" ? response[0].ticketID : lastTicket;
             } else {
-              lastTicket = messageID == "0" ? response[0].ticketID : messageID;
+              var lastTicket = messageID == "0" ? response[0].ticketID : messageID;
             }
             var latestTicketRoute = "/" + jobLevel + "/" + lastTicket;
             this.$router.replace(latestTicketRoute);
@@ -210,16 +208,14 @@ export default {
   },
   mounted() {
     this.refreshMessageList();
+        // 1. Check if the user has been authenticate
+    this.$store.dispatch("user/authenticate", {}).then(status => {
+      // 1.2 Redirect to login page if the user is not authenticated
+      if (status === 0) {
+        this.$router.replace("/login");
+      }
+      // 1.1 Render the user page if the user is authenticated
+    });
   }
-  // mounted() {
-  //   // 1. Check if the user has been authenticate
-  //   this.$store.dispatch("user/authenticate", {}).then(status => {
-  //     // 1.2 Redirect to login page if the user is not authenticated
-  //     if (status === 0) {
-  //       this.$router.replace("/login");
-  //     }
-  //     // 1.1 Render the user page if the user is authenticated
-  //   });
-  // }
 };
 </script>
