@@ -1,12 +1,12 @@
 <template>
   <div id="outerDiv">
-    <div class="split left" />
+    <div class="split left"/>
     <div class="split right">
-      <message-content />
+      <message-content/>
     </div>
 
-    <navigation-bar />
-    <message-list id="messagelist" />
+    <navigation-bar/>
+    <message-list id="messagelist"/>
   </div>
 </template>
 
@@ -54,7 +54,8 @@ export default {
       lastMyJobs: 0,
       selectedMsgNo: 0,
       changedCache: false,
-      refreshMessageListSingleton: true
+      refreshMessageListSingleton: true,
+      timer: ''
     };
   },
   components: {
@@ -74,7 +75,6 @@ export default {
       this.refreshMessageList();
     },
     refreshMessageList: function() {
-      this.items = [];
       // Pull data from the database
       var jobLevel = this.jobLevel;
       var messageID = this.$route.params.messageID;
@@ -82,6 +82,7 @@ export default {
         .dispatch("tickets/getTickets", { jobLevel })
         .then(response => {
           if (response !== 0) {
+            this.items = [];
             //check if first visit, loads latest message
             if (this.changedCache) {
               var lastTicket =
@@ -91,7 +92,8 @@ export default {
               lastTicket =
                 lastTicket == "0" ? response[0].ticketID : lastTicket;
             } else {
-              var lastTicket = messageID == "0" ? response[0].ticketID : messageID;
+              var lastTicket =
+                messageID == "0" ? response[0].ticketID : messageID;
             }
             var latestTicketRoute = "/" + jobLevel + "/" + lastTicket;
             this.$router.replace(latestTicketRoute);
@@ -196,7 +198,7 @@ export default {
         if (this.items[i].postID == this.$route.params.messageID) {
           found = true;
         } else if (found) {
-          if (this.items[i].postID != undefined) {
+          if (this.items[i].postID) {
             this.$router.push(
               "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
             );
@@ -208,7 +210,11 @@ export default {
   },
   mounted() {
     this.refreshMessageList();
-        // 1. Check if the user has been authenticate
+
+    // Below line is to autorefresh message list every 2s
+    // this.timer = setInterval(this.refreshMessageList, 2000)
+
+    // 1. Check if the user has been authenticate
     this.$store.dispatch("user/authenticate", {}).then(status => {
       // 1.2 Redirect to login page if the user is not authenticated
       if (status === 0) {
