@@ -8,44 +8,57 @@
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
       </div>
-      <hr />
+      <hr>
     </div>
 
     <div v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]">
       <!-- Iterates through messages list for messages -->
-      <template v-for="(item, index) in messages">
-        <div :key="index">
-          <div v-bind:class="[item.senderIsClient ? clientDiv : adminDiv]">
-            <div v-bind:class="[item.senderIsClient ? clientBox : adminBox]">
-              {{ item.message }}
-            </div>
-          </div>
-        </div>
-      </template>
+      <div class="messages__container">
+        <MessageBubble
+          v-for="message in messages"
+          :key="message.index"
+          :message="message.message"
+          :type="message.type"
+          :reply="message.reply"
+          @download-media="downdloadMedia(message.index)"
+        ></MessageBubble>
+      </div>
     </div>
     <div>
       <div v-if="jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()"
-          >Add to My Jobs</v-btn
-        >
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
       </div>
       <div v-else class="full-row row-my-jobs">
-        <textarea class="text-area"></textarea>
-        <v-btn class="send-button">send</v-btn>
+        <v-textarea
+          class="text-area"
+          v-model="message"
+          solo
+          flat
+          hide-details
+          no-resize
+          rows="5"
+          label="Type here..."
+          prepend-inner-icon="attach_file"
+          color="accent"
+          background-color="lightbackground"
+          @keyup.enter="sendMessage"
+        ></v-textarea>
+        <!-- <v-btn class="send-button" @click="sendMessage">send</v-btn> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import MessageBubble from "@/components/MessageBubble.vue";
 export default {
+  components: {
+    MessageBubble
+  },
   data() {
     return {
+      id: this.$route.params.messageID,
       jobLevelIsNewJobs: false,
-      adminDiv: "admin-div",
-      clientDiv: "client-div",
-      adminBox: "admin-box",
-      clientBox: "client-box",
       messagesNewJobs: "messages-new-jobs",
       messagesMyJobs: "messages-my-jobs",
       // Temporary data
@@ -55,78 +68,26 @@ export default {
         body: "body",
         dateTime: "dateTime"
       },
+      message: "",
+      channel: null,
       messages: [
-        {
-          message:
-            "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with deskt",
-          senderIsClient: true,
-          dateTime: "2pm or something"
-        },
-        {
-          message:
-            "Lmao messaasssssssssssssssssssssssssssssssssssssssssssssssssssssge 2",
-          senderIsClient: false,
-          dateTime: "2pm or something"
-        },
-        {
-          message: "Lmao message 3",
-          senderIsClient: true,
-          dateTime: "2pm or something"
-        },
-        {
-          message: "Lmao message 4",
-          senderIsClient: false,
-          dateTime: "2pm or something"
-        },
-        {
-          message:
-            "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with deskt",
-          senderIsClient: true,
-          dateTime: "2pm or something"
-        },
-        {
-          message:
-            "Lmao messaasssssssssssssssssssssssssssssssssssssssssssssssssssssge 2",
-          senderIsClient: false,
-          dateTime: "2pm or something"
-        },
-        {
-          message: "Lmao message 3",
-          senderIsClient: true,
-          dateTime: "2pm or something"
-        },
-        {
-          message: "Lmao message 4",
-          senderIsClient: false,
-          dateTime: "2pm or something"
-        },
-        {
-          message:
-            "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with deskt",
-          senderIsClient: true,
-          dateTime: "2pm or something"
-        },
-        {
-          message:
-            "Lmao messaasssssssssssssssssssssssssssssssssssssssssssssssssssssge 2",
-          senderIsClient: false,
-          dateTime: "2pm or something"
-        },
-        {
-          message: "Lmao message 3",
-          senderIsClient: true,
-          dateTime: "2pm or something"
-        },
-        {
-          message: "Lmao message 4",
-          senderIsClient: false,
-          dateTime: "2pm or something"
-        }
+        // {
+        //   message: "Lmao message 4",
+        //   type: "text",
+        //   reply: true
+        // },
+        // {
+        //   message: "Lmao message 4",
+        //   type: "text",
+        //   reply: false
+        // }
       ]
     };
   },
   methods: {
     refreshMessageContent: function() {
+      this.id = this.$route.params.messageID;
+      // Replace all id's with $route statement if app is bugging out
       var messageID = this.$route.params.messageID;
       var jobLevel = this.$route.params.jobLevel;
       if (jobLevel == "newjobs") {
@@ -164,10 +125,47 @@ export default {
             console.log("Error in fetching the tickets");
           }
         });
+    },
+    ticketListing() {
+      this.$router.replace({ name: "TicketListing" });
+    },
+    sendMessage() {
+      const message = this.message;
+      if (message.trim() !== "") {
+        this.$store
+          .dispatch("messages/sendMessage", {
+            message,
+            id_channel: this.id
+          })
+          .then(status => {
+            if (status) {
+              this.message = "";
+            }
+          });
+      } else {
+        this.message = "";
+      }
+    },
+    updateMessage() {
+      this.$store
+        .dispatch("messages/getMessages", { id_channel: this.id })
+        .then(messages => {
+          this.messages = [...messages];
+        });
+    },
+    downdloadMedia(index) {
+      this.$store.dispatch("messages/downloadMedia", { index });
     }
   },
   mounted() {
     this.refreshMessageContent();
+    this.channel = this.$store.getters["messages/getChannel"](this.id);
+    this.$store
+      .dispatch("messages/getMessages", { id_channel: this.id })
+      .then(messages => {
+        this.messages = [...messages];
+        this.channel.on("messageAdded", this.updateMessage);
+      });
   },
   updated() {
     this.refreshMessageContent();
@@ -176,10 +174,17 @@ export default {
 </script>
 
 <style scoped>
+.message__container {
+  margin: 5px 0;
+  width: 100%;
+  right: 0;
+  padding: 0 10px 0 10px;
+}
 .text-area {
-  padding: 15px;
-  width: calc(99.1% - 675px);
-  height: 80%;
+  padding: 7px;
+  margin: 15px;
+  width: calc(100% - 705px);
+  height: 90%;
   resize: none;
   background-color: white;
   border: 1px solid lightgrey;
@@ -189,14 +194,14 @@ export default {
   height: auto;
   padding-bottom: 40px;
   /* background-color: aqua; */
-  display: inline-block;
+  /* display: inline-block; */
 }
 .messages-my-jobs {
   padding-top: 125px;
   height: auto;
   padding-bottom: 280px;
   /* background-color: aqua; */
-  display: inline-block;
+  /* display: inline-block; */
 }
 .full-row {
   width: 100%;
@@ -233,30 +238,5 @@ export default {
 }
 .invis-text {
   font-size: 0;
-}
-.admin-div {
-  text-align: right;
-  float: right;
-  width: 100%;
-  padding: 10px 12px 10px 15%;
-}
-.client-div {
-  text-align: left;
-  float: left;
-  width: 100%;
-  padding: 10px 15% 10px 12px;
-  height: auto;
-}
-.admin-box {
-  background-color: lightblue;
-  display: inline-block;
-  padding: 15px;
-  border-radius: 10px;
-}
-.client-box {
-  background-color: #f0f0f0;
-  display: inline-block;
-  padding: 15px;
-  border-radius: 10px;
 }
 </style>
