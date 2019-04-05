@@ -9,7 +9,6 @@ const actions = {
   getTickets({ commit }, payload) {
     let status = 0;
     const access_token = localStorage.getItem("access_token");
-    console.log(access_token);
     if (true) {
       //change to access_token when login is working
       return axios
