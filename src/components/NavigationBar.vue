@@ -2,7 +2,7 @@
   <v-navigation-drawer fixed permanent absolute width="175">
     <div id="logo-bg">
       <div id="logo-main">
-        <img src="../assets/img/Accenture_Support_Staff.svg" alt />
+        <img src="../assets/img/Accenture_Support_Staff.svg" alt>
       </div>
     </div>
     <div id="name-bg">
@@ -16,47 +16,25 @@
         class="button"
         @click="changeToNewJobs()"
       >
-        <img
-          class="button-image"
-          src="../assets/img/_ionicons_svg_ios-document.svg"
-          alt
-        />
-        <div class="button-text">
-          New Jobs
-        </div>
+        <img class="button-image" src="../assets/img/_ionicons_svg_ios-document.svg" alt>
+        <div class="button-text">New Jobs</div>
       </button>
       <button
         v-bind:class="[jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus]"
         class="button"
         @click="changeToMyJobs()"
       >
-        <img
-          class="button-image"
-          src="../assets/img/_ionicons_svg_md-briefcase.svg"
-          alt
-        />
-        <div class="button-text">
-          My Jobs
-        </div>
+        <img class="button-image" src="../assets/img/_ionicons_svg_md-briefcase.svg" alt>
+        <div class="button-text">My Jobs</div>
       </button>
     </div>
     <div class="logout">
-<button
-        class="button logout-button"
-        @click="signOut()"
-      >
-        <img
-          class="button-image"
-          src="../assets/img/_ionicons_svg_ios-log-out.svg"
-          alt
-        />
-        <div class="button-text">
-          Logout
-        </div>
+      <button class="button logout-button" @click="signOut()">
+        <img class="button-image" src="../assets/img/_ionicons_svg_ios-log-out.svg" alt>
+        <div class="button-text">Logout</div>
       </button>
     </div>
   </v-navigation-drawer>
-  
 </template>
 
 <style scoped>
@@ -86,10 +64,11 @@
   background: #f0ddf5;
 }
 
-.logout{
-  bottom:0;
+.logout {
+  bottom: 0;
   position: absolute;
- width:100%
+  background: #e0e0e0;
+  width: 100%;
 }
 .button-image {
   width: 30px;
@@ -159,7 +138,6 @@ export default {
       }
     },
     signOut: function() {
-      
       this.$store.dispatch("user/logout").then(status => {
         if (status === 1) {
           this.$router.replace("/login");
