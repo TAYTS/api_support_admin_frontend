@@ -40,7 +40,23 @@
         </div>
       </button>
     </div>
+    <div class="logout">
+<button
+        class="button logout-button"
+        @click="signOut()"
+      >
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_ios-log-out.svg"
+          alt
+        />
+        <div class="button-text">
+          Logout
+        </div>
+      </button>
+    </div>
   </v-navigation-drawer>
+  
 </template>
 
 <style scoped>
@@ -65,6 +81,16 @@
   text-align: center;
 }
 
+.logout-button:focus {
+  outline: none;
+  background: #f0ddf5;
+}
+
+.logout{
+  bottom:0;
+  position: absolute;
+ width:100%
+}
 .button-image {
   width: 30px;
   margin-top: 7px;
@@ -118,7 +144,7 @@ export default {
   methods: {
     changeToMyJobs: function() {
       if (this.$parent.refreshMessageListSingleton) {
-        this.$router.push("/myjobs/0");
+        this.$parent.lastNewJobs = this.$route.params.messageID;
         this.$parent.refreshMessageListSingleton = false;
         this.jobLevelIsNewJobs = false;
         this.$parent.changeToMyJobs();
@@ -126,20 +152,25 @@ export default {
     },
     changeToNewJobs: function() {
       if (this.$parent.refreshMessageListSingleton) {
-        this.$router.push("/newjobs/0");
+        this.$parent.lastMyJobs = this.$route.params.messageID;
         this.$parent.refreshMessageListSingleton = false;
         this.jobLevelIsNewJobs = true;
         this.$parent.changeToNewJobs();
       }
+    },
+    signOut: function() {
+      
+      this.$store.dispatch("user/logout").then(status => {
+        if (status === 1) {
+          this.$router.replace("/login");
+        } else {
+          alert("Unable to logout");
+        }
+        // Handle the arrow animation
+        const arrowIcon = document.querySelector(".arrow-icon");
+        arrowIcon.classList.toggle("down");
+      });
     }
-    // mounted() {
-    //   var jobLevel = this.$route.params.jobLevel;
-    //   if (jobLevel == "newjobs") {
-    //     this.jobLevelIsNewJobs = true;
-    //   } else {
-    //     this.jobLevelIsNewJobs = false;
-    //   }
-    // }
   }
 };
 </script>

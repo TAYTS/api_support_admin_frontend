@@ -1,3 +1,5 @@
+import axios from "../../axios/loginAxios";
+
 const state = {
   access_token: "",
   refresh_token: ""
@@ -74,6 +76,22 @@ const actions = {
     return new Promise(resolve => {
       resolve(status);
     });
+  },
+  logout() {
+    return axios
+      .post("/users/logout")
+      .then(response => {
+        if (response.status === 200 && response.data.status === 1) {
+          // Clean local storage
+          localStorage.clear();
+          return 1;
+        } else {
+          return 0;
+        }
+      })
+      .catch(() => {
+        return 0;
+      });
   }
 };
 
