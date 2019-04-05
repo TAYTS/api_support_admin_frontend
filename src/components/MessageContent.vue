@@ -1,27 +1,29 @@
 <template>
   <div>
-    <div class="top-outer">
-      <div class="pa-3 top">
-        <div class="invis-text">{{ $route.params.messageID }}</div>
-        <!-- There for force update -->
-        <h1>{{ messageHeader.title }}</h1>
-        <h2>{{ messageHeader.sender }}</h2>
-        <div>{{ messageHeader.dateTime }}</div>
+      <div class="top-outer">
+        <div class="px-3 top">
+          <div class="invis-text">{{ $route.params.messageID }}</div>
+          <!-- There for force update -->
+          <h1>{{ messageHeader.title }}</h1>
+          <h2>{{ messageHeader.sender }}</h2>
+          <div>{{ messageHeader.dateTime }}</div>
+        </div>
+        <hr>
       </div>
-      <hr>
-    </div>
+    <div>
+      <div v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]">
+        <!-- Iterates through messages list for messages -->
 
-    <div v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]">
-      <!-- Iterates through messages list for messages -->
-      <div class="messages__container">
-        <MessageBubble
-          v-for="message in messages"
-          :key="message.index"
-          :message="message.message"
-          :type="message.type"
-          :reply="message.reply"
-          @download-media="downdloadMedia(message.index)"
-        ></MessageBubble>
+        <div class="messages__container">
+          <MessageBubble
+            v-for="message in messages"
+            :key="message.index"
+            :message="message.message"
+            :type="message.type"
+            :reply="message.reply"
+            @download-media="downdloadMedia(message.index)"
+          ></MessageBubble>
+        </div>
       </div>
     </div>
     <div>
@@ -71,16 +73,6 @@ export default {
       message: "",
       channel: null,
       messages: [
-        // {
-        //   message: "Lmao message 4",
-        //   type: "text",
-        //   reply: true
-        // },
-        // {
-        //   message: "Lmao message 4",
-        //   type: "text",
-        //   reply: false
-        // }
       ]
     };
   },
@@ -183,9 +175,32 @@ export default {
     this.refreshMessageContent();
   }
 };
+
 </script>
 
 <style scoped>
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d0d0d0; 
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #808080; 
+}
+
 .message__container {
   margin: 5px 0;
   width: 100%;
@@ -195,7 +210,6 @@ export default {
 }
 .text-area {
   padding: 7px;
-  margin: 15px;
   width: calc(100% - 705px);
   height: 90%;
   resize: none;
@@ -203,16 +217,24 @@ export default {
   border: 1px solid lightgrey;
 }
 .messages-new-jobs {
-  padding-top: 125px;
-  height: auto;
-  padding-bottom: 50px;
+    margin: 5px 0 5px 0;
+  top: 120px;
+  height: calc(100% - 165px);
+  width: calc(100% - 675px);
+  display: block;
+  overflow: auto;
+  position: fixed;
   /* background-color: aqua; */
   /* display: inline-block; */
 }
 .messages-my-jobs {
-  padding-top: 125px;
-  height: 100%;
-  padding-bottom: 26vh;
+  margin: 5px 0 5px 0;
+  top: 120px;
+  height: calc(75% - 125px);
+  width: calc(100% - 675px);
+  display: block;
+  overflow: auto;
+  position: fixed;
   /* padding-bottom: 210px; */
   /* background-color: aqua; */
   /* display: inline-block; */
@@ -235,12 +257,16 @@ export default {
 }
 
 .row-my-jobs {
-  height: 200px;
+  height: 25%;
 }
 .top-outer {
   position: fixed;
   width: 100%;
   background-color: white;
+  display: block;
+  height: 20%;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 .top {
   height: 125px;
