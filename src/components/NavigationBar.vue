@@ -11,38 +11,34 @@
       </div>
     </div>
     <div>
-      <router-link style="text-decoration: none;" to="/newjobs/0">
-        <button
-          v-bind:class="[jobLevelIsNewJobs ? buttonInFocus : buttonOutFocus]"
-          class="button"
-          @click="changeToNewJobs()"
-        >
-          <img
-            class="button-image"
-            src="../assets/img/_ionicons_svg_ios-document.svg"
-            alt
-          />
-          <div class="button-text">
-            New Jobs
-          </div>
-        </button>
-      </router-link>
-      <router-link style="text-decoration: none;" to="/myjobs/0">
-        <button
-          v-bind:class="[jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus]"
-          class="button"
-          @click="changeToMyJobs()"
-        >
-          <img
-            class="button-image"
-            src="../assets/img/_ionicons_svg_md-briefcase.svg"
-            alt
-          />
-          <div class="button-text">
-            My Jobs
-          </div>
-        </button>
-      </router-link>
+      <button
+        v-bind:class="[jobLevelIsNewJobs ? buttonInFocus : buttonOutFocus]"
+        class="button"
+        @click="changeToNewJobs()"
+      >
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_ios-document.svg"
+          alt
+        />
+        <div class="button-text">
+          New Jobs
+        </div>
+      </button>
+      <button
+        v-bind:class="[jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus]"
+        class="button"
+        @click="changeToMyJobs()"
+      >
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_md-briefcase.svg"
+          alt
+        />
+        <div class="button-text">
+          My Jobs
+        </div>
+      </button>
     </div>
   </v-navigation-drawer>
 </template>
@@ -104,15 +100,8 @@
   background: #f0f0f0;
 }
 
-.button:active {
-  background: #ffffff;
-  transition-duration: 0.1s;
-}
-
 .button:focus {
-  outline: 0;
-  background: #f0ddf5;
-  transition-duration: 0.1s;
+  outline: none;
 }
 </style>
 
@@ -121,7 +110,7 @@ export default {
   data() {
     return {
       adminName: "Insert admin name here",
-      jobLevelIsNewJobs: true,
+      jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs",
       buttonInFocus: "button-in-focus",
       buttonOutFocus: "button-out-focus"
     };
@@ -129,6 +118,7 @@ export default {
   methods: {
     changeToMyJobs: function() {
       if (this.$parent.refreshMessageListSingleton) {
+        this.$router.push("/myjobs/0");
         this.$parent.refreshMessageListSingleton = false;
         this.jobLevelIsNewJobs = false;
         this.$parent.changeToMyJobs();
@@ -136,19 +126,20 @@ export default {
     },
     changeToNewJobs: function() {
       if (this.$parent.refreshMessageListSingleton) {
+        this.$router.push("/newjobs/0");
         this.$parent.refreshMessageListSingleton = false;
         this.jobLevelIsNewJobs = true;
         this.$parent.changeToNewJobs();
       }
-    },
-    mounted() {
-      var jobLevel = this.$route.params.jobLevel;
-      if (jobLevel == "newjobs") {
-        this.jobLevelIsNewJobs = true;
-      } else {
-        this.jobLevelIsNewJobs = false;
-      }
     }
+    // mounted() {
+    //   var jobLevel = this.$route.params.jobLevel;
+    //   if (jobLevel == "newjobs") {
+    //     this.jobLevelIsNewJobs = true;
+    //   } else {
+    //     this.jobLevelIsNewJobs = false;
+    //   }
+    // }
   }
 };
 </script>

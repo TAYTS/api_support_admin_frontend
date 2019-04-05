@@ -45,8 +45,12 @@
             <v-container class="pa-0 ma-0">
               <v-layout fill-height class="pa-0">
                 <v-list-tile-content>
-                  <v-list-tile-title v-html="item.title"></v-list-tile-title>
+                  <v-list-tile-title
+                    class="title"
+                    v-html="item.title"
+                  ></v-list-tile-title>
                   <v-list-tile-sub-title
+                    class="subtitle"
                     v-html="item.subtitle"
                   ></v-list-tile-sub-title>
                 </v-list-tile-content>
