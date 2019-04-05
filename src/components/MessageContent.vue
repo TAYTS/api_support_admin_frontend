@@ -99,13 +99,25 @@ export default {
       this.$store
         .dispatch("tickets/getSingleTicket", { jobLevel, messageID })
         .then(response => {
-          if (response !== 0) {
+          if (response != 0) {
             this.messageHeader.title = response.title;
             this.messageHeader.sender = response.sender;
             this.messageHeader.body = response.body;
             this.messageHeader.dateTime = response.dateTime;
           } else {
             console.log("Error in fetching the tickets");
+            for (var i = 0; i < this.$parent.items.length; i++) {
+              if (this.$parent.items[i].postID) {
+                this.$router.push(
+                  "/" +
+                    this.$route.params.jobLevel +
+                    "/" +
+                    this.$parent.items[i].postID
+                );
+                break;
+              }
+            }
+            this.$parent.refreshMessageList();
           }
         });
     },
@@ -179,6 +191,7 @@ export default {
   width: 100%;
   right: 0;
   padding: 0 10px 0 10px;
+  height: 100%;
 }
 .text-area {
   padding: 7px;
@@ -192,14 +205,15 @@ export default {
 .messages-new-jobs {
   padding-top: 125px;
   height: auto;
-  padding-bottom: 40px;
+  padding-bottom: 50px;
   /* background-color: aqua; */
   /* display: inline-block; */
 }
 .messages-my-jobs {
   padding-top: 125px;
-  height: auto;
-  padding-bottom: 210px;
+  height: 100%;
+  padding-bottom: 26vh;
+  /* padding-bottom: 210px; */
   /* background-color: aqua; */
   /* display: inline-block; */
 }

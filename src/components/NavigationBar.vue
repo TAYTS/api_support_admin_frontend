@@ -122,17 +122,17 @@ export default {
   },
   methods: {
     changeToMyJobs: function() {
-      if (this.$parent.refreshMessageListSingleton) {
-        this.$parent.lastNewJobs = this.$route.params.messageID;
+      if (this.$parent.refreshMessageListSingleton && this.$route.params.jobLevel!="myjobs") {
         this.$parent.refreshMessageListSingleton = false;
+        this.$parent.lastNewJobs = this.$route.params.messageID;
         this.jobLevelIsNewJobs = false;
         this.$parent.changeToMyJobs();
       }
     },
     changeToNewJobs: function() {
-      if (this.$parent.refreshMessageListSingleton) {
-        this.$parent.lastMyJobs = this.$route.params.messageID;
+      if (this.$parent.refreshMessageListSingleton && this.$route.params.jobLevel!="newjobs") {
         this.$parent.refreshMessageListSingleton = false;
+        this.$parent.lastMyJobs = this.$route.params.messageID;
         this.jobLevelIsNewJobs = true;
         this.$parent.changeToNewJobs();
       }
