@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const messageAxios = axios.create({
-  baseURL: "https://userbackend.chocolatepie.tech",
+  baseURL: "https://message.chocolatepie.tech",
   headers: {
     "Content-Type": "application/json"
   },
