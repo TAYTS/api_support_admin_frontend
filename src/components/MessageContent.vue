@@ -8,10 +8,12 @@
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
       </div>
-      <hr>
+      <hr />
     </div>
     <div>
-      <div v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]">
+      <div
+        v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]"
+      >
         <!-- Iterates through messages list for messages -->
 
         <div class="messages__container">
@@ -28,7 +30,9 @@
     </div>
     <div>
       <div v-if="jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()"
+          >Add to My Jobs</v-btn
+        >
       </div>
       <div v-else class="full-row row-my-jobs">
         <v-textarea
@@ -109,6 +113,12 @@ export default {
                   break;
                 }
               }
+            } else {
+              // todo replace this with opacity white box
+              this.messageHeader.title = "";
+              this.messageHeader.sender = "";
+              this.messageHeader.body = "";
+              this.messageHeader.dateTime = "";
             }
             this.$parent.refreshMessageList();
           }
@@ -209,7 +219,7 @@ export default {
   height: 100%;
 }
 .text-area {
-  padding: x;
+  margin: 15px;
   width: calc(100% - 705px);
   height: 90%;
   resize: none;
@@ -246,12 +256,6 @@ export default {
   background-color: #fafafa;
 }
 
-.send-button {
-  width: calc(98% - 675px);
-  z-index: 99;
-  height: 38px;
-  margin-top: 0;
-}
 .row-new-jobs {
   height: 50px;
 }
@@ -272,7 +276,7 @@ export default {
   height: 125px;
 }
 .add-jobs-button {
-  width: calc(98% - 675px);
+  width: calc(100% - 675px);
   z-index: 99;
   height: 40px;
 }
