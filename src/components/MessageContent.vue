@@ -8,12 +8,10 @@
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
       </div>
-      <hr />
+      <hr>
     </div>
     <div>
-      <div
-        v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]"
-      >
+      <div v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]">
         <!-- Iterates through messages list for messages -->
 
         <div class="messages__container">
@@ -30,9 +28,7 @@
     </div>
     <div>
       <div v-if="jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()"
-          >Add to My Jobs</v-btn
-        >
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
       </div>
       <div v-else class="full-row row-my-jobs">
         <v-textarea
@@ -101,15 +97,17 @@ export default {
             this.messageHeader.dateTime = response.dateTime;
           } else {
             console.log("Error in fetching the tickets");
-            for (var i = 0; i < this.$parent.items.length; i++) {
-              if (this.$parent.items[i].postID) {
-                this.$router.push(
-                  "/" +
-                    this.$route.params.jobLevel +
+            if (messageID != "empty") {
+              for (var i = 0; i < this.$parent.items.length; i++) {
+                if (this.$parent.items[i].postID) {
+                  this.$router.push(
                     "/" +
-                    this.$parent.items[i].postID
-                );
-                break;
+                      this.$route.params.jobLevel +
+                      "/" +
+                      this.$parent.items[i].postID
+                  );
+                  break;
+                }
               }
             }
             this.$parent.refreshMessageList();

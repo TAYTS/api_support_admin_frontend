@@ -85,15 +85,17 @@ export default {
           if (response !== 0) {
             this.items = [];
             //check if first visit, loads latest message
-            if (this.changedCache) {
+            if (this.changedCache && response.length!=0) {
               lastTicket =
                 jobLevel == "myjobs" ? this.lastMyJobs : this.lastNewJobs;
               //loads previous job task if it's its jobs/0
               //if the loaded job is 0, then load the latest item
               lastTicket =
                 lastTicket == "0" ? response[0].ticketID : lastTicket;
-            } else {
+            } else if (response.length!=0) {
               lastTicket = messageID == "0" ? response[0].ticketID : messageID;
+            } else {
+              lastTicket = "empty";
             }
             var latestTicketRoute = "/" + jobLevel + "/" + lastTicket;
             this.$router.replace(latestTicketRoute);
@@ -183,11 +185,12 @@ export default {
                   response[i].ticketID ==
                   (lastTicket == 0 ? response[0].ticketID : lastTicket)
               });
-              this.refreshMessageListSingleton = true;
+             
             }
           } else {
             console.log("Error in fetching the tickets");
           }
+           this.refreshMessageListSingleton = true;
         });
     },
     nextItem: function() {
