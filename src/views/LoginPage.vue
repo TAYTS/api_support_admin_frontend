@@ -3,11 +3,7 @@
     <v-container fluid class="login__container">
       <v-layout align-center justify-center row fill-height>
         <v-flex xs7 class="text-xs-right">
-          <img
-            class="logo-main"
-            src="../assets/img/Accenture_Support_Staff.svg"
-            alt
-          />
+          <img class="logo-main" src="../assets/img/Accenture_Support_Staff.svg" alt>
         </v-flex>
         <v-flex xs1 class="text-xs-center">
           <div class="divider"></div>
@@ -18,12 +14,12 @@
               <v-form ref="form" v-model="valid" lazy-validation>
                 <v-flex xs5>
                   <v-text-field
-                    v-model="username"
-                    :rules="usernameRules"
+                    v-model="email"
+                    :rules="emailRules"
                     :error-messages="error_messages"
                     @update:error="toggle_error"
                     @input="update_error_message"
-                    label="USERNAME"
+                    label="EMAIL"
                     solo
                     prepend-inner-icon="person"
                     dark
@@ -53,20 +49,8 @@
                   <v-card color="background">
                     <v-card-actions class="action__container">
                       <v-layout column>
-                        <v-checkbox
-                          color="white"
-                          v-model="remember"
-                          dark
-                          label="REMEMBER ME"
-                        ></v-checkbox>
-                        <v-btn
-                          block
-                          large
-                          color="accent"
-                          :disabled="!valid"
-                          @click="submit"
-                          >SIGN IN</v-btn
-                        >
+                        <v-checkbox color="white" v-model="remember" dark label="REMEMBER ME"></v-checkbox>
+                        <v-btn block large color="accent" :disabled="!valid" @click="submit">SIGN IN</v-btn>
                       </v-layout>
                     </v-card-actions>
                   </v-card>
@@ -87,10 +71,10 @@ export default {
       show: false,
       valid: false,
       error: false,
-      username: "",
-      usernameRules: [
-        v => !!v || "Username is required",
-        v => /.+@.+\..+/.test(v) || "Username must be valid"
+      email: "",
+      emailRules: [
+        v => !!v || "Email is required",
+        v => /.+@.+\..+/.test(v) || "Email must be valid"
       ],
       password: "",
       passwordRules: [v => !!v || "Password is required"],
@@ -114,12 +98,12 @@ export default {
     submit() {
       const pass = this.$refs.form.validate();
       if (pass) {
-        const username = this.username;
+        const email = this.email;
         const password = this.password;
         const remember = this.remember;
         this.$store
           .dispatch("user/login", {
-            username,
+            email,
             password,
             remember
           })
@@ -128,7 +112,7 @@ export default {
               this.$router.replace("/");
             } else {
               this.error = true;
-              this.username = "";
+              this.email = "";
               this.password = "";
               this.error_messages.push("Invalid username or password!");
             }
