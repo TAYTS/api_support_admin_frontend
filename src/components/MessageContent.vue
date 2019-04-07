@@ -8,14 +8,11 @@
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
       </div>
-      <hr />
+      <hr>
     </div>
     <div>
-      <div
-        v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]"
-      >
+      <div v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]">
         <!-- Iterates through messages list for messages -->
-
         <div class="messages__container">
           <MessageBubble
             v-for="message in messages"
@@ -30,9 +27,7 @@
     </div>
     <div>
       <div v-if="jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()"
-          >Add to My Jobs</v-btn
-        >
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
       </div>
       <div v-else class="full-row row-my-jobs">
         <v-textarea
@@ -155,6 +150,7 @@ export default {
           .then(status => {
             if (status) {
               this.message = "";
+              this.updateMessage();
             }
           });
       } else {
@@ -171,16 +167,6 @@ export default {
     downdloadMedia(index) {
       this.$store.dispatch("messages/downloadMedia", { index });
     }
-  },
-  mounted() {
-    this.refreshMessageContent();
-    this.channel = this.$store.getters["messages/getChannel"](this.id);
-    this.$store
-      .dispatch("messages/getMessages", { id_channel: this.id })
-      .then(messages => {
-        this.messages = [...messages];
-        this.channel.on("messageAdded", this.updateMessage);
-      });
   },
   updated() {
     this.refreshMessageContent();
