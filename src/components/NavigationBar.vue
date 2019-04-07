@@ -11,39 +11,43 @@
       </div>
     </div>
     <div>
-      <button class="button">
+      <button
+        v-bind:class="[jobLevelIsNewJobs ? buttonInFocus : buttonOutFocus]"
+        class="button"
+        @click="changeToNewJobs()"
+      >
         <img
           class="button-image"
           src="../assets/img/_ionicons_svg_ios-document.svg"
           alt
         />
-        <div class="button-text">
-          New Jobs
-        </div>
+        <div class="button-text">New Jobs</div>
       </button>
-      <button class="button">
+      <button
+        v-bind:class="[jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus]"
+        class="button"
+        @click="changeToMyJobs()"
+      >
         <img
           class="button-image"
           src="../assets/img/_ionicons_svg_md-briefcase.svg"
           alt
         />
-        <div class="button-text">
-          My Jobs
-        </div>
+        <div class="button-text">My Jobs</div>
+      </button>
+    </div>
+    <div class="logout">
+      <button class="button logout-button" @click="signOut()">
+        <img
+          class="button-image"
+          src="../assets/img/_ionicons_svg_ios-log-out.svg"
+          alt
+        />
+        <div class="button-text">Logout</div>
       </button>
     </div>
   </v-navigation-drawer>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      adminName: "Insert admin name here"
-    };
-  }
-};
-</script>
 
 <style scoped>
 #logo-bg {
@@ -67,6 +71,17 @@ export default {
   text-align: center;
 }
 
+.logout-button:focus {
+  outline: none;
+  background: #f0ddf5;
+}
+
+.logout {
+  bottom: 0;
+  position: absolute;
+  background: #e0e0e0;
+  width: 100%;
+}
 .button-image {
   width: 30px;
   margin-top: 7px;
@@ -82,8 +97,14 @@ export default {
   color: #000000;
 }
 
-.button {
+.button-in-focus {
+  background: #f0ddf5;
+}
+
+.button-out-focus {
   background-color: #ffffff;
+}
+.button {
   display: block;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
@@ -96,15 +117,8 @@ export default {
   background: #f0f0f0;
 }
 
-.button:active {
-  background: #ffffff;
-  transition-duration: 0.1s;
-}
-
 .button:focus {
-  outline: 0;
-  background: #f0ddf5;
-  transition-duration: 0.1s;
+  outline: none;
 }
 </style>
 
@@ -112,8 +126,47 @@ export default {
 export default {
   data() {
     return {
-      adminName: "Insert admin name here"
+      adminName: "Insert admin name here",
+      jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs",
+      buttonInFocus: "button-in-focus",
+      buttonOutFocus: "button-out-focus"
     };
+  },
+  methods: {
+    changeToMyJobs: function() {
+      if (
+        this.$parent.refreshMessageListSingleton &&
+        this.$route.params.jobLevel != "myjobs"
+      ) {
+        this.$parent.refreshMessageListSingleton = false;
+        this.$parent.lastNewJobs = this.$route.params.messageID;
+        this.jobLevelIsNewJobs = false;
+        this.$parent.changeToMyJobs();
+      }
+    },
+    changeToNewJobs: function() {
+      if (
+        this.$parent.refreshMessageListSingleton &&
+        this.$route.params.jobLevel != "newjobs"
+      ) {
+        this.$parent.refreshMessageListSingleton = false;
+        this.$parent.lastMyJobs = this.$route.params.messageID;
+        this.jobLevelIsNewJobs = true;
+        this.$parent.changeToNewJobs();
+      }
+    },
+    signOut: function() {
+      this.$store.dispatch("user/logout").then(status => {
+        if (status === 1) {
+          this.$router.replace("/login");
+        } else {
+          alert("Unable to logout");
+        }
+        // Handle the arrow animation
+        const arrowIcon = document.querySelector(".arrow-icon");
+        arrowIcon.classList.toggle("down");
+      });
+    }
   }
 };
 </script>

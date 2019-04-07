@@ -36,12 +36,21 @@
         </v-subheader>
         <div v-else-if="item.divider" :key="index">
           <v-divider></v-divider>
-          <v-list-tile v-if="item.title" :key="index" @click="">
+          <v-list-tile
+            v-bind:class="[item.selected ? selectedClass : '']"
+            v-if="item.title"
+            :key="index"
+            @click="openMessage(index, item.postID)"
+          >
             <v-container class="pa-0 ma-0">
               <v-layout fill-height class="pa-0">
                 <v-list-tile-content>
-                  <v-list-tile-title v-html="item.title"></v-list-tile-title>
+                  <v-list-tile-title
+                    class="title"
+                    v-html="item.title"
+                  ></v-list-tile-title>
                   <v-list-tile-sub-title
+                    class="subtitle"
                     v-html="item.subtitle"
                   ></v-list-tile-sub-title>
                 </v-list-tile-content>
@@ -55,6 +64,28 @@
 </template>
 
 <style scoped>
+/* width */
+::-webkit-scrollbar {
+  width: 11px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 4px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d0d0d0;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #808080;
+}
+
 .items {
   max-height: calc(100% - 62px);
   overflow: auto;
@@ -63,12 +94,9 @@
   background-color: #f7e8ff;
   padding-top: 10px;
 }
-.colorTag {
-  height: 80px;
-  width: 10px;
-  background-color: #9acd32;
-  margin-right: 15px;
-  margin-left: 0;
+
+.selected-class {
+  background-color: rgb(245, 245, 245);
 }
 </style>
 
@@ -79,157 +107,15 @@ export default {
       search: "",
       adminName: "Insert admin name here",
       filter: ["Foo", "Bar", "Fizz", "Buzz"],
-      items: [
-        { header: "Today" },
-        {
-          title: "Brunch this weekend?",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Summer BBQ",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Oui oui",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Birthday gift",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Recipe to try",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        { header: "Two Days Ago" },
-        {
-          title: "Brunch this weekend?",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Summer BBQ",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Oui oui",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Birthday gift",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Recipe to try",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        { header: "Three Days Ago" },
-        {
-          title: "Brunch this weekend?",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Summer BBQ",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Oui oui",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Birthday gift",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Recipe to try",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        { header: "Yesterday" },
-        {
-          title: "Brunch this weekend?",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Summer BBQ",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Oui oui",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Birthday gift",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Recipe to try",
-          subtitle:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et pulvinar est. Sed tincidunt faucibus elit, eu aliquam nisl. Nulla fermentum rutrum erat eget consectetur. ",
-          divider: true,
-          inset: true
-        }
-      ]
+      items: [],
+      selectedClass: "selected-class",
+      lastIndex: 0
     };
   },
+  mounted() {},
   computed: {
     filteredItems: function() {
-      return this.items.filter(item => {
+      return this.$parent.items.filter(item => {
         if (this.search.length > 0) {
           if (item.title) {
             return item.title.toLowerCase().match(this.search.toLowerCase());
@@ -238,6 +124,20 @@ export default {
           return true;
         }
       });
+    }
+  },
+  methods: {
+    openMessage: function(index, postID) {
+      this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
+      this.$parent.selectedMsgNo = index;
+      for (var i = 0; i < this.$parent.items.length; i++) {
+        if (this.$parent.items[i]["postID"] == postID) {
+          this.$parent.items[i]["selected"] = true;
+        } else {
+          this.$parent.items[i]["selected"] = false;
+        }
+      }
+      console.log(index);
     }
   }
 };

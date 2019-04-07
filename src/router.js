@@ -15,9 +15,12 @@ export default new Router({
       component: LoginPage
     },
     {
-      path: "/",
-      name: "DashboardPage",
+      path: "/:jobLevel/:messageID",
       component: Dashboard
-    }
+    },
+    { path: "/", redirect: "/newjobs/0" },
+    { path: "/newjobs", redirect: "/newjobs/0" },
+    { path: "/myjobs", redirect: "/myjobs/0" },
+    { path: "/*", redirect: "/newjobs/0" }
   ]
 });
