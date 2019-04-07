@@ -89,7 +89,7 @@ export default {
       this.$store
         .dispatch("tickets/getSingleTicket", { jobLevel, messageID })
         .then(response => {
-          if (response != 0) {
+          if (response !== 0) {
             this.messageHeader.title = response.title;
             this.messageHeader.sender = response.sender;
             this.messageHeader.body = response.body;
