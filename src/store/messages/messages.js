@@ -31,7 +31,7 @@ const actions = {
                 // client.on("synchronizationStatusUpdated");
                 let channels = [];
                 const result = client
-                  .getSubscribedChannels()
+                  .getPublicChannelDescriptors()
                   .then(paginator => {
                     for (let i = 0; i < paginator.items.length; i++) {
                       channels.push(paginator.items[i]);
@@ -64,25 +64,29 @@ const actions = {
     state.client.shutdown();
   },
   sendMessage(context, { message, id_channel }) {
-    const channel = this.getters["messages/getChannel"](id_channel);
-    channel.sendMessage(message);
-    return 1;
+    const channelDes = this.getters["messages/getChannel"](id_channel);
+    return channelDes.getChannel().then(channel => {
+      channel.sendMessage(message);
+      return 1;
+    });
   },
   sendMedia(context, { files, id_channel }) {
-    const channel = this.getters["messages/getChannel"](id_channel);
-    for (let i = 0, file, formData; i < files.length; i++) {
-      file = files[i];
-      formData = new FormData();
-      formData.append("file", file.file);
-      channel.sendMessage(formData);
-    }
-    return 1;
+    const channelDes = this.getters["messages/getChannel"](id_channel);
+    return channelDes.getChannel(channel => {
+      for (let i = 0, file, formData; i < files.length; i++) {
+        file = files[i];
+        formData = new FormData();
+        formData.append("file", file.file);
+        channel.sendMessage(formData);
+      }
+      return 1;
+    });
   },
   updateChannels({ commit }) {
     const client = this.getters["messages/getClient"];
     let channels = [];
     return client
-      .getSubscribedChannels()
+      .getPublicChannelDescriptors()
       .then(paginator => {
         for (let i = 0; i < paginator.items.length; i++) {
           channels.push(paginator.items[i]);
@@ -95,34 +99,42 @@ const actions = {
       });
   },
   getMessages({ commit }, { id_channel }) {
-    const channel = this.getters["messages/getChannel"](id_channel);
+    const channelDes = this.getters["messages/getChannel"](id_channel);
     const id_user_hash = this.getters["user/getUser"];
     let msgStore = [];
-    if (channel) {
-      return channel.getMessages().then(messages => {
-        commit("storeMessages", messages.items);
-        const totalMessages = messages.items.length;
-        for (let i = 0; i < totalMessages; i++) {
-          const message = messages.items[i];
-          if (message.author === id_user_hash) {
-            msgStore.push({
-              message:
-                message.type === "text" ? message.body : message.media.filename,
-              type: message.type,
-              index: message.index,
-              reply: false
-            });
-          } else {
-            msgStore.push({
-              message:
-                message.type === "text" ? message.body : message.media.filename,
-              type: message.type,
-              index: message.index,
-              reply: true
-            });
+    if (channelDes) {
+      return channelDes.getChannel().then(channel => {
+        channel.join().catch(err => {});
+        const result = channel.getMessages().then(messages => {
+          commit("storeMessages", messages.items);
+          const totalMessages = messages.items.length;
+          for (let i = 0; i < totalMessages; i++) {
+            const message = messages.items[i];
+            if (message.author === id_user_hash) {
+              msgStore.push({
+                message:
+                  message.type === "text"
+                    ? message.body
+                    : message.media.filename,
+                type: message.type,
+                index: message.index,
+                reply: false
+              });
+            } else {
+              msgStore.push({
+                message:
+                  message.type === "text"
+                    ? message.body
+                    : message.media.filename,
+                type: message.type,
+                index: message.index,
+                reply: true
+              });
+            }
           }
-        }
-        return msgStore;
+          return msgStore;
+        });
+        return result;
       });
     } else {
       return msgStore;
