@@ -8,13 +8,14 @@
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
       </div>
-      <hr />
+      <hr>
     </div>
     <div>
       <div
         v-bind:class="[
           this.$parent.jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs
         ]"
+        class="message_scroll"
       >
         <!-- Iterates through messages list for messages -->
         <div class="messages__container">
@@ -31,9 +32,7 @@
     </div>
     <div>
       <div v-if="this.$parent.jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()"
-          >Add to My Jobs</v-btn
-        >
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
       </div>
       <div v-else class="full-row row-my-jobs">
         <v-textarea
@@ -161,6 +160,20 @@ export default {
     }
   },
   mounted() {
+    const messageContainer = document.querySelector(".message_scroll");
+    this.channel = this.$store.getters["messages/getChannel"](this.id);
+    this.$store
+      .dispatch("messages/getMessages", { id_channel: this.id })
+      .then(messages => {
+        this.messages = [...messages];
+        // Scroll to the bottom of the message container
+        setTimeout(() => {
+          messageContainer.scrollTop = messageContainer.scrollHeight;
+        }, 1);
+        if (this.channel) {
+          this.channel.on("messageAdded", this.updateMessage);
+        }
+      });
     EventBus.$on("refreshContent", () => {
       this.messages = [];
       this.refreshMessageContent();
