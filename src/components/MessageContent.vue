@@ -8,10 +8,14 @@
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
       </div>
-      <hr>
+      <hr />
     </div>
     <div>
-      <div v-bind:class="[jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]">
+      <div
+        v-bind:class="[
+          this.$parent.jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs
+        ]"
+      >
         <!-- Iterates through messages list for messages -->
         <div class="messages__container">
           <MessageBubble
@@ -26,8 +30,10 @@
       </div>
     </div>
     <div>
-      <div v-if="jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
+      <div v-if="this.$parent.jobLevelIsNewJobs" class="full-row row-new-jobs">
+        <v-btn class="add-jobs-button" @click="addtoMyJobs()"
+          >Add to My Jobs</v-btn
+        >
       </div>
       <div v-else class="full-row row-my-jobs">
         <v-textarea
@@ -52,6 +58,7 @@
 
 <script>
 import MessageBubble from "@/components/MessageBubble.vue";
+import EventBus from "@/store/eventBus.js";
 export default {
   components: {
     MessageBubble
@@ -59,7 +66,6 @@ export default {
   data() {
     return {
       id: this.$route.params.messageID,
-      jobLevelIsNewJobs: false,
       messagesNewJobs: "messages-new-jobs",
       messagesMyJobs: "messages-my-jobs",
       // Temporary data
@@ -77,47 +83,30 @@ export default {
   methods: {
     refreshMessageContent: function() {
       this.id = this.$route.params.messageID;
+
       // Replace all id's with $route statement if app is bugging out
       var messageID = this.$route.params.messageID;
       var jobLevel = this.$route.params.jobLevel;
-      if (jobLevel == "newjobs") {
-        this.jobLevelIsNewJobs = true;
+      if (messageID == "0") {
+        // todo replace this with opacity white box
+        this.messageHeader.title = "";
+        this.messageHeader.sender = "";
+        this.messageHeader.body = "";
+        this.messageHeader.dateTime = "";
       } else {
-        this.jobLevelIsNewJobs = false;
-      }
-
-      this.$store
-        .dispatch("tickets/getSingleTicket", { jobLevel, messageID })
-        .then(response => {
-          if (response !== 0) {
-            this.messageHeader.title = response.title;
-            this.messageHeader.sender = response.sender;
-            this.messageHeader.body = response.body;
-            this.messageHeader.dateTime = response.dateTime;
-          } else {
-            console.log("Error in fetching the tickets");
-            if (messageID != "empty") {
-              for (var i = 0; i < this.$parent.items.length; i++) {
-                if (this.$parent.items[i].postID) {
-                  this.$router.push(
-                    "/" +
-                      this.$route.params.jobLevel +
-                      "/" +
-                      this.$parent.items[i].postID
-                  );
-                  break;
-                }
-              }
+        this.$store
+          .dispatch("tickets/getSingleTicket", { jobLevel, messageID })
+          .then(response => {
+            if (response !== 0) {
+              this.messageHeader.title = response.title;
+              this.messageHeader.sender = response.sender;
+              this.messageHeader.body = response.body;
+              this.messageHeader.dateTime = response.dateTime;
             } else {
-              // todo replace this with opacity white box
-              this.messageHeader.title = "";
-              this.messageHeader.sender = "";
-              this.messageHeader.body = "";
-              this.messageHeader.dateTime = "";
+              console.log("Error in fetching the tickets");
             }
-            this.$parent.refreshMessageList();
-          }
-        });
+          });
+      }
     },
     addtoMyJobs: function() {
       var messageID = this.$route.params.messageID;
@@ -129,7 +118,6 @@ export default {
             this.$parent.nextItem();
             // refreshes the current list
             this.$parent.refreshMessageList();
-            // refreshes the content
             this.refreshMessageContent();
           } else {
             console.log("Error in fetching the tickets");
@@ -161,16 +149,27 @@ export default {
       this.$store
         .dispatch("messages/getMessages", { id_channel: this.id })
         .then(messages => {
-          this.messages = [...messages];
+          if (this.id != 0) {
+            this.messages = [...messages];
+          } else {
+            this.messages = [];
+          }
         });
     },
     downdloadMedia(index) {
       this.$store.dispatch("messages/downloadMedia", { index });
     }
   },
-  updated() {
-    this.refreshMessageContent();
+  mounted() {
+    EventBus.$on("refreshContent", () => {
+      this.messages = [];
+      this.refreshMessageContent();
+      this.updateMessage();
+    });
   }
+  // updated() {
+  //   this.refreshMessageContent();
+  // }
 };
 </script>
 

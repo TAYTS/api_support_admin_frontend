@@ -128,16 +128,7 @@ export default {
   },
   methods: {
     openMessage: function(index, postID) {
-      this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
-      this.$parent.selectedMsgNo = index;
-      for (var i = 0; i < this.$parent.items.length; i++) {
-        if (this.$parent.items[i]["postID"] == postID) {
-          this.$parent.items[i]["selected"] = true;
-        } else {
-          this.$parent.items[i]["selected"] = false;
-        }
-      }
-      console.log(index);
+      this.$parent.openMessage(index, postID);
     }
   }
 };

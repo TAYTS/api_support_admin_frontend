@@ -1,11 +1,11 @@
 <template>
   <div id="outerDiv">
-    <div class="split left"/>
+    <div class="split left" />
     <div class="split right">
-      <message-content ref="messageContent"/>
+      <message-content ref="messageContent" />
     </div>
-    <navigation-bar/>
-    <message-list id="messagelist"/>
+    <navigation-bar />
+    <message-list id="messagelist" />
   </div>
 </template>
 
@@ -42,6 +42,7 @@
 import NavigationBar from "@/components/NavigationBar.vue";
 import MessageList from "@/components/MessageList.vue";
 import MessageContent from "@/components/MessageContent.vue";
+import EventBus from "@/store/eventBus.js";
 
 export default {
   data() {
@@ -52,9 +53,9 @@ export default {
       lastNewJobs: 0,
       lastMyJobs: 0,
       selectedMsgNo: 0,
-      changedCache: false,
       refreshMessageListSingleton: true,
-      timer: ""
+      timer: "",
+      jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs"
     };
   },
   components: {
@@ -64,41 +65,43 @@ export default {
   },
   methods: {
     changeToNewJobs: function() {
-      this.jobLevel = "newjobs";
-      this.changedCache = true;
+      this.lastMyJobs = this.$route.params.messageID;
+      this.$router.replace("/newjobs/" + this.lastNewJobs);
       this.refreshMessageList();
     },
     changeToMyJobs: function() {
-      this.jobLevel = "myjobs";
-      this.changedCache = true;
+      this.lastNewJobs = this.$route.params.messageID;
+      this.$router.replace("/myjobs/" + this.lastMyJobs);
       this.refreshMessageList();
     },
+
+    openMessage: function(index, postID) {
+      this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
+      this.selectedMsgNo = index;
+      this.refreshHighlight();
+      EventBus.$emit("refreshContent");
+    },
+
     refreshMessageList: function() {
       // Pull data from the database
-      var jobLevel = this.jobLevel;
+      var jobLevel = this.$route.params.jobLevel;
       var messageID = this.$route.params.messageID;
+      this.jobLevelIsNewJobs = this.$route.params.jobLevel == "newjobs";
       var lastTicket;
+      var latestTicketRoute;
       this.$store
         .dispatch("tickets/getTickets", { jobLevel })
         .then(response => {
           if (response !== 0) {
             this.items = [];
-            //check if first visit, loads latest message
-            if (this.changedCache && response.length != 0) {
-              lastTicket =
-                jobLevel == "myjobs" ? this.lastMyJobs : this.lastNewJobs;
-              //loads previous job task if it's its jobs/0
-              //if the loaded job is 0, then load the latest item
-              lastTicket =
-                lastTicket == "0" ? response[0].ticketID : lastTicket;
-            } else if (response.length != 0) {
-              lastTicket = messageID == "0" ? response[0].ticketID : messageID;
-            } else {
-              lastTicket = "empty";
+            if (messageID == "0") {
+              if (response[0]) {
+                latestTicketRoute = "/" + jobLevel + "/" + response[0].ticketID;
+              } else {
+                latestTicketRoute = "/" + jobLevel + "/0";
+              }
+              this.$router.replace(latestTicketRoute);
             }
-            var latestTicketRoute = "/" + jobLevel + "/" + lastTicket;
-            this.$router.replace(latestTicketRoute);
-
             var i;
             var headerCheck = {
               Today: 0,
@@ -188,8 +191,21 @@ export default {
           } else {
             console.log("Error in fetching the tickets");
           }
+          this.refreshHighlight();
+          EventBus.$emit("refreshContent");
           this.refreshMessageListSingleton = true;
         });
+    },
+    refreshHighlight: function() {
+      var messageID = this.$route.params.messageID;
+
+      for (var i = 0; i < this.items.length; i++) {
+        if (this.items[i]["postID"] == messageID) {
+          this.items[i]["selected"] = true;
+        } else {
+          this.items[i]["selected"] = false;
+        }
+      }
     },
     nextItem: function() {
       // Loads the next post once current post has been added to 'myjobs'
@@ -198,6 +214,7 @@ export default {
       for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].postID == this.$route.params.messageID) {
           found = true;
+          console.log("found it!");
         } else if (found) {
           if (this.items[i].postID) {
             this.$router.push(
@@ -207,10 +224,14 @@ export default {
           }
         }
       }
+      if (!found) {
+        this.$router.push("/" + this.$route.params.jobLevel + "/empty");
+      }
     }
   },
   mounted() {
     this.refreshMessageList();
+    EventBus.$emit("refreshContent");
     // Below line is to autorefresh message list every 2s
     // this.timer = setInterval(this.refreshMessageList, 2000)
 
