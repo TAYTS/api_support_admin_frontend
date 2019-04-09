@@ -294,14 +294,13 @@ export default {
           })
           .then(status => {
             if (status === 1) {
-              this.$router.replace("/");
+              this.confirmation = true;
             } else {
               this.error = true;
               this.email = "";
               this.password = "";
               this.passwordCheck = "";
               this.username = "";
-              this.confirmation = true;
               this.error_messages.push("Invalid username or password!");
             }
           });
