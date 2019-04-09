@@ -40,6 +40,113 @@
         <div class="button-text">My Jobs</div>
       </button>
     </div>
+    <div>
+      <v-dialog v-model="dialog" max-width="600px">
+        <template v-slot:activator="{ on }">
+          <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
+          <div class="register">
+            <button class="button" v-on="on">
+              <img
+                class="button-image"
+                src="../assets/img/_ionicons_svg_md-person-add.svg"
+                alt
+              />
+              <div class="button-text">Register Account</div>
+            </button>
+          </div>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">Register new admin</span>
+          </v-card-title>
+          <v-card-text>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-container grid-list-md>
+                <v-layout wrap>
+                  <v-flex xs12>
+                    <v-text-field
+                      v-model="username"
+                      :rules="usernameRules"
+                      :error-messages="error_messages"
+                      @update:error="toggle_error"
+                      @input="update_error_message"
+                      label="Username"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12>
+                    <v-text-field
+                      v-model="email"
+                      :rules="emailRules"
+                      :error-messages="error_messages"
+                      @update:error="toggle_error"
+                      @input="update_error_message"
+                      label="Email"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6>
+                    <v-text-field
+                      v-model="password"
+                      :rules="passwordRules"
+                      :error-messages="error_messages"
+                      @update:error="toggle_error"
+                      @input="update_error_message"
+                      label="Password"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6>
+                    <v-text-field
+                      v-model="passwordCheck"
+                      :rules="passwordCheckRules"
+                      :error-messages="error_messages"
+                      @update:error="toggle_error"
+                      @input="update_error_message"
+                      label="Confirm Password"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+              </v-container>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="purple darken-1" flat @click="dialog = false"
+              >Close</v-btn
+            >
+            <v-btn
+              color="purple darken-1"
+              flat
+              :disabled="!valid"
+              @click="submit()"
+              >Save</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="confirmation" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Registration successful!</v-card-title>
+
+          <v-card-text
+            >New user account has been succesfully created, use it to log in
+            next time.</v-card-text
+          >
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="purple darken-1" flat="flat" @click="closeWindow()"
+              >Okay</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
     <div class="logout">
       <button class="button logout-button" @click="signOut()">
         <img
@@ -80,6 +187,13 @@
   background: #f0ddf5;
 }
 
+.register {
+  bottom: 45px;
+  position: absolute;
+  background: #eeeeee;
+  width: 100%;
+}
+
 .logout {
   bottom: 0;
   position: absolute;
@@ -118,7 +232,7 @@
 }
 
 .button:hover {
-  background: #f0f0f0;
+  background: #fafafa;
 }
 
 .button:focus {
@@ -130,12 +244,66 @@
 export default {
   data() {
     return {
+      dialog: false,
       adminName: "Insert admin name here",
       buttonInFocus: "button-in-focus",
-      buttonOutFocus: "button-out-focus"
+      buttonOutFocus: "button-out-focus",
+      valid: false,
+      error: false,
+      email: "",
+      username: "",
+      emailRules: [
+        v => !!v || "Email is required",
+        v => /.+@.+\..+/.test(v) || "Email must be valid"
+      ],
+      passwordCheckRules: [
+        v => !!v || "Confirmation password is required",
+        v => v == this.password || "password must match"
+      ],
+      password: "",
+      passwordCheck: "",
+      passwordRules: [v => !!v || "Password is required"],
+      usernameRules: [v => !!v || "Username is required"],
+      error_messages: [],
+      confirmation: false
     };
   },
   methods: {
+    closeWindow() {
+      this.confirmation = false;
+      this.dialog = false;
+      this.password = "";
+      this.passwordCheck = "";
+      this.username = "";
+      this.email = "";
+      this.valid = false;
+      this.error = false;
+    },
+    submit() {
+      const pass = this.$refs.form.validate();
+      if (pass) {
+        const email = this.email;
+        const password = this.password;
+        const username = this.username;
+        this.confirmation = true;
+
+        this.$store
+          .dispatch("user/register", {
+            email,
+            password
+          })
+          .then(status => {
+            if (status === 1) {
+              this.$router.replace("/");
+            } else {
+              this.error = true;
+              this.email = "";
+              this.password = "";
+              this.error_messages.push("Invalid username or password!");
+            }
+          });
+      }
+    },
     changeToMyJobs: function() {
       if (
         this.$parent.refreshMessageListSingleton &&
@@ -165,6 +333,12 @@ export default {
         const arrowIcon = document.querySelector(".arrow-icon");
         arrowIcon.classList.toggle("down");
       });
+    },
+    toggle_error() {
+      this.error = !this.error;
+    },
+    update_error_message() {
+      this.error_messages.pop();
     }
   }
 };
