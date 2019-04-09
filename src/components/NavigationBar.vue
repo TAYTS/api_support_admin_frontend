@@ -12,7 +12,9 @@
     </div>
     <div>
       <button
-        v-bind:class="[jobLevelIsNewJobs ? buttonInFocus : buttonOutFocus]"
+        v-bind:class="[
+          $parent.jobLevelIsNewJobs ? buttonInFocus : buttonOutFocus
+        ]"
         class="button"
         @click="changeToNewJobs()"
       >
@@ -24,7 +26,9 @@
         <div class="button-text">New Jobs</div>
       </button>
       <button
-        v-bind:class="[jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus]"
+        v-bind:class="[
+          $parent.jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus
+        ]"
         class="button"
         @click="changeToMyJobs()"
       >
@@ -127,7 +131,6 @@ export default {
   data() {
     return {
       adminName: "Insert admin name here",
-      jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs",
       buttonInFocus: "button-in-focus",
       buttonOutFocus: "button-out-focus"
     };
@@ -139,8 +142,6 @@ export default {
         this.$route.params.jobLevel != "myjobs"
       ) {
         this.$parent.refreshMessageListSingleton = false;
-        this.$parent.lastNewJobs = this.$route.params.messageID;
-        this.jobLevelIsNewJobs = false;
         this.$parent.changeToMyJobs();
       }
     },
@@ -150,8 +151,6 @@ export default {
         this.$route.params.jobLevel != "newjobs"
       ) {
         this.$parent.refreshMessageListSingleton = false;
-        this.$parent.lastMyJobs = this.$route.params.messageID;
-        this.jobLevelIsNewJobs = true;
         this.$parent.changeToNewJobs();
       }
     },
