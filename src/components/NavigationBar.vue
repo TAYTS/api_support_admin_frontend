@@ -285,11 +285,11 @@ export default {
         const email = this.email;
         const password = this.password;
         const username = this.username;
-        this.confirmation = true;
 
         this.$store
           .dispatch("user/register", {
             email,
+            username,
             password
           })
           .then(status => {
@@ -299,6 +299,9 @@ export default {
               this.error = true;
               this.email = "";
               this.password = "";
+              this.passwordCheck = "";
+              this.username = "";
+              this.confirmation = true;
               this.error_messages.push("Invalid username or password!");
             }
           });
