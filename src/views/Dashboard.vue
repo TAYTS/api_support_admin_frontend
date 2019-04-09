@@ -1,11 +1,11 @@
 <template>
   <div id="outerDiv">
-    <div class="split left" />
+    <div class="split left"/>
     <div class="split right">
-      <message-content ref="messageContent" />
+      <message-content/>
     </div>
-    <navigation-bar />
-    <message-list id="messagelist" />
+    <navigation-bar/>
+    <message-list id="messagelist"/>
   </div>
 </template>
 
@@ -231,7 +231,7 @@ export default {
   },
   mounted() {
     this.refreshMessageList();
-    EventBus.$emit("refreshContent");
+
     // Below line is to autorefresh message list every 2s
     // this.timer = setInterval(this.refreshMessageList, 2000)
 
@@ -244,7 +244,7 @@ export default {
         // Get the Twilio access token (assume that it will success)
         this.$store.dispatch("messages/initClient").then(status => {
           if (status === 1) {
-            this.$refs.messageContent.updateMessage();
+            EventBus.$emit("refreshContent");
           }
         });
       }
