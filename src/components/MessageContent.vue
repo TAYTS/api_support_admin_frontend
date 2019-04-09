@@ -76,36 +76,60 @@ export default {
       },
       message: "",
       channel: null,
-      messages: []
+      messages: [
+        {
+          message:
+            "Lorem ipsum dolor sit amet, consectetur adipisos felis blandit magna. Suspendisse a massa fringilla, cursus metus non, finibus enim. Sed venenatis malesuada urna, euismod suscipit neque maximus vitae. ",
+          reply: false,
+          type: "text"
+        },
+        {
+          message:
+            "Loreobortis nibh, ac lobortis eros felis blandit magna. Suspendisse a massa fringilla, cursus metus non, finibus enim. Sed venenatis malesuada urna, euismod suscipit neque maximus vitae. ",
+          reply: true,
+          type: "text"
+        },
+        {
+          message:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ismod suscipit neque maximus vitae. ",
+          reply: false,
+          type: "message"
+        },
+        {
+          message:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet elementum nisi. Vispendisse a massa fringilla, cursus metus non, finibus enim. Sed venenatis malesuada urna, euismod suscipit neque maximus vitae. ",
+          reply: true,
+          type: "message"
+        }
+      ]
     };
   },
   methods: {
     refreshMessageContent: function() {
-      this.id = this.$route.params.messageID;
-
-      // Replace all id's with $route statement if app is bugging out
-      var messageID = this.$route.params.messageID;
-      var jobLevel = this.$route.params.jobLevel;
-      if (messageID == "0") {
-        // todo replace this with opacity white box
-        this.messageHeader.title = "";
-        this.messageHeader.sender = "";
-        this.messageHeader.body = "";
-        this.messageHeader.dateTime = "";
-      } else {
-        this.$store
-          .dispatch("tickets/getSingleTicket", { jobLevel, messageID })
-          .then(response => {
-            if (response !== 0) {
-              this.messageHeader.title = response.title;
-              this.messageHeader.sender = response.sender;
-              this.messageHeader.body = response.body;
-              this.messageHeader.dateTime = response.dateTime;
-            } else {
-              console.log("Error in fetching the tickets");
-            }
-          });
-      }
+      // this.id = this.$route.params.messageID;
+      // // Replace all id's with $route statement if app is bugging out
+      // var messageID = this.$route.params.messageID;
+      // var jobLevel = this.$route.params.jobLevel;
+      // if (messageID == "0") {
+      //   // todo replace this with opacity white box
+      //   this.messageHeader.title = "";
+      //   this.messageHeader.sender = "";
+      //   this.messageHeader.body = "";
+      //   this.messageHeader.dateTime = "";
+      // } else {
+      //   this.$store
+      //     .dispatch("tickets/getSingleTicket", { jobLevel, messageID })
+      //     .then(response => {
+      //       if (response !== 0) {
+      //         this.messageHeader.title = response.title;
+      //         this.messageHeader.sender = response.sender;
+      //         this.messageHeader.body = response.body;
+      //         this.messageHeader.dateTime = response.dateTime;
+      //       } else {
+      //         console.log("Error in fetching the tickets");
+      //       }
+      //     });
+      // }
     },
     addtoMyJobs: function() {
       var messageID = this.$route.params.messageID;
@@ -160,25 +184,11 @@ export default {
     }
   },
   mounted() {
-    const messageContainer = document.querySelector(".message_scroll");
-    this.channel = this.$store.getters["messages/getChannel"](this.id);
-    this.$store
-      .dispatch("messages/getMessages", { id_channel: this.id })
-      .then(messages => {
-        this.messages = [...messages];
-        // Scroll to the bottom of the message container
-        setTimeout(() => {
-          messageContainer.scrollTop = messageContainer.scrollHeight;
-        }, 1);
-        if (this.channel) {
-          this.channel.on("messageAdded", this.updateMessage);
-        }
-      });
-    EventBus.$on("refreshContent", () => {
-      this.messages = [];
-      this.refreshMessageContent();
-      this.updateMessage();
-    });
+    // EventBus.$on("refreshContent", () => {
+    //   this.messages = [];
+    //   this.refreshMessageContent();
+    //   this.updateMessage();
+    // });
   }
   // updated() {
   //   this.refreshMessageContent();
