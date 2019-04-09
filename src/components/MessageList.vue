@@ -1,7 +1,7 @@
 <template>
-  <v-navigation-drawer v-model="drawer" fixed permanent absolute width="500">
+  <v-navigation-drawer fixed permanent absolute width="500">
     <div id="search-bg" class="pb-0">
-      <v-form v-model="valid">
+      <v-form>
         <v-container class="py-0">
           <v-layout>
             <v-flex xs12 md12 class="pb-0 pt-0">
