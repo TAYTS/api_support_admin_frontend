@@ -104,6 +104,13 @@ export default {
             } else {
               console.log("Error in fetching the tickets");
             }
+          })
+          .catch(error => {
+            console.log("Error in ticketID");
+            this.messageHeader.title = "";
+            this.messageHeader.sender = "";
+            this.messageHeader.body = "";
+            this.messageHeader.dateTime = "";
           });
       }
     },
