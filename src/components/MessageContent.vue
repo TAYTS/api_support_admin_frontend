@@ -187,9 +187,6 @@ export default {
       this.updateMessage();
     });
   }
-  // updated() {
-  //   this.refreshMessageContent();
-  // }
 };
 </script>
 
