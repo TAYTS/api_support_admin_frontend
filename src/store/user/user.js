@@ -90,11 +90,11 @@ const actions = {
         return 0;
       });
   },
-  register({ commit }, payload) {
+  register(context, payload) {
     return axios
       .post("/users/register", payload)
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           return 1;
         } else {
           deleteAllCookies();
