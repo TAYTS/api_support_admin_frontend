@@ -44,14 +44,12 @@ export default {
       this.$router.replace("/myjobs/" + this.lastMyJobs);
       this.refreshMessageList();
     },
-
     openMessage: function(index, postID) {
       this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
       this.selectedMsgNo = index;
       this.refreshHighlight();
       EventBus.$emit("refreshContent");
     },
-
     refreshMessageList: function() {
       // Pull data from the database
       var jobLevel = this.$route.params.jobLevel;
