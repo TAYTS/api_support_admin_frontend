@@ -1,6 +1,5 @@
 <template>
   <div id="outerDiv">
-    <div class="split left"/>
     <div class="split right">
       <message-content/>
     </div>
