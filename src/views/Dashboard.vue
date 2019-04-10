@@ -211,6 +211,7 @@ export default {
       // Loads the next post once current post has been added to 'myjobs'
       // Todo: Improve code for effeciency
       var found = false;
+      var done = false;
       for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].postID == this.$route.params.messageID) {
           found = true;
@@ -220,12 +221,24 @@ export default {
             this.$router.push(
               "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
             );
+            done = true;
             break;
           }
         }
       }
-      if (!found) {
-        this.$router.push("/" + this.$route.params.jobLevel + "/empty");
+      if (!done) {
+        for (var i = this.items.length - 2; i >= 0; i--) {
+          if (this.items[i].postID) {
+            this.$router.push(
+              "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
+            );
+            done = true;
+            break;
+          }
+        }
+        if (!done) {
+          this.$router.push("/" + this.$route.params.jobLevel + "/0");
+        }
       }
     }
   },
