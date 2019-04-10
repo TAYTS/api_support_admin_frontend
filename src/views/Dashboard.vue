@@ -1,6 +1,5 @@
 <template>
   <div id="outerDiv">
-    <div class="split left" />
     <div class="split right">
       <message-content />
     </div>
@@ -9,34 +8,7 @@
   </div>
 </template>
 
-<style scoped>
-#messagelist {
-  margin-left: 250px;
-}
-#outerDiv {
-  overflow: hidden;
-}
-.split {
-  height: 100%;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  overflow-x: hidden;
-}
 
-/* Control the left side */
-.left {
-  left: 0;
-  width: 750px;
-}
-
-/* Control the right side */
-.right {
-  right: 0;
-  width: calc(100% - 750px);
-  background-color: white;
-}
-</style>
 
 <script>
 import NavigationBar from "@/components/NavigationBar.vue";
@@ -111,14 +83,12 @@ export default {
       this.refreshMessageListSingleton = true;
       this.jobLevelIsNewJobs = this.$route.params.jobLevel == "newjobs";
     },
-
     openMessage: function(index, postID) {
       this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
       this.selectedMsgNo = index;
       this.refreshHighlight();
       EventBus.$emit("refreshContent");
     },
-
     refreshMessageList: function() {
       // Pull data from the database
       var jobLevel = this.$route.params.jobLevel;
@@ -248,6 +218,7 @@ export default {
       // Loads the next post once current post has been added to 'myjobs'
       // Todo: Improve code for effeciency
       var found = false;
+      var done = false;
       for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].postID == this.$route.params.messageID) {
           found = true;
@@ -257,12 +228,24 @@ export default {
             this.$router.push(
               "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
             );
+            done = true;
             break;
           }
         }
       }
-      if (!found) {
-        this.$router.push("/" + this.$route.params.jobLevel + "/empty");
+      if (!done) {
+        for (var i = this.items.length - 2; i >= 0; i--) {
+          if (this.items[i].postID) {
+            this.$router.push(
+              "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
+            );
+            done = true;
+            break;
+          }
+        }
+        if (!done) {
+          this.$router.push("/" + this.$route.params.jobLevel + "/0");
+        }
       }
     }
   },
@@ -290,3 +273,27 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#messagelist {
+  margin-left: 250px;
+}
+#outerDiv {
+  overflow: hidden;
+}
+.split {
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+}
+
+
+/* Control the right side */
+.right {
+  right: 0;
+  width: calc(100% - 750px);
+  background-color: white;
+}
+</style>

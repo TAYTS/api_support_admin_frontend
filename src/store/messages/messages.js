@@ -70,16 +70,23 @@ const actions = {
       return 1;
     });
   },
-  sendMedia(context, { files, id_channel }) {
+  async sendMedia(context, { files, id_channel }) {
     const channelDes = this.getters["messages/getChannel"](id_channel);
-    return channelDes.getChannel(channel => {
+    const total = await channelDes.getChannel().then(async channel => {
+      let total = 0;
       for (let i = 0, file, formData; i < files.length; i++) {
         file = files[i];
         formData = new FormData();
         formData.append("file", file.file);
-        channel.sendMessage(formData);
+        const idx = await channel.sendMessage(formData);
+        total += idx;
       }
-      return 1;
+      return new Promise(resolve => {
+        resolve(total);
+      });
+    });
+    return new Promise(resolve => {
+      resolve(total);
     });
   },
   updateChannels({ commit }) {
@@ -184,7 +191,13 @@ const getters = {
     return channel;
   },
   getMessage: state => index => {
-    const message = state.messages[index];
+    let message;
+    for (let i = 0; i < state.messages.length; i++) {
+      if (state.messages[i].index === index) {
+        message = state.messages[i];
+        break;
+      }
+    }
     return message;
   }
 };

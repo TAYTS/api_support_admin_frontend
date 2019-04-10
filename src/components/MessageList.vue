@@ -1,7 +1,7 @@
 <template>
-  <v-navigation-drawer v-model="drawer" fixed permanent absolute width="500">
+  <v-navigation-drawer fixed permanent absolute width="500">
     <div id="search-bg" class="pb-0">
-      <v-form v-model="valid">
+      <v-form>
         <v-container class="py-0">
           <v-layout>
             <v-flex xs12 md12 class="pb-0 pt-0">
@@ -31,9 +31,7 @@
     </div>
     <v-list three-line class="items">
       <template v-for="(item, index) in filteredItems">
-        <v-subheader v-if="item.header" :key="item.header">
-          {{ item.header }}
-        </v-subheader>
+        <v-subheader v-if="item.header" :key="item.header">{{ item.header }}</v-subheader>
         <div v-else-if="item.divider" :key="index">
           <v-divider></v-divider>
           <v-list-tile
@@ -63,6 +61,39 @@
     </v-list>
   </v-navigation-drawer>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      search: "",
+      adminName: "Insert admin name here",
+      filter: ["Foo", "Bar", "Fizz", "Buzz"],
+      items: [],
+      selectedClass: "selected-class",
+      lastIndex: 0
+    };
+  },
+  computed: {
+    filteredItems: function() {
+      return this.$parent.items.filter(item => {
+        if (this.search.length > 0) {
+          if (item.title) {
+            return item.title.toLowerCase().match(this.search.toLowerCase());
+          }
+        } else {
+          return true;
+        }
+      });
+    }
+  },
+  methods: {
+    openMessage: function(index, postID) {
+      this.$parent.openMessage(index, postID);
+    }
+  }
+};
+</script>
 
 <style scoped>
 /* width */
@@ -111,46 +142,3 @@
   color: #8099ec;
 }
 </style>
-
-<script>
-export default {
-  data() {
-    return {
-      search: "",
-      adminName: "Insert admin name here",
-      filter: ["Foo", "Bar", "Fizz", "Buzz"],
-      items: [],
-      selectedClass: "selected-class",
-      lastIndex: 0
-    };
-  },
-  mounted() {},
-  computed: {
-    filteredItems: function() {
-      return this.$parent.items.filter(item => {
-        if (this.search.length > 0) {
-          if (item.title) {
-            return item.title.toLowerCase().match(this.search.toLowerCase());
-          }
-        } else {
-          return true;
-        }
-      });
-    }
-  },
-  methods: {
-    openMessage: function(index, postID) {
-      this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
-      this.$parent.selectedMsgNo = index;
-      for (var i = 0; i < this.$parent.items.length; i++) {
-        if (this.$parent.items[i]["postID"] == postID) {
-          this.$parent.items[i]["selected"] = true;
-        } else {
-          this.$parent.items[i]["selected"] = false;
-        }
-      }
-      console.log(index);
-    }
-  }
-};
-</script>
