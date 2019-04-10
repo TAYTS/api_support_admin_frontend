@@ -8,7 +8,7 @@
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
       </div>
-      <hr>
+      <hr />
     </div>
     <div>
       <div
@@ -32,7 +32,14 @@
     </div>
     <div>
       <div v-if="this.$parent.jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
+        <v-btn
+          color="#a6b9f7"
+          round
+          left
+          class="add-jobs-button"
+          @click="addtoMyJobs()"
+          >Add to My Jobs</v-btn
+        >
       </div>
       <div v-else class="full-row row-my-jobs">
         <v-textarea
@@ -42,13 +49,38 @@
           flat
           hide-details
           no-resize
-          rows="5"
+          rows="6"
           label="Type here..."
-          prepend-inner-icon="attach_file"
           color="accent"
-          background-color="lightbackground"
-          @keyup.enter="sendMessage"
-        ></v-textarea>
+          background-color="white"
+          append-icon="send"
+          prepend-inner-icon="attach_file"
+          @click.append-icon="sendMedia"
+          @click.prepend-icon="sendMessage"
+        >
+          @keyup.enter="sendMessage" ></v-textarea
+        >
+
+        <!-- <div class="attachfile">
+          <v-flex xs12 sm3>
+            <v-btn flat icon color="accent">
+              <v-icon>attach_file</v-icon>
+            </v-btn>
+          </v-flex>
+        </div>
+        <div class="sendMessage">
+          <v-flex xs12 sm3>
+            <v-btn
+              flat
+              icon
+              color="accent"
+              @click="sendMessage"
+              align-content-end=""
+            >
+              <v-icon>send</v-icon>
+            </v-btn>
+          </v-flex>
+        </div> -->
         <!-- <v-btn class="send-button" @click="sendMessage">send</v-btn> -->
       </div>
     </div>
@@ -226,33 +258,36 @@ export default {
   padding: 0 10px 0 10px;
   height: 100%;
 }
+
 .text-area {
-  margin: 15px;
-  width: calc(100% - 705px);
-  height: 90%;
+  margin: 5px 50px;
+  width: calc(100% - 850px);
   resize: none;
-  background-color: white;
+  height: calc(100% - 34px);
+  background-color: #f4f4f4;
   border: 1px solid lightgrey;
 }
+
 .messages-new-jobs {
-  margin: 5px 0 5px 0;
-  top: 120px;
-  height: calc(100% - 165px);
-  width: calc(100% - 675px);
+  margin: 9px 0px 5px 0;
+  top: 127px;
+  height: calc(100% - 70px);
+  width: calc(100% - 750px);
   display: block;
   overflow: auto;
   position: fixed;
-  /* background-color: aqua; */
+  background-color: #f4f4f4;
   /* display: inline-block; */
 }
 .messages-my-jobs {
-  margin: 5px 0 5px 0;
-  top: 120px;
-  height: calc(75% - 125px);
-  width: calc(100% - 675px);
+  margin: 9px 0 5px 0;
+  top: 127px;
+  height: calc(100% - 250px);
+  width: calc(100% - 750px);
   display: block;
   overflow: auto;
   position: fixed;
+  background-color: #f4f4f4;
   /* padding-bottom: 210px; */
   /* background-color: aqua; */
   /* display: inline-block; */
@@ -261,34 +296,41 @@ export default {
   width: 100%;
   position: fixed;
   bottom: 0;
-  background-color: #fafafa;
+  background-color: #f4f4f4;
+  padding-bottom: 15px;
 }
 
 .row-new-jobs {
-  height: 50px;
+  height: 100px;
+  width: calc(100% - 750px);
+  text-align: center;
+  height: calc(100% - 700px);
 }
 
-.row-my-jobs {
-  height: 25%;
-}
 .top-outer {
   position: fixed;
   width: 100%;
   background-color: white;
   display: block;
-  height: 20%;
+  color: #8099ec;
+  font-family: sans-serif;
+  height: calc(100% - 200px);
   margin-bottom: 0;
   padding-bottom: 0;
+  font-size: 20px;
 }
 .top {
-  height: 125px;
+  height: 135px;
 }
 .add-jobs-button {
-  width: calc(100% - 675px);
-  z-index: 99;
-  height: 40px;
+  width: 180px;
+  background-color: #000000;
+  height: 60px;
 }
+
 .invis-text {
   font-size: 0;
+  background-color: #000000;
+  color: #f4f4f4;
 }
 </style>

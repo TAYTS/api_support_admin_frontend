@@ -1,5 +1,11 @@
 <template>
-  <v-navigation-drawer fixed permanent absolute width="175">
+  <v-navigation-drawer
+    id="v-navigation-drawer"
+    fixed
+    permanent
+    absolute
+    width="250"
+  >
     <div id="logo-bg">
       <div id="logo-main">
         <img src="../assets/img/Accenture_Support_Staff.svg" alt />
@@ -54,6 +60,10 @@
 </template>
 
 <style scoped>
+#v-navigation-drawer {
+  background-color: #f4f4f4;
+}
+
 #logo-bg {
   background-color: #f7e8ff;
   padding-top: 10px;
@@ -66,9 +76,10 @@
 }
 
 #name-bg {
-  background-color: #dedede;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  background-color: #a6b9f7;
+  opacity: 0.7;
+  padding-top: 19px;
+  padding-bottom: 19px;
 }
 
 #name-main {
@@ -90,15 +101,18 @@
   width: 30px;
   margin-top: 7px;
   float: left;
-  margin-left: 30px;
+  opacity: 0.35;
+  margin-left: 40px;
 }
 
 .button-text {
   text-align: left;
   padding: 10px;
-  margin-left: 60px;
-  font-size: 18px;
+  margin-left: 80px;
+  font-size: 15px;
   color: #000000;
+  opacity: 0.8;
+  font-family: "HelveticaNeueMedium";
 }
 
 .button-in-focus {
@@ -106,7 +120,7 @@
 }
 
 .button-out-focus {
-  background-color: #ffffff;
+  background-color: #f4f4f4;
 }
 .button {
   display: block;
@@ -118,7 +132,7 @@
 }
 
 .button:hover {
-  background: #f0f0f0;
+  background: #ececec;
 }
 
 .button:focus {

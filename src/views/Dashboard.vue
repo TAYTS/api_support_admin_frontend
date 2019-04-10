@@ -1,17 +1,17 @@
 <template>
   <div id="outerDiv">
-    <div class="split left"/>
+    <div class="split left" />
     <div class="split right">
-      <message-content/>
+      <message-content />
     </div>
-    <navigation-bar/>
-    <message-list id="messagelist"/>
+    <navigation-bar />
+    <message-list id="messagelist" />
   </div>
 </template>
 
 <style scoped>
 #messagelist {
-  margin-left: 175px;
+  margin-left: 250px;
 }
 #outerDiv {
   overflow: hidden;
@@ -27,13 +27,13 @@
 /* Control the left side */
 .left {
   left: 0;
-  width: 675px;
+  width: 750px;
 }
 
 /* Control the right side */
 .right {
   right: 0;
-  width: calc(100% - 675px);
+  width: calc(100% - 750px);
   background-color: white;
 }
 </style>
@@ -48,42 +48,38 @@ export default {
   data() {
     return {
       items: [
-                        {
+        {
           header: "Two weeks ago",
-          divider: true,
+          divider: true
         },
-                {
+        {
           title: "Brunch this weekend?",
-          subtitle:
-            "06 Apr 2019 11:46 PM",
+          subtitle: "06 Apr 2019 11:46 PM",
           divider: true,
           inset: true
         },
-                                {
+        {
           header: "Two weeks ago",
-          divider: true,
+          divider: true
         },
-                                       {
+        {
           title: "Brunch this weekend?",
-          subtitle:
-            "06 Apr 2019 11:46 PM",
+          subtitle: "06 Apr 2019 11:46 PM",
           divider: true,
           inset: true
         },
-                                      {
+        {
           title: "Brunch this weekend?",
-          subtitle:
-            "06 Apr 2019 11:46 PM",
+          subtitle: "06 Apr 2019 11:46 PM",
           divider: true,
           inset: true
         },
-                                      {
+        {
           title: "Brunch this weekend?",
-          subtitle:
-            "06 Apr 2019 11:46 PM",
+          subtitle: "06 Apr 2019 11:46 PM",
           divider: true,
           inset: true
-        },
+        }
       ],
       jobLevel: this.$route.params.jobLevel,
       messageID: this.$route.params.messageID,

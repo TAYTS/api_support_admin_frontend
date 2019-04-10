@@ -23,18 +23,19 @@ export default {
 
 <style scoped>
 .message__container {
-  margin: 5px 0;
+  margin: 5px;
   width: 100%;
 }
 
 .message {
   display: inline-block;
-  max-width: 50%;
-  padding: 5px;
+  max-width: 55%;
+  padding: 10px 5px 10px 5px;
+  margin-bottom: 5px;
   border-radius: 5px;
   background-color: #e0bdf5;
   word-wrap: break-word;
-  font-size: 16px;
+  font-size: 15px;
   text-align: left;
 }
 

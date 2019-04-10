@@ -45,14 +45,15 @@
             <v-container class="pa-0 ma-0">
               <v-layout fill-height class="pa-0">
                 <v-list-tile-content>
-                  <v-list-tile-title
-                    class="title"
-                    v-html="item.title"
-                  ></v-list-tile-title>
-                  <v-list-tile-sub-title
-                    class="subtitle"
-                    v-html="item.subtitle"
-                  ></v-list-tile-sub-title>
+                  <div id="message_title">
+                    <v-list-tile-title v-html="item.title"></v-list-tile-title>
+                  </div>
+                  <div id="message_details">
+                    <v-list-tile-title
+                      v-html="item.title"
+                      color="white"
+                    ></v-list-tile-title>
+                  </div>
                 </v-list-tile-content>
               </v-layout>
             </v-container>
@@ -83,7 +84,7 @@
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #808080;
+  background: #f7e8ff;
 }
 
 .items {
@@ -92,11 +93,22 @@
 }
 #search-bg {
   background-color: #f7e8ff;
-  padding-top: 10px;
+  padding-top: 28px;
 }
 
 .selected-class {
-  background-color: rgb(245, 245, 245);
+  background-color: #f4f4f4;
+}
+
+#message_title {
+  font-size: 20px;
+  color: #000000;
+  opacity: 0.75;
+  font-family: HelveticaNeueMedium;
+}
+#message_details {
+  font-size: 15px;
+  color: #8099ec;
 }
 </style>
 
@@ -128,7 +140,16 @@ export default {
   },
   methods: {
     openMessage: function(index, postID) {
-      this.$parent.openMessage(index, postID);
+      this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
+      this.$parent.selectedMsgNo = index;
+      for (var i = 0; i < this.$parent.items.length; i++) {
+        if (this.$parent.items[i]["postID"] == postID) {
+          this.$parent.items[i]["selected"] = true;
+        } else {
+          this.$parent.items[i]["selected"] = false;
+        }
+      }
+      console.log(index);
     }
   }
 };
