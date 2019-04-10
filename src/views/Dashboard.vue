@@ -19,40 +19,7 @@ import EventBus from "@/store/eventBus.js";
 export default {
   data() {
     return {
-      items: [
-        {
-          header: "Two weeks ago",
-          divider: true
-        },
-        {
-          title: "Brunch this weekend?",
-          subtitle: "06 Apr 2019 11:46 PM",
-          divider: true,
-          inset: true
-        },
-        {
-          header: "Two weeks ago",
-          divider: true
-        },
-        {
-          title: "Brunch this weekend?",
-          subtitle: "06 Apr 2019 11:46 PM",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Brunch this weekend?",
-          subtitle: "06 Apr 2019 11:46 PM",
-          divider: true,
-          inset: true
-        },
-        {
-          title: "Brunch this weekend?",
-          subtitle: "06 Apr 2019 11:46 PM",
-          divider: true,
-          inset: true
-        }
-      ],
+      items: [],
       jobLevel: this.$route.params.jobLevel,
       messageID: this.$route.params.messageID,
       lastNewJobs: 0,
@@ -72,16 +39,12 @@ export default {
     changeToNewJobs: function() {
       this.lastMyJobs = this.$route.params.messageID;
       this.$router.replace("/newjobs/" + this.lastNewJobs);
-      // this.refreshMessageList();
-      this.refreshMessageListSingleton = true;
-      this.jobLevelIsNewJobs = this.$route.params.jobLevel == "newjobs";
+      this.refreshMessageList();
     },
     changeToMyJobs: function() {
       this.lastNewJobs = this.$route.params.messageID;
       this.$router.replace("/myjobs/" + this.lastMyJobs);
-      // this.refreshMessageList();
-      this.refreshMessageListSingleton = true;
-      this.jobLevelIsNewJobs = this.$route.params.jobLevel == "newjobs";
+      this.refreshMessageList();
     },
     openMessage: function(index, postID) {
       this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
@@ -250,26 +213,26 @@ export default {
     }
   },
   mounted() {
-    // this.refreshMessageList();
-    EventBus.$emit("refreshContent");
+    this.refreshMessageList();
+
     // Below line is to autorefresh message list every 2s
     // this.timer = setInterval(this.refreshMessageList, 2000)
 
     // 1. Check if the user has been authenticate
-    // this.$store.dispatch("user/authenticate").then(status => {
-    //   // 1.2 Redirect to login page if the user is not authenticated
-    //   if (status === 0) {
-    //     this.$router.replace("/login");
-    //   } else {
-    //     // Get the Twilio access token (assume that it will success)
-    //     this.$store.dispatch("messages/initClient").then(status => {
-    //       if (status === 1) {
-    //         this.$refs.messageContent.updateMessage();
-    //       }
-    //     });
-    //   }
-    //   // 1.1 Render the user page if the user is authenticated
-    // });
+    this.$store.dispatch("user/authenticate").then(status => {
+      // 1.2 Redirect to login page if the user is not authenticated
+      if (status === 0) {
+        this.$router.replace("/login");
+      } else {
+        // Get the Twilio access token (assume that it will success)
+        this.$store.dispatch("messages/initClient").then(status => {
+          if (status === 1) {
+            EventBus.$emit("refreshContent");
+          }
+        });
+      }
+      // 1.1 Render the user page if the user is authenticated
+    });
   }
 };
 </script>
