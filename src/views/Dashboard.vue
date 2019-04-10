@@ -9,35 +9,6 @@
   </div>
 </template>
 
-<style scoped>
-#messagelist {
-  margin-left: 175px;
-}
-#outerDiv {
-  overflow: hidden;
-}
-.split {
-  height: 100%;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  overflow-x: hidden;
-}
-
-/* Control the left side */
-.left {
-  left: 0;
-  width: 675px;
-}
-
-/* Control the right side */
-.right {
-  right: 0;
-  width: calc(100% - 675px);
-  background-color: white;
-}
-</style>
-
 <script>
 import NavigationBar from "@/components/NavigationBar.vue";
 import MessageList from "@/components/MessageList.vue";
@@ -266,3 +237,32 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#messagelist {
+  margin-left: 175px;
+}
+#outerDiv {
+  overflow: hidden;
+}
+.split {
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+  width: 675px;
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+  width: calc(100% - 675px);
+  background-color: white;
+}
+</style>
