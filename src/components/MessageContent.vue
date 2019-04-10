@@ -12,9 +12,7 @@
     </div>
     <div>
       <div
-        v-bind:class="[
-          this.$parent.jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs
-        ]"
+        v-bind:class="[this.$parent.jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]"
         class="message_scroll"
       >
         <!-- Iterates through messages list for messages -->
@@ -152,11 +150,16 @@ export default {
       }
     },
     updateMessage() {
+      const messageContainer = document.querySelector(".message_scroll");
       this.$store
         .dispatch("messages/getMessages", { id_channel: this.id })
         .then(messages => {
           if (this.id != 0) {
             this.messages = [...messages];
+            // Scroll to the bottom of the message container
+            setTimeout(() => {
+              messageContainer.scrollTop = messageContainer.scrollHeight;
+            }, 1);
           } else {
             this.messages = [];
           }
@@ -167,24 +170,26 @@ export default {
     }
   },
   mounted() {
-    const messageContainer = document.querySelector(".message_scroll");
-    this.channel = this.$store.getters["messages/getChannel"](this.id);
     this.$store
       .dispatch("messages/getMessages", { id_channel: this.id })
       .then(messages => {
         this.messages = [...messages];
-        // Scroll to the bottom of the message container
-        setTimeout(() => {
-          messageContainer.scrollTop = messageContainer.scrollHeight;
-        }, 1);
-        if (this.channel) {
-          this.channel.on("messageAdded", this.updateMessage);
-        }
       });
     EventBus.$on("refreshContent", () => {
       this.messages = [];
       this.refreshMessageContent();
       this.updateMessage();
+
+      // Ge the current ticket channel descriptor
+      const channelDes = this.$store.getters["messages/getChannel"](this.id);
+
+      if (channelDes) {
+        channelDes.getChannel().then(channel => {
+          this.channel = channel;
+          // Add event listener to the channel
+          this.channel.on("messageAdded", this.updateMessage);
+        });
+      }
     });
   }
 };
