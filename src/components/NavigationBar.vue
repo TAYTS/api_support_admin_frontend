@@ -2,7 +2,7 @@
   <v-navigation-drawer fixed permanent absolute width="175">
     <div id="logo-bg">
       <div id="logo-main">
-        <img src="../assets/img/Accenture_Support_Staff.svg" alt />
+        <img src="../assets/img/Accenture_Support_Staff.svg" alt>
       </div>
     </div>
     <div id="name-bg">
@@ -18,11 +18,7 @@
         class="button"
         @click="changeToNewJobs()"
       >
-        <img
-          class="button-image"
-          src="../assets/img/_ionicons_svg_ios-document.svg"
-          alt
-        />
+        <img class="button-image" src="../assets/img/_ionicons_svg_ios-document.svg" alt>
         <div class="button-text">New Jobs</div>
       </button>
       <button
@@ -32,27 +28,17 @@
         class="button"
         @click="changeToMyJobs()"
       >
-        <img
-          class="button-image"
-          src="../assets/img/_ionicons_svg_md-briefcase.svg"
-          alt
-        />
+        <img class="button-image" src="../assets/img/_ionicons_svg_md-briefcase.svg" alt>
         <div class="button-text">My Jobs</div>
       </button>
     </div>
     <div>
       <v-dialog v-model="dialog" max-width="600px">
-        <template v-slot:activator="{ on }">
-          <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
+        <template v-slot:activator="data">
           <div class="register">
-            <button class="button" v-on="on">
-              <img
-                class="button-image"
-                src="../assets/img/_ionicons_svg_md-person-add.svg"
-                alt
-              />
-              <div class="button-text">Register Account</div>
-            </button>
+            <v-btn block large depressed height="56px" color="#e0e0e0" v-on="data.on">
+              <v-icon>person_add</v-icon>Register Account
+            </v-btn>
           </div>
         </template>
         <v-card>
@@ -115,45 +101,28 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="purple darken-1" flat @click="dialog = false"
-              >Close</v-btn
-            >
-            <v-btn
-              color="purple darken-1"
-              flat
-              :disabled="!valid"
-              @click="submit()"
-              >Save</v-btn
-            >
+            <v-btn color="purple darken-1" flat @click="dialog = false">Close</v-btn>
+            <v-btn color="purple darken-1" flat :disabled="!valid" @click="submit()">Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <v-dialog v-model="confirmation" persistent max-width="290">
         <v-card>
           <v-card-title class="headline">Registration successful!</v-card-title>
-
-          <v-card-text
-            >New user account has been succesfully created, use it to log in
-            next time.</v-card-text
-          >
-
+          <v-card-text>
+            New user account has been succesfully created, use it to log in
+            next time.
+          </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-
-            <v-btn color="purple darken-1" flat="flat" @click="closeWindow()"
-              >Okay</v-btn
-            >
+            <v-btn color="purple darken-1" flat="flat" @click="closeWindow()">Okay</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </div>
     <div class="logout">
       <button class="button logout-button" @click="signOut()">
-        <img
-          class="button-image"
-          src="../assets/img/_ionicons_svg_ios-log-out.svg"
-          alt
-        />
+        <img class="button-image" src="../assets/img/_ionicons_svg_ios-log-out.svg" alt>
         <div class="button-text">Logout</div>
       </button>
     </div>
@@ -190,8 +159,11 @@
 .register {
   bottom: 45px;
   position: absolute;
-  background: #eeeeee;
   width: 100%;
+}
+
+.register > button {
+  margin: 0;
 }
 
 .logout {
@@ -222,6 +194,7 @@
 .button-out-focus {
   background-color: #ffffff;
 }
+
 .button {
   display: block;
   -webkit-transition-duration: 0.4s; /* Safari */
