@@ -129,90 +129,6 @@
   </v-navigation-drawer>
 </template>
 
-<style scoped>
-#logo-bg {
-  background-color: #f7e8ff;
-  padding-top: 10px;
-}
-
-#logo-main {
-  width: 130px;
-  margin: auto;
-  padding-right: 4px;
-}
-
-#name-bg {
-  background-color: #dedede;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-#name-main {
-  text-align: center;
-}
-
-.logout-button:focus {
-  outline: none;
-  background: #f0ddf5;
-}
-
-.register {
-  bottom: 45px;
-  position: absolute;
-  width: 100%;
-}
-
-.register > button {
-  margin: 0;
-}
-
-.logout {
-  bottom: 0;
-  position: absolute;
-  background: #e0e0e0;
-  width: 100%;
-}
-.button-image {
-  width: 30px;
-  margin-top: 7px;
-  float: left;
-  margin-left: 30px;
-}
-
-.button-text {
-  text-align: left;
-  padding: 10px;
-  margin-left: 60px;
-  font-size: 18px;
-  color: #000000;
-}
-
-.button-in-focus {
-  background: #f0ddf5;
-}
-
-.button-out-focus {
-  background-color: #ffffff;
-}
-
-.button {
-  display: block;
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
-  text-decoration: none;
-  cursor: pointer;
-  width: 100%;
-}
-
-.button:hover {
-  background: #fafafa;
-}
-
-.button:focus {
-  outline: none;
-}
-</style>
-
 <script>
 export default {
   data() {
@@ -318,3 +234,87 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#logo-bg {
+  background-color: #f7e8ff;
+  padding-top: 10px;
+}
+
+#logo-main {
+  width: 130px;
+  margin: auto;
+  padding-right: 4px;
+}
+
+#name-bg {
+  background-color: #dedede;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+#name-main {
+  text-align: center;
+}
+
+.logout-button:focus {
+  outline: none;
+  background: #f0ddf5;
+}
+
+.register {
+  bottom: 45px;
+  position: absolute;
+  width: 100%;
+}
+
+.register > button {
+  margin: 0;
+}
+
+.logout {
+  bottom: 0;
+  position: absolute;
+  background: #e0e0e0;
+  width: 100%;
+}
+.button-image {
+  width: 30px;
+  margin-top: 7px;
+  float: left;
+  margin-left: 30px;
+}
+
+.button-text {
+  text-align: left;
+  padding: 10px;
+  margin-left: 60px;
+  font-size: 18px;
+  color: #000000;
+}
+
+.button-in-focus {
+  background: #f0ddf5;
+}
+
+.button-out-focus {
+  background-color: #ffffff;
+}
+
+.button {
+  display: block;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  text-decoration: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.button:hover {
+  background: #fafafa;
+}
+
+.button:focus {
+  outline: none;
+}
+</style>

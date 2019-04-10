@@ -1,6 +1,5 @@
 <template>
   <div id="outerDiv">
-    <div class="split left"/>
     <div class="split right">
       <message-content/>
     </div>
@@ -8,35 +7,6 @@
     <message-list id="messagelist"/>
   </div>
 </template>
-
-<style scoped>
-#messagelist {
-  margin-left: 175px;
-}
-#outerDiv {
-  overflow: hidden;
-}
-.split {
-  height: 100%;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  overflow-x: hidden;
-}
-
-/* Control the left side */
-.left {
-  left: 0;
-  width: 675px;
-}
-
-/* Control the right side */
-.right {
-  right: 0;
-  width: calc(100% - 675px);
-  background-color: white;
-}
-</style>
 
 <script>
 import NavigationBar from "@/components/NavigationBar.vue";
@@ -74,14 +44,12 @@ export default {
       this.$router.replace("/myjobs/" + this.lastMyJobs);
       this.refreshMessageList();
     },
-
     openMessage: function(index, postID) {
       this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
       this.selectedMsgNo = index;
       this.refreshHighlight();
       EventBus.$emit("refreshContent");
     },
-
     refreshMessageList: function() {
       // Pull data from the database
       var jobLevel = this.$route.params.jobLevel;
@@ -266,3 +234,32 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#messagelist {
+  margin-left: 175px;
+}
+#outerDiv {
+  overflow: hidden;
+}
+.split {
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+  width: 675px;
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+  width: calc(100% - 675px);
+  background-color: white;
+}
+</style>
