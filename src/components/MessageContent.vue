@@ -16,7 +16,10 @@
         class="message_scroll"
       >
         <!-- Iterates through messages list for messages -->
-        <div class="messages__container">
+        <div v-show="!messageReady" class="message-loader">
+          <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
+        </div>
+        <div v-show="messageReady" class="messages__container">
           <MessageBubble
             v-for="message in messages"
             :key="message.index"
@@ -137,7 +140,8 @@ export default {
       maxFileSize: 10485760, // 10MB
       acceptFileTypes: ["application/pdf", "image/jpeg", "image/png"],
       uploadHint: "Max limit 10MB. (Supported format: .pdf, .jpg, .jpeg, .png)",
-      uploading: false
+      uploading: false,
+      messageReady: false
     };
   },
   methods: {
@@ -332,6 +336,7 @@ export default {
       });
     EventBus.$on("refreshContent", () => {
       this.messages = [];
+      this.messageReady = false;
       this.refreshMessageContent();
       this.updateMessage();
 
@@ -343,6 +348,9 @@ export default {
           this.channel = channel;
           // Add event listener to the channel
           this.channel.on("messageAdded", this.updateMessage);
+          setTimeout(() => {
+            this.messageReady = true;
+          }, 500);
         });
       }
     });
@@ -380,6 +388,15 @@ export default {
   padding: 0 10px 0 10px;
   height: 100%;
 }
+
+.message-loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .text-area {
   margin: 15px;
   width: calc(100% - 705px);
