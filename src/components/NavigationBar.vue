@@ -42,8 +42,8 @@
           </div>
         </template>
         <v-card>
-          <v-card-title>
-            <span class="headline">Register new admin</span>
+          <v-card-title class="headline">
+            <span>Register new admin</span>
           </v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
@@ -102,19 +102,16 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="purple darken-1" flat @click="dialog = false">Close</v-btn>
-            <v-btn color="purple darken-1" flat :disabled="!valid" @click="submit()">Save</v-btn>
+            <v-btn color="purple darken-1" flat :disabled="!valid" @click="submit()">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <v-dialog v-model="confirmation" persistent max-width="290">
         <v-card>
           <v-card-title class="headline">Registration successful!</v-card-title>
-          <v-card-text>
-            New user account has been succesfully created, use it to log in
-            next time.
-          </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
+
             <v-btn color="purple darken-1" flat="flat" @click="closeWindow()">Okay</v-btn>
           </v-card-actions>
         </v-card>
@@ -143,7 +140,7 @@ export default {
       username: "",
       emailRules: [
         v => !!v || "Email is required",
-        v => /.+@.+\..+/.test(v) || "Email must be valid"
+        v => /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || "Email must be valid"
       ],
       passwordCheckRules: [
         v => !!v || "Confirmation password is required",
