@@ -67,7 +67,6 @@ export default {
       lastIndex: 0
     };
   },
-  mounted() {},
   computed: {
     filteredItems: function() {
       return this.$parent.items.filter(item => {
