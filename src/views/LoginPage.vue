@@ -49,6 +49,7 @@
                   <v-card color="background">
                     <v-card-actions class="action__container">
                       <v-layout column>
+                        <vue-recaptcha sitekey="6Lf5-Z0UAAAAALMmm5RVsebKA8JROYGoBkd4cTLU" theme="dark"></vue-recaptcha>
                         <v-checkbox color="white" v-model="remember" dark label="REMEMBER ME"></v-checkbox>
                         <v-btn block large color="accent" :disabled="!valid" @click="submit">SIGN IN</v-btn>
                       </v-layout>
@@ -65,6 +66,7 @@
 </template>
 
 <script>
+import VueRecaptcha from "vue-recaptcha";
 export default {
   data: () => {
     return {
@@ -82,6 +84,7 @@ export default {
       error_messages: []
     };
   },
+  components: { VueRecaptcha },
   mounted() {
     const logo = document.querySelector(".logo-main");
     const form = document.querySelector(".form__container");
