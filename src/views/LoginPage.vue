@@ -49,7 +49,12 @@
                   <v-card color="background">
                     <v-card-actions class="action__container">
                       <v-layout column>
-                        <vue-recaptcha sitekey="6Lf5-Z0UAAAAALMmm5RVsebKA8JROYGoBkd4cTLU" theme="dark"></vue-recaptcha>
+                        <vue-recaptcha
+                          sitekey="6Lf5-Z0UAAAAALMmm5RVsebKA8JROYGoBkd4cTLU"
+                          @verify="onCaptchaClick"
+                          @expired="onCaptchaExpired"
+                          theme="dark"
+                        ></vue-recaptcha>
                         <v-checkbox color="white" v-model="remember" dark label="REMEMBER ME"></v-checkbox>
                         <v-btn block large color="accent" :disabled="!valid" @click="submit">SIGN IN</v-btn>
                       </v-layout>
@@ -81,7 +86,8 @@ export default {
       password: "",
       passwordRules: [v => !!v || "Password is required"],
       remember: false,
-      error_messages: []
+      error_messages: [],
+      recaptchaToken: ""
     };
   },
   components: { VueRecaptcha },
@@ -98,17 +104,22 @@ export default {
     }, 10);
   },
   methods: {
+    onCaptchaClick: function(recaptchaToken) {
+      this.recaptchaToken = recaptchaToken;
+    },
     submit() {
       const pass = this.$refs.form.validate();
       if (pass) {
         const email = this.email;
         const password = this.password;
         const remember = this.remember;
+        const recaptchaToken = this.recaptchaToken;
         this.$store
           .dispatch("user/login", {
             email,
             password,
-            remember
+            remember,
+            recaptchaToken
           })
           .then(status => {
             if (status === 1) {
@@ -121,6 +132,10 @@ export default {
             }
           });
       }
+    },
+    onCaptchaExpired: function() {
+      this.$refs.recaptcha.reset();
+      this.recaptchaToken = "";
     },
     toggle_error() {
       this.error = !this.error;
