@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer fixed permanent absolute width="500">
+  <v-navigation-drawer class="search__container" fixed permanent absolute width="500">
     <div id="search-bg" class="pb-0">
       <v-form>
         <v-container class="py-0">
@@ -85,6 +85,10 @@ export default {
 </script>
 
 <style scoped>
+.search__container {
+  overflow: hidden;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 11px;
