@@ -1,8 +1,8 @@
 <template>
   <div id="outerDiv">
     <div class="split right">
-      <MessageContent v-if="items.length > 0"/>
-      <SplashMessage :message="splashMessage" v-else/>
+      <MessageContent v-show="items.length > 0"/>
+      <SplashMessage :message="splashMessage" v-show="items.length === 0"/>
     </div>
     <Navigation-bar :adminname="adminName"/>
     <MessageList id="messagelist"/>
