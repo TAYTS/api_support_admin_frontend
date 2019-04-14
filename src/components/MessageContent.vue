@@ -23,6 +23,7 @@
             :key="message.index"
             :message="message.message"
             :type="message.type"
+            :index="message.index"
             :reply="message.reply"
             @download-media="downdloadMedia(message.index)"
           ></MessageBubble>
@@ -120,6 +121,7 @@
 <script>
 import MessageBubble from "@/components/MessageBubble.vue";
 import EventBus from "@/store/eventBus.js";
+
 export default {
   components: {
     MessageBubble
@@ -234,7 +236,9 @@ export default {
         });
     },
     downdloadMedia(index) {
-      this.$store.dispatch("messages/downloadMedia", { index });
+      this.$store.dispatch("messages/downloadMedia", { index }).then(() => {
+        EventBus.$emit("finishDownload", index);
+      });
     },
     addFiles() {
       this.$refs.upload.click();
