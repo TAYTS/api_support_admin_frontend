@@ -6,7 +6,7 @@
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
       </div>
-      <hr />
+      <hr>
     </div>
     <div>
       <div
@@ -14,7 +14,7 @@
         class="message_scroll"
       >
         <!-- Iterates through messages list for messages -->
-        <div v-show="!messageReady && this.$route.params.messageID!=0" class="message-loader">
+        <div v-show="!messageReady" class="message-loader">
           <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
         </div>
         <div v-show="messageReady" class="messages__container">
@@ -37,8 +37,7 @@
           left
           class="add-jobs-button"
           @click="addtoMyJobs()"
-          >Add to My Jobs</v-btn
-        >
+        >Add to My Jobs</v-btn>
       </div>
       <div v-else class="full-row row-my-jobs">
         <v-textarea
@@ -56,8 +55,8 @@
           prepend-inner-icon="attach_file"
           @click:append.stop="sendMedia"
           @click:prepend.stop="sendMessage"
-          @keyup.enter="sendMessage" ></v-textarea
-        >
+          @keyup.enter="sendMessage"
+        ></v-textarea>
       </div>
     </div>
     <input
@@ -345,19 +344,22 @@ export default {
       this.messageReady = false;
       this.refreshMessageContent();
       this.updateMessage();
+      if (this.id > 0) {
+        // Ge the current ticket channel descriptor
+        const channelDes = this.$store.getters["messages/getChannel"](this.id);
 
-      // Ge the current ticket channel descriptor
-      const channelDes = this.$store.getters["messages/getChannel"](this.id);
-
-      if (channelDes) {
-        channelDes.getChannel().then(channel => {
-          this.channel = channel;
-          // Add event listener to the channel
-          this.channel.on("messageAdded", this.updateMessage);
-          setTimeout(() => {
-            this.messageReady = true;
-          }, 500);
-        });
+        if (channelDes) {
+          channelDes.getChannel().then(channel => {
+            this.channel = channel;
+            // Add event listener to the channel
+            this.channel.on("messageAdded", this.updateMessage);
+            setTimeout(() => {
+              this.messageReady = true;
+            }, 500);
+          });
+        }
+      } else {
+        this.messageReady = true;
       }
     });
   }
