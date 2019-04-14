@@ -1,10 +1,11 @@
 <template>
   <div id="outerDiv">
     <div class="split right">
-      <message-content />
+      <MessageContent v-if="items.length > 0"/>
+      <SplashMessage :message="splashMessage" v-else/>
     </div>
-    <navigation-bar />
-    <message-list id="messagelist" />
+    <Navigation-bar :adminname="adminName"/>
+    <MessageList id="messagelist"/>
   </div>
 </template>
 
@@ -15,6 +16,7 @@ import NavigationBar from "@/components/NavigationBar.vue";
 import MessageList from "@/components/MessageList.vue";
 import MessageContent from "@/components/MessageContent.vue";
 import EventBus from "@/store/eventBus.js";
+import SplashMessage from "@/components/SplashMessage.vue";
 
 export default {
   data() {
@@ -27,13 +29,16 @@ export default {
       selectedMsgNo: 0,
       refreshMessageListSingleton: true,
       timer: "",
-      jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs"
+      jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs",
+      adminName: "",
+      splashMessage: ""
     };
   },
   components: {
     NavigationBar,
     MessageList,
-    MessageContent
+    MessageContent,
+    SplashMessage
   },
   methods: {
     changeToNewJobs: function() {
@@ -64,11 +69,16 @@ export default {
         .then(response => {
           if (response !== 0) {
             this.items = [];
-            if (messageID == "0") {
+            if (messageID === "0") {
               if (response[0]) {
                 latestTicketRoute = "/" + jobLevel + "/" + response[0].ticketID;
               } else {
                 latestTicketRoute = "/" + jobLevel + "/0";
+                if (jobLevel === "newjobs") {
+                  this.splashMessage = "No New Job At The Moment...";
+                } else if (jobLevel === "myjobs") {
+                  this.splashMessage = "No Job At The Momment...";
+                }
               }
               this.$router.replace(latestTicketRoute);
             }
@@ -185,7 +195,6 @@ export default {
       for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].postID == this.$route.params.messageID) {
           found = true;
-          console.log("found it!");
         } else if (found) {
           if (this.items[i].postID) {
             this.$router.push(
@@ -224,6 +233,8 @@ export default {
       if (status === 0) {
         this.$router.replace("/login");
       } else {
+        const adminName = this.$store.getters["user/getUsername"];
+        this.adminName = adminName;
         // Get the Twilio access token (assume that it will success)
         this.$store.dispatch("messages/initClient").then(status => {
           if (status === 1) {
@@ -251,7 +262,6 @@ export default {
   top: 0;
   overflow-x: hidden;
 }
-
 
 /* Control the right side */
 .right {
