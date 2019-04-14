@@ -2,17 +2,18 @@
   <v-navigation-drawer class="search__container" fixed permanent absolute width="500">
     <div id="search-bg" class="pb-0">
       <v-form>
-        <v-container class="py-0">
+        <v-container class="primary">
           <v-layout>
             <v-flex xs12 md12 class="pb-0 pt-0">
               <v-text-field
                 label="Search..."
                 append-icon="search"
                 class="pb-0"
+                color="accent"
                 single-line
                 flat
                 v-model="search"
-                background-color="#f7e8ff"
+                hide-details
               ></v-text-field>
             </v-flex>
           </v-layout>
@@ -37,10 +38,7 @@
                     <v-list-tile-title v-html="item.title"></v-list-tile-title>
                   </div>
                   <div id="message_details">
-                    <v-list-tile-title
-                      v-html="item.subtitle"
-                      color="white"
-                    ></v-list-tile-title>
+                    <v-list-tile-title v-html="item.title" color="white"></v-list-tile-title>
                   </div>
                 </v-list-tile-content>
               </v-layout>
@@ -117,7 +115,6 @@ export default {
 }
 #search-bg {
   background-color: #f7e8ff;
-  padding-top: 28px;
 }
 
 .selected-class {
