@@ -15,16 +15,6 @@
                 background-color="#f7e8ff"
               ></v-text-field>
             </v-flex>
-            <v-flex xs4 md4 class="pb-0 pt-0">
-              <v-select
-                :items="filter"
-                label="Filter"
-                class="pb-0"
-                single-line
-                flat
-                background-color="#f7e8ff"
-              ></v-select>
-            </v-flex>
           </v-layout>
         </v-container>
       </v-form>
@@ -48,7 +38,7 @@
                   </div>
                   <div id="message_details">
                     <v-list-tile-title
-                      v-html="item.title"
+                      v-html="item.subtitle"
                       color="white"
                     ></v-list-tile-title>
                   </div>
@@ -68,7 +58,6 @@ export default {
     return {
       search: "",
       adminName: "Insert admin name here",
-      filter: ["Foo", "Bar", "Fizz", "Buzz"],
       items: [],
       selectedClass: "selected-class",
       lastIndex: 0
@@ -119,7 +108,7 @@ export default {
 }
 
 .items {
-  max-height: calc(100% - 62px);
+  max-height: calc(100% - 80px);
   overflow: auto;
 }
 #search-bg {

@@ -1,5 +1,5 @@
 <template>
-  <div class="login" @keyup.enter="submit">
+  <div class="login" @keydown.enter="submit">
     <v-container fluid class="login__container">
       <v-layout align-center justify-center row fill-height>
         <v-flex xs7 class="text-xs-right">
