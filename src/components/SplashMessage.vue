@@ -113,7 +113,7 @@
 
 <script>
 export default {
-  props: ["messages"]
+  props: ["message"]
 };
 </script>
 
