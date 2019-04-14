@@ -3,7 +3,8 @@ import axios from "../../axios/loginAxios";
 const state = {
   id_user_hash: "",
   access_token: "",
-  refresh_token: ""
+  refresh_token: "",
+  username: ""
 };
 
 const actions = {
@@ -11,9 +12,14 @@ const actions = {
     return axios
       .post("/users/login", payload)
       .then(response => {
-        if (response.status === 200 && response.data.id_user_hash) {
+        if (
+          response.status === 200 &&
+          response.data.id_user_hash &&
+          response.data.username
+        ) {
           const id_user_hash = response.data.id_user_hash;
-          commit("storeCredentials", { id_user_hash });
+          const username = response.data.username;
+          commit("storeCredentials", { id_user_hash, username });
           localStorage.setItem("remember", payload.remember);
           return 1;
         } else {
@@ -26,53 +32,63 @@ const actions = {
       });
   },
   authenticate({ commit }) {
-    commit("storeCredentials", { id_user_hash: "" });
-    let status;
     const access_token = localStorage.getItem("access_token");
     const refresh_token = localStorage.getItem("refresh_token");
+    commit("storeCredentials", { id_user_hash: "" });
+    let status;
     if (access_token) {
       const remember = localStorage.getItem("remember");
       if (remember === "true") {
-        axios
+        return axios
           .get("/users/refresh", {
             headers: {
               "X-CSRF-TOKEN": refresh_token
             }
           })
           .then(response => {
-            if (response.status === 200 && response.data.id_user_hash) {
+            if (
+              response.status === 200 &&
+              response.data.id_user_hash &&
+              response.data.username
+            ) {
               const id_user_hash = response.data.id_user_hash;
-              commit("storeCredentials", { id_user_hash });
-              status = 1;
+              const username = response.data.username;
+              commit("storeCredentials", { id_user_hash, username });
+              return 1;
             } else {
-              status = 0;
               deleteAllCookies();
+              return 0;
             }
           });
       } else {
-        axios
+        return axios
           .get("/users/authenticate", {
             headers: {
               "X-CSRF-TOKEN": access_token
             }
           })
           .then(response => {
-            if (response.status === 200 && response.data.id_user_hash) {
+            if (
+              response.status === 200 &&
+              response.data.id_user_hash &&
+              response.data.username
+            ) {
               const id_user_hash = response.data.id_user_hash;
-              commit("storeCredentials", { id_user_hash });
-              status = 1;
+              const username = response.data.username;
+              commit("storeCredentials", { id_user_hash, username });
+              return 1;
             } else {
-              status = 0;
               deleteAllCookies();
+              return 0;
             }
           });
       }
     } else {
       status = 0;
+      return new Promise(resolve => {
+        resolve(status);
+      });
     }
-    return new Promise(resolve => {
-      resolve(status);
-    });
   },
   logout() {
     return axios
@@ -108,7 +124,7 @@ const actions = {
 };
 
 const mutations = {
-  storeCredentials(state, { id_user_hash }) {
+  storeCredentials(state, { id_user_hash, username }) {
     // Get the CSRF cookies
     const cookies = document.cookie.split(";");
     // Create the regx pattern to extract the csrf token
@@ -130,15 +146,20 @@ const mutations = {
     }
     localStorage.setItem("access_token", access_token);
     localStorage.setItem("refresh_token", refresh_token);
+    localStorage.setItem("username", username);
     state.access_token = access_token;
     state.refresh_token = refresh_token;
     state.id_user_hash = id_user_hash;
+    state.username = username;
   }
 };
 
 const getters = {
   getUser: state => {
     return state.id_user_hash;
+  },
+  getUsername: state => {
+    return state.username;
   }
 };
 
