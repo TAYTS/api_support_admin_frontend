@@ -38,7 +38,7 @@
                   </div>
                   <div id="message_details">
                     <v-list-tile-title
-                      v-html="item.title"
+                      v-html="item.subtitle"
                       color="white"
                     ></v-list-tile-title>
                   </div>
@@ -112,7 +112,7 @@ export default {
 }
 
 .items {
-  max-height: calc(100% - 62px);
+  max-height: calc(100% - 80px);
   overflow: auto;
 }
 #search-bg {

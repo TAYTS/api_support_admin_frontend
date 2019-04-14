@@ -2,8 +2,6 @@
   <div>
     <div class="top-outer">
       <div class="px-3 top">
-        <div class="invis-text">{{ $route.params.messageID }}</div>
-        <!-- There for force update -->
         <h1>{{ messageHeader.title }}</h1>
         <h2>{{ messageHeader.sender }}</h2>
         <div>{{ messageHeader.dateTime }}</div>
@@ -16,7 +14,7 @@
         class="message_scroll"
       >
         <!-- Iterates through messages list for messages -->
-        <div v-show="!messageReady" class="message-loader">
+        <div v-show="!messageReady && this.$route.params.messageID!=0" class="message-loader">
           <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
         </div>
         <div v-show="messageReady" class="messages__container">
@@ -428,7 +426,7 @@ export default {
 .messages-my-jobs {
   margin: 9px 0 5px 0;
   top: 127px;
-  height: calc(100% - 250px);
+  height: calc(100% - 298px);
   width: calc(100% - 750px);
   display: block;
   overflow: auto;
