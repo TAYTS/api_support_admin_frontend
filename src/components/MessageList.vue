@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer class="search__container" fixed permanent absolute width="500">
+  <div class="search__container">
     <div id="search-bg" class="pb-0">
       <v-form>
         <v-container class="primary">
@@ -47,7 +47,7 @@
         </div>
       </template>
     </v-list>
-  </v-navigation-drawer>
+  </div>
 </template>
 
 <script>
@@ -85,6 +85,9 @@ export default {
 <style scoped>
 .search__container {
   overflow: hidden;
+  width: 500px;
+  position: absolute;
+  height: 100vh;
 }
 
 /* width */
@@ -110,9 +113,11 @@ export default {
 }
 
 .items {
-  max-height: calc(100% - 80px);
-  overflow: auto;
+  padding: 0;
+  max-height: calc(100% - 64px);
+  overflow-x: hidden;
 }
+
 #search-bg {
   background-color: #f7e8ff;
 }
