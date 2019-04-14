@@ -8,6 +8,9 @@ Vue.use(Vuetify, {
     primary: "#d099ef",
     secondary: "#ffffff",
     accent: "#9f2edf",
-    background: "#a991b6"
+    background: "#a991b6",
+    lightbg: "#f7e8ff",
+    greyhue: "#f4f4f4",
+    btn1: "#e0e0e0"
   }
 });
