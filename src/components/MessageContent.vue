@@ -133,7 +133,6 @@ export default {
       messageHeader: {
         title: "title",
         sender: "sender",
-        body: "body",
         dateTime: "dateTime"
       },
       message: "",
@@ -160,7 +159,6 @@ export default {
         // todo replace this with opacity white box
         this.messageHeader.title = "";
         this.messageHeader.sender = "";
-        this.messageHeader.body = "";
         this.messageHeader.dateTime = "";
       } else {
         this.$store
@@ -169,7 +167,6 @@ export default {
             if (response !== 0) {
               this.messageHeader.title = response.title;
               this.messageHeader.sender = response.sender;
-              this.messageHeader.body = response.body;
               this.messageHeader.dateTime = response.dateTime;
             } else {
               console.log("Error in fetching the tickets");
@@ -179,7 +176,6 @@ export default {
             console.log("Error in ticketID");
             this.messageHeader.title = "";
             this.messageHeader.sender = "";
-            this.messageHeader.body = "";
             this.messageHeader.dateTime = "";
           });
       }
@@ -344,8 +340,9 @@ export default {
       this.messageReady = false;
       this.refreshMessageContent();
       this.updateMessage();
-      if (this.id > 0) {
-        // Ge the current ticket channel descriptor
+
+      if (this.id !== "0") {
+        // Get the current ticket channel descriptor
         const channelDes = this.$store.getters["messages/getChannel"](this.id);
 
         if (channelDes) {
