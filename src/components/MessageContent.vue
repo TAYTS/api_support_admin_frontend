@@ -1,5 +1,13 @@
 <template>
   <div class="main__container">
+    <v-btn
+      v-if="!this.$parent.jobLevelIsNewJobs"
+      class="email-button"
+      color="#a6b9f7"
+      round
+      large
+      @click="emailUser()"
+    >E-mail User</v-btn>
     <div class="header__container">
       <h1>{{ messageHeader.title }}</h1>
       <h2>{{ messageHeader.sender }}</h2>
@@ -105,6 +113,10 @@
       {{ snackbarText }}
       <v-btn dark flat @click="snackbar=false">Close</v-btn>
     </v-snackbar>
+    <v-snackbar v-model="snackbarEmail" top right>
+      Email is successful
+      <v-btn dark flat @click="snackbarEmail = false">Close</v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -138,7 +150,8 @@ export default {
       messageReady: false,
       snackbar: false,
       timeout: 3000,
-      snackbarText: ""
+      snackbarText: "",
+      snackbarEmail: false
     };
   },
   methods: {
@@ -322,6 +335,16 @@ export default {
             this.dialog = false;
           }
         });
+    },
+    emailUser() {
+      var messageID = this.$route.params.messageID;
+      this.$store.dispatch("tickets/emailUser", { messageID }).then(status => {
+        if (status == 1) {
+          this.snackbarEmail = true;
+        } else {
+          console.log("Error in fetching emailing user");
+        }
+      });
     }
   },
   mounted() {
@@ -379,6 +402,12 @@ export default {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #808080;
+}
+
+.email-button {
+  right: 0;
+  position: absolute;
+  margin: 90px 30px 40px 30px;
 }
 
 .main__container {
