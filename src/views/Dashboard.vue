@@ -222,17 +222,14 @@ export default {
     }
   },
   mounted() {
-    this.refreshMessageList();
-
     // Below line is to autorefresh message list every 2s
     // this.timer = setInterval(this.refreshMessageList, 2000)
 
     // 1. Check if the user has been authenticate
     this.$store.dispatch("user/authenticate").then(status => {
-      // 1.2 Redirect to login page if the user is not authenticated
-      if (status === 0) {
-        this.$router.replace("/login");
-      } else {
+      if (status === 1) {
+        this.refreshMessageList();
+        // 1.1 Render the user page if the user is authenticated
         const adminName = this.$store.getters["user/getUsername"];
         this.adminName = adminName;
         // Get the Twilio access token (assume that it will success)
@@ -241,8 +238,10 @@ export default {
             EventBus.$emit("refreshContent");
           }
         });
+      } else {
+        // 1.2 Redirect to login page if the user is not authenticated
+        this.$router.replace("/login");
       }
-      // 1.1 Render the user page if the user is authenticated
     });
   }
 };
@@ -258,7 +257,6 @@ export default {
 .split {
   height: 100%;
   position: fixed;
-  z-index: 1;
   top: 0;
   overflow-x: hidden;
 }
@@ -266,7 +264,8 @@ export default {
 /* Control the right side */
 .right {
   right: 0;
-  width: calc(100% - 750px);
+  width: calc(100vw - 250px - 26%);
+  height: 100vh;
   background-color: white;
 }
 </style>

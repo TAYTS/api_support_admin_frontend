@@ -59,6 +59,10 @@ const actions = {
               deleteAllCookies();
               return 0;
             }
+          })
+          .catch(() => {
+            deleteAllCookies();
+            return 0;
           });
       } else {
         return axios
@@ -81,6 +85,10 @@ const actions = {
               deleteAllCookies();
               return 0;
             }
+          })
+          .catch(() => {
+            deleteAllCookies();
+            return 0;
           });
       }
     } else {
