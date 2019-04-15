@@ -85,8 +85,8 @@ export default {
 <style scoped>
 .search__container {
   overflow: hidden;
-  width: 500px;
-  position: absolute;
+  width: 26%;
+  min-width: 350px;
   height: 100vh;
 }
 

@@ -1,64 +1,50 @@
 <template>
-  <div>
-    <div class="top-outer">
-      <div class="px-3 top">
-        <h1>{{ messageHeader.title }}</h1>
-        <h2>{{ messageHeader.sender }}</h2>
-        <div>{{ messageHeader.dateTime }}</div>
-      </div>
-      <hr>
+  <div class="main__container">
+    <div class="header__container">
+      <h1>{{ messageHeader.title }}</h1>
+      <h2>{{ messageHeader.sender }}</h2>
+      <div>{{ messageHeader.dateTime }}</div>
     </div>
-    <div>
-      <div
-        v-bind:class="[this.$parent.jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]"
-        class="message_scroll"
-      >
-        <!-- Iterates through messages list for messages -->
-        <div v-show="!messageReady" class="message-loader">
-          <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
-        </div>
-        <div v-show="messageReady" class="messages__container">
-          <MessageBubble
-            v-for="message in messages"
-            :key="message.index"
-            :message="message.message"
-            :type="message.type"
-            :index="message.index"
-            :reply="message.reply"
-            @download-media="downdloadMedia(message.index)"
-          ></MessageBubble>
-        </div>
-      </div>
+    <div v-show="!messageReady" class="message-loader">
+      <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
     </div>
-    <div>
-      <div v-if="this.$parent.jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn
-          color="#a6b9f7"
-          round
-          left
-          class="add-jobs-button"
-          @click="addtoMyJobs()"
-        >Add to My Jobs</v-btn>
-      </div>
-      <div v-else class="full-row row-my-jobs">
-        <v-textarea
-          class="text-area"
-          v-model="message"
-          solo
-          flat
-          hide-details
-          no-resize
-          rows="6"
-          label="Type here..."
-          color="accent"
-          background-color="white"
-          append-icon="send"
-          prepend-inner-icon="attach_file"
-          @click:append.stop="sendMedia"
-          @click:prepend.stop="sendMessage"
-          @keyup.enter="sendMessage"
-        ></v-textarea>
-      </div>
+    <!-- Iterates through messages list for messages -->
+    <div v-show="messageReady" class="messages__container">
+      <MessageBubble
+        v-for="message in messages"
+        :key="message.index"
+        :message="message.message"
+        :type="message.type"
+        :index="message.index"
+        :reply="message.reply"
+        @download-media="downdloadMedia(message.index)"
+      ></MessageBubble>
+    </div>
+    <div class="action__container">
+      <v-btn
+        v-if="this.$parent.jobLevelIsNewJobs"
+        color="#a6b9f7"
+        round
+        large
+        @click="addtoMyJobs()"
+      >Add to My Jobs</v-btn>
+      <v-textarea
+        v-else
+        v-model="message"
+        solo
+        flat
+        hide-details
+        no-resize
+        rows="6"
+        label="Type here..."
+        color="accent"
+        background-color="white"
+        append-icon="send"
+        prepend-inner-icon="attach_file"
+        @click:append.stop="sendMessage"
+        @click:prepend-inner.stop="addFiles"
+        @keyup.enter="sendMessage"
+      ></v-textarea>
     </div>
     <input
       class="file-upload"
@@ -115,6 +101,10 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="snackbar" bottom>
+      {{ snackbarText }}
+      <v-btn dark flat @click="snackbar=false">Close</v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -129,8 +119,6 @@ export default {
   data() {
     return {
       id: this.$route.params.messageID,
-      messagesNewJobs: "messages-new-jobs",
-      messagesMyJobs: "messages-my-jobs",
       // Temporary data
       messageHeader: {
         title: "title",
@@ -147,7 +135,10 @@ export default {
       acceptFileTypes: ["application/pdf", "image/jpeg", "image/png"],
       uploadHint: "Max limit 10MB. (Supported format: .pdf, .jpg, .jpeg, .png)",
       uploading: false,
-      messageReady: false
+      messageReady: false,
+      snackbar: false,
+      timeout: 3000,
+      snackbarText: ""
     };
   },
   methods: {
@@ -220,7 +211,7 @@ export default {
       }
     },
     updateMessage() {
-      const messageContainer = document.querySelector(".message_scroll");
+      const messageContainer = document.querySelector(".messages__container");
       this.$store
         .dispatch("messages/getMessages", { id_channel: this.id })
         .then(messages => {
@@ -390,94 +381,49 @@ export default {
   background: #808080;
 }
 
-.message__container {
-  margin: 5px 0;
+.main__container {
+  margin: 0;
   width: 100%;
   right: 0;
-  padding: 0 10px 0 10px;
   height: 100%;
+}
+
+.header__container {
+  width: 100%;
+  height: 20%;
+  background-color: white;
+  color: #8099ec;
+  font-family: sans-serif;
+  font-size: 20px;
+  padding: 0 10px;
+  border-bottom: 2px solid #a6a6a6;
 }
 
 .message-loader {
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.text-area {
-  margin: 5px 50px;
-  width: calc(100% - 850px);
-  resize: none;
-  height: calc(100% - 34px);
+.messages__container {
+  margin: 0;
+  padding: 10px;
   background-color: #f4f4f4;
-  border: 1px solid lightgrey;
+  height: 60%;
+  overflow: auto;
 }
 
-.messages-new-jobs {
-  margin: 9px 0px 5px 0;
-  top: 127px;
-  height: calc(100% - 70px);
-  width: calc(100% - 750px);
-  display: block;
-  overflow: auto;
-  position: fixed;
-  background-color: #f4f4f4;
-  /* display: inline-block; */
-}
-.messages-my-jobs {
-  margin: 9px 0 5px 0;
-  top: 127px;
-  height: calc(100% - 298px);
-  width: calc(100% - 750px);
-  display: block;
-  overflow: auto;
-  position: fixed;
-  background-color: #f4f4f4;
-  /* padding-bottom: 210px; */
-  /* background-color: aqua; */
-  /* display: inline-block; */
-}
-.full-row {
+.action__container {
   width: 100%;
-  position: fixed;
-  bottom: 0;
+  height: 20%;
+  padding: 15px;
   background-color: #f4f4f4;
-  padding-bottom: 15px;
-}
-
-.row-new-jobs {
-  height: 100px;
-  width: calc(100% - 750px);
   text-align: center;
-  height: calc(100% - 700px);
 }
 
-.top-outer {
-  position: fixed;
-  width: 100%;
-  background-color: white;
-  display: block;
-  color: #8099ec;
-  font-family: sans-serif;
-  height: calc(100% - 200px);
-  margin-bottom: 0;
-  padding-bottom: 0;
-  font-size: 20px;
-}
-.top {
-  height: 135px;
-}
-.add-jobs-button {
-  width: 180px;
-  background-color: #000000;
-  height: 60px;
-}
-
-.invis-text {
-  font-size: 0;
-  background-color: #000000;
-  color: #f4f4f4;
+.file-upload {
+  display: none;
 }
 </style>
