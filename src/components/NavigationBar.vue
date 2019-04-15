@@ -33,7 +33,7 @@
       </button>
     </div>
     <div class="admin-btn-grp">
-      <v-btn block large depressed color="btn1" @click="registerDialog = !registerDialog">
+      <v-btn block large depressed color="btn1" @click="activateDialog">
         <v-icon left>person_add</v-icon>Register Account
         <v-spacer/>
       </v-btn>
@@ -42,156 +42,26 @@
         <v-spacer/>
       </v-btn>
     </div>
-    <div>
-      <v-dialog v-model="registerDialog" max-width="600px">
-        <v-card>
-          <v-toolbar card dark color="primary">
-            <v-toolbar-title class="headline">Register new admin</v-toolbar-title>
-          </v-toolbar>
-          <v-card-text>
-            <v-form ref="form" v-model="valid" lazy-validation>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12>
-                    <v-text-field
-                      v-model="username"
-                      :rules="usernameRules"
-                      :error-messages="error_messages"
-                      @update:error="toggle_error"
-                      @input="update_error_message"
-                      label="Username"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field
-                      v-model="email"
-                      :rules="emailRules"
-                      :error-messages="error_messages"
-                      @update:error="toggle_error"
-                      @input="update_error_message"
-                      label="Email"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6>
-                    <v-text-field
-                      v-model="password"
-                      :rules="passwordRules"
-                      :error-messages="error_messages"
-                      @update:error="toggle_error"
-                      @input="update_error_message"
-                      label="Password"
-                      type="password"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6>
-                    <v-text-field
-                      v-model="passwordCheck"
-                      :rules="passwordCheckRules"
-                      :error-messages="error_messages"
-                      @update:error="toggle_error"
-                      @input="update_error_message"
-                      label="Confirm Password"
-                      type="password"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="purple darken-1" flat @click="registerDialog = false">Close</v-btn>
-            <v-btn color="purple darken-1" flat :disabled="!valid" @click="submit">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="confirmation" persistent max-width="290">
-        <v-card>
-          <v-card-title class="headline">Registration successful!</v-card-title>
-          <v-card-text>
-            New user account has been succesfully created, use it to log in
-            next time.
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="purple darken-1" flat="flat" @click="closeWindow">Okay</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
+    <RegistrationDialog/>
   </v-navigation-drawer>
 </template>
 
 <script>
+import RegistrationDialog from "@/components/RegistrationDialog.vue";
+import EventBus from "@/store/eventBus.js";
 export default {
+  components: {
+    RegistrationDialog
+  },
   data() {
     return {
-      registerDialog: false,
+      adminName: "Insert admin name here",
       buttonInFocus: "button-in-focus",
-      buttonOutFocus: "button-out-focus",
-      valid: false,
-      error: false,
-      email: "",
-      username: "",
-      emailRules: [
-        v => !!v || "Email is required",
-        v => /.+@.+\..+/.test(v) || "Email must be valid"
-      ],
-      passwordCheckRules: [
-        v => !!v || "Confirmation password is required",
-        v => v == this.password || "password must match"
-      ],
-      password: "",
-      passwordCheck: "",
-      passwordRules: [v => !!v || "Password is required"],
-      usernameRules: [v => !!v || "Username is required"],
-      error_messages: [],
-      confirmation: false
+      buttonOutFocus: "button-out-focus"
     };
   },
   props: ["adminname"],
   methods: {
-    closeWindow() {
-      this.confirmation = false;
-      this.registerDialog = false;
-      this.password = "";
-      this.passwordCheck = "";
-      this.username = "";
-      this.email = "";
-      this.valid = false;
-      this.error = false;
-    },
-    submit() {
-      const pass = this.$refs.form.validate();
-      if (pass) {
-        const email = this.email;
-        const password = this.password;
-        const username = this.username;
-
-        this.$store
-          .dispatch("user/register", {
-            email,
-            username,
-            password
-          })
-          .then(status => {
-            if (status === 1) {
-              this.confirmation = true;
-            } else {
-              this.error = true;
-              this.email = "";
-              this.password = "";
-              this.passwordCheck = "";
-              this.username = "";
-              this.error_messages.push("Invalid username or password!");
-            }
-          });
-      }
-    },
     changeToMyJobs: function() {
       if (
         this.$parent.refreshMessageListSingleton &&
@@ -222,11 +92,8 @@ export default {
         arrowIcon.classList.toggle("down");
       });
     },
-    toggle_error() {
-      this.error = !this.error;
-    },
-    update_error_message() {
-      this.error_messages.pop();
+    activateDialog() {
+      EventBus.$emit("openRegistrationDialog");
     }
   }
 };
@@ -297,5 +164,15 @@ export default {
 
 .button:focus {
   outline: none;
+}
+
+.register {
+  bottom: 45px;
+  position: absolute;
+  width: 100%;
+}
+
+.register > button {
+  margin: 0;
 }
 </style>
