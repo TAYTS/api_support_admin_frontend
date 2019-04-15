@@ -49,12 +49,6 @@
                   <v-card color="background">
                     <v-card-actions class="action__container">
                       <v-layout column>
-                        <vue-recaptcha
-                          sitekey="6Lf5-Z0UAAAAALMmm5RVsebKA8JROYGoBkd4cTLU"
-                          @verify="onCaptchaClick"
-                          @expired="onCaptchaExpired"
-                          theme="dark"
-                        ></vue-recaptcha>
                         <v-checkbox color="white" v-model="remember" dark label="REMEMBER ME"></v-checkbox>
                         <v-btn block large color="accent" :disabled="!valid" @click="submit">SIGN IN</v-btn>
                       </v-layout>
@@ -67,6 +61,13 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <vue-recaptcha
+      ref="recaptchaLogin"
+      sitekey="6LdUL54UAAAAAMAh2UefbbeTtmJGd3fRk02dP9QK"
+      @verify="onCaptchaClick"
+      @expired="onCaptchaExpired"
+      size="invisible"
+    ></vue-recaptcha>
   </div>
 </template>
 
@@ -105,15 +106,11 @@ export default {
   },
   methods: {
     onCaptchaClick: function(recaptchaToken) {
-      this.recaptchaToken = recaptchaToken;
-    },
-    submit() {
       const pass = this.$refs.form.validate();
       if (pass) {
         const email = this.email;
         const password = this.password;
         const remember = this.remember;
-        const recaptchaToken = this.recaptchaToken;
         this.$store
           .dispatch("user/login", {
             email,
@@ -133,9 +130,11 @@ export default {
           });
       }
     },
+    submit() {
+      this.$refs.recaptchaLogin.execute();
+    },
     onCaptchaExpired: function() {
-      this.$refs.recaptcha.reset();
-      this.recaptchaToken = "";
+      this.$refs.recaptchaLogin.reset();
     },
     toggle_error() {
       this.error = !this.error;
