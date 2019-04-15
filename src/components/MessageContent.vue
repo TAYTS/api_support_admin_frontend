@@ -1,58 +1,50 @@
 <template>
-  <div>
-    <div class="top-outer">
-      <div class="px-3 top">
-        <div class="invis-text">{{ $route.params.messageID }}</div>
-        <!-- There for force update -->
-        <h1>{{ messageHeader.title }}</h1>
-        <h2>{{ messageHeader.sender }}</h2>
-        <div>{{ messageHeader.dateTime }}</div>
-      </div>
-      <hr>
+  <div class="main__container">
+    <div class="header__container">
+      <h1>{{ messageHeader.title }}</h1>
+      <h2>{{ messageHeader.sender }}</h2>
+      <div>{{ messageHeader.dateTime }}</div>
     </div>
-    <div>
-      <div
-        v-bind:class="[this.$parent.jobLevelIsNewJobs ? messagesNewJobs : messagesMyJobs]"
-        class="message_scroll"
-      >
-        <!-- Iterates through messages list for messages -->
-        <div v-show="!messageReady" class="message-loader">
-          <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
-        </div>
-        <div v-show="messageReady" class="messages__container">
-          <MessageBubble
-            v-for="message in messages"
-            :key="message.index"
-            :message="message.message"
-            :type="message.type"
-            :reply="message.reply"
-            @download-media="downdloadMedia(message.index)"
-          ></MessageBubble>
-        </div>
-      </div>
+    <div v-show="!messageReady" class="message-loader">
+      <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
     </div>
-    <div>
-      <div v-if="this.$parent.jobLevelIsNewJobs" class="full-row row-new-jobs">
-        <v-btn class="add-jobs-button" @click="addtoMyJobs()">Add to My Jobs</v-btn>
-      </div>
-      <div v-else class="full-row row-my-jobs">
-        <v-textarea
-          class="text-area"
-          v-model="message"
-          solo
-          flat
-          hide-details
-          no-resize
-          rows="5"
-          label="Type here..."
-          prepend-inner-icon="attach_file"
-          color="accent"
-          background-color="lightbackground"
-          @keyup.enter="sendMessage"
-          @click:prepend-inner.stop="addFiles"
-        ></v-textarea>
-        <!-- <v-btn class="send-button" @click="sendMessage">send</v-btn> -->
-      </div>
+    <!-- Iterates through messages list for messages -->
+    <div v-show="messageReady" class="messages__container">
+      <MessageBubble
+        v-for="message in messages"
+        :key="message.index"
+        :message="message.message"
+        :type="message.type"
+        :index="message.index"
+        :reply="message.reply"
+        @download-media="downdloadMedia(message.index)"
+      ></MessageBubble>
+    </div>
+    <div class="action__container">
+      <v-btn
+        v-if="this.$parent.jobLevelIsNewJobs"
+        color="#a6b9f7"
+        round
+        large
+        @click="addtoMyJobs()"
+      >Add to My Jobs</v-btn>
+      <v-textarea
+        v-else
+        v-model="message"
+        solo
+        flat
+        hide-details
+        no-resize
+        rows="6"
+        label="Type here..."
+        color="accent"
+        background-color="white"
+        append-icon="send"
+        prepend-inner-icon="attach_file"
+        @click:append.stop="sendMessage"
+        @click:prepend-inner.stop="addFiles"
+        @keyup.enter="sendMessage"
+      ></v-textarea>
     </div>
     <input
       class="file-upload"
@@ -109,12 +101,17 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="snackbar" bottom>
+      {{ snackbarText }}
+      <v-btn dark flat @click="snackbar=false">Close</v-btn>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import MessageBubble from "@/components/MessageBubble.vue";
 import EventBus from "@/store/eventBus.js";
+
 export default {
   components: {
     MessageBubble
@@ -122,13 +119,10 @@ export default {
   data() {
     return {
       id: this.$route.params.messageID,
-      messagesNewJobs: "messages-new-jobs",
-      messagesMyJobs: "messages-my-jobs",
       // Temporary data
       messageHeader: {
         title: "title",
         sender: "sender",
-        body: "body",
         dateTime: "dateTime"
       },
       message: "",
@@ -141,7 +135,10 @@ export default {
       acceptFileTypes: ["application/pdf", "image/jpeg", "image/png"],
       uploadHint: "Max limit 10MB. (Supported format: .pdf, .jpg, .jpeg, .png)",
       uploading: false,
-      messageReady: false
+      messageReady: false,
+      snackbar: false,
+      timeout: 3000,
+      snackbarText: ""
     };
   },
   methods: {
@@ -155,7 +152,6 @@ export default {
         // todo replace this with opacity white box
         this.messageHeader.title = "";
         this.messageHeader.sender = "";
-        this.messageHeader.body = "";
         this.messageHeader.dateTime = "";
       } else {
         this.$store
@@ -164,7 +160,6 @@ export default {
             if (response !== 0) {
               this.messageHeader.title = response.title;
               this.messageHeader.sender = response.sender;
-              this.messageHeader.body = response.body;
               this.messageHeader.dateTime = response.dateTime;
             } else {
               console.log("Error in fetching the tickets");
@@ -174,7 +169,6 @@ export default {
             console.log("Error in ticketID");
             this.messageHeader.title = "";
             this.messageHeader.sender = "";
-            this.messageHeader.body = "";
             this.messageHeader.dateTime = "";
           });
       }
@@ -217,7 +211,7 @@ export default {
       }
     },
     updateMessage() {
-      const messageContainer = document.querySelector(".message_scroll");
+      const messageContainer = document.querySelector(".messages__container");
       this.$store
         .dispatch("messages/getMessages", { id_channel: this.id })
         .then(messages => {
@@ -233,7 +227,9 @@ export default {
         });
     },
     downdloadMedia(index) {
-      this.$store.dispatch("messages/downloadMedia", { index });
+      this.$store.dispatch("messages/downloadMedia", { index }).then(() => {
+        EventBus.$emit("finishDownload", index);
+      });
     },
     addFiles() {
       this.$refs.upload.click();
@@ -340,18 +336,22 @@ export default {
       this.refreshMessageContent();
       this.updateMessage();
 
-      // Ge the current ticket channel descriptor
-      const channelDes = this.$store.getters["messages/getChannel"](this.id);
+      if (this.id !== "0") {
+        // Get the current ticket channel descriptor
+        const channelDes = this.$store.getters["messages/getChannel"](this.id);
 
-      if (channelDes) {
-        channelDes.getChannel().then(channel => {
-          this.channel = channel;
-          // Add event listener to the channel
-          this.channel.on("messageAdded", this.updateMessage);
-          setTimeout(() => {
-            this.messageReady = true;
-          }, 500);
-        });
+        if (channelDes) {
+          channelDes.getChannel().then(channel => {
+            this.channel = channel;
+            // Add event listener to the channel
+            this.channel.on("messageAdded", this.updateMessage);
+            setTimeout(() => {
+              this.messageReady = true;
+            }, 500);
+          });
+        }
+      } else {
+        this.messageReady = true;
       }
     });
   }
@@ -381,85 +381,49 @@ export default {
   background: #808080;
 }
 
-.message__container {
-  margin: 5px 0;
+.main__container {
+  margin: 0;
   width: 100%;
   right: 0;
-  padding: 0 10px 0 10px;
   height: 100%;
+}
+
+.header__container {
+  width: 100%;
+  height: 20%;
+  background-color: white;
+  color: #8099ec;
+  font-family: sans-serif;
+  font-size: 20px;
+  padding: 0 10px;
+  border-bottom: 2px solid #a6a6a6;
 }
 
 .message-loader {
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.text-area {
-  margin: 15px;
-  width: calc(100% - 705px);
-  height: 90%;
-  resize: none;
-  background-color: white;
-  border: 1px solid lightgrey;
-}
-.messages-new-jobs {
-  margin: 5px 0 5px 0;
-  top: 120px;
-  height: calc(100% - 165px);
-  width: calc(100% - 675px);
-  display: block;
+.messages__container {
+  margin: 0;
+  padding: 10px;
+  background-color: #f4f4f4;
+  height: 60%;
   overflow: auto;
-  position: fixed;
-  /* background-color: aqua; */
-  /* display: inline-block; */
-}
-.messages-my-jobs {
-  margin: 5px 0 5px 0;
-  top: 120px;
-  height: calc(75% - 125px);
-  width: calc(100% - 675px);
-  display: block;
-  overflow: auto;
-  position: fixed;
-  /* padding-bottom: 210px; */
-  /* background-color: aqua; */
-  /* display: inline-block; */
-}
-.full-row {
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  background-color: #fafafa;
 }
 
-.row-new-jobs {
-  height: 50px;
-}
-
-.row-my-jobs {
-  height: 25%;
-}
-.top-outer {
-  position: fixed;
+.action__container {
   width: 100%;
-  background-color: white;
-  display: block;
   height: 20%;
-  margin-bottom: 0;
-  padding-bottom: 0;
+  padding: 15px;
+  background-color: #f4f4f4;
+  text-align: center;
 }
-.top {
-  height: 125px;
-}
-.add-jobs-button {
-  width: calc(100% - 675px);
-  z-index: 99;
-  height: 40px;
-}
-.invis-text {
-  font-size: 0;
+
+.file-upload {
+  display: none;
 }
 </style>

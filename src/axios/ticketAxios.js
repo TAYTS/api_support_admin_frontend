@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const ticketAxios = axios.create({
-  baseURL: "https://ticket.chocolatepie.tech",
+  baseURL: "http://127.0.0.1:5001",
   headers: {
     "Content-Type": "application/json"
   },

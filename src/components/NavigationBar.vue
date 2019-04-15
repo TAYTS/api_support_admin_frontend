@@ -1,14 +1,14 @@
 <template>
-  <v-navigation-drawer fixed permanent absolute width="175">
-    <div id="logo-bg">
-      <div id="logo-main">
-        <img src="../assets/img/Accenture_Support_Staff.svg" alt>
-      </div>
-    </div>
-    <div id="name-bg">
-      <div id="name-main">
-        <b>{{ adminName }}</b>
-      </div>
+  <v-navigation-drawer class="greyhue" fixed permanent absolute width="250">
+    <v-toolbar flat color="primary">
+      <v-list>
+        <v-list-tile>
+          <img class="logo-main" src="../assets/img/Accenture_Logo.svg">
+        </v-list-tile>
+      </v-list>
+    </v-toolbar>
+    <div id="name">
+      <b>{{ adminname }}</b>
     </div>
     <div>
       <button
@@ -32,18 +32,17 @@
         <div class="button-text">My Jobs</div>
       </button>
     </div>
-    <div class="register">
-      <v-btn block large depressed height="56px" color="#e0e0e0" v-on:click="activateDialog">
-        <v-icon>person_add</v-icon>Register Account
+    <div class="admin-btn-grp">
+      <v-btn block large depressed color="btn1" @click="activateDialog">
+        <v-icon left>person_add</v-icon>Register Account
+        <v-spacer/>
+      </v-btn>
+      <v-btn block large depressed color="btn1" @click="signOut">
+        <v-icon left>exit_to_app</v-icon>Logout
+        <v-spacer/>
       </v-btn>
     </div>
-    <registration-dialog/>
-    <div class="logout">
-      <button class="button logout-button" @click="signOut()">
-        <img class="button-image" src="../assets/img/_ionicons_svg_ios-log-out.svg" alt>
-        <div class="button-text">Logout</div>
-      </button>
-    </div>
+    <RegistrationDialog/>
   </v-navigation-drawer>
 </template>
 
@@ -61,6 +60,7 @@ export default {
       buttonOutFocus: "button-out-focus"
     };
   },
+  props: ["adminname"],
   methods: {
     changeToMyJobs: function() {
       if (
@@ -100,51 +100,45 @@ export default {
 </script>
 
 <style scoped>
-#logo-bg {
-  background-color: #f7e8ff;
-  padding-top: 10px;
+.logo-main {
+  width: 100%;
+  height: 100%;
 }
 
-#logo-main {
-  width: 130px;
-  margin: auto;
-  padding-right: 4px;
-}
-
-#name-bg {
-  background-color: #dedede;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-#name-main {
+#name {
+  background-color: #a6b9f7;
+  opacity: 0.7;
+  padding-top: 19px;
+  padding-bottom: 19px;
   text-align: center;
 }
 
-.logout-button:focus {
-  outline: none;
-  background: #f0ddf5;
-}
-
-.logout {
+.admin-btn-grp {
   bottom: 0;
   position: absolute;
-  background: #e0e0e0;
   width: 100%;
 }
+
+.admin-btn-grp > button {
+  margin: 0;
+}
+
 .button-image {
   width: 30px;
   margin-top: 7px;
   float: left;
-  margin-left: 30px;
+  opacity: 0.35;
+  margin-left: 40px;
 }
 
 .button-text {
   text-align: left;
   padding: 10px;
-  margin-left: 60px;
-  font-size: 18px;
+  margin-left: 80px;
+  font-size: 15px;
   color: #000000;
+  opacity: 0.8;
+  font-family: "HelveticaNeueMedium";
 }
 
 .button-in-focus {
@@ -152,7 +146,7 @@ export default {
 }
 
 .button-out-focus {
-  background-color: #ffffff;
+  background-color: #f4f4f4;
 }
 
 .button {
@@ -165,7 +159,7 @@ export default {
 }
 
 .button:hover {
-  background: #fafafa;
+  background: #ececec;
 }
 
 .button:focus {
