@@ -1,14 +1,14 @@
 <template>
-  <v-navigation-drawer fixed permanent absolute width="175">
-    <div id="logo-bg">
-      <div id="logo-main">
-        <img src="../assets/img/Accenture_Support_Staff.svg" alt>
-      </div>
-    </div>
-    <div id="name-bg">
-      <div id="name-main">
-        <b>{{ adminName }}</b>
-      </div>
+  <v-navigation-drawer class="greyhue" fixed permanent absolute width="250">
+    <v-toolbar flat color="primary">
+      <v-list>
+        <v-list-tile>
+          <img class="logo-main" src="../assets/img/Accenture_Logo.svg">
+        </v-list-tile>
+      </v-list>
+    </v-toolbar>
+    <div id="name">
+      <b>{{ adminname }}</b>
     </div>
     <div>
       <button
@@ -32,169 +32,36 @@
         <div class="button-text">My Jobs</div>
       </button>
     </div>
-    <div>
-      <v-dialog v-model="dialog" max-width="600px">
-        <template v-slot:activator="data">
-          <div class="register">
-            <v-btn block large depressed height="56px" color="#e0e0e0" v-on="data.on">
-              <v-icon>person_add</v-icon>Register Account
-            </v-btn>
-          </div>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="headline">Register new admin</span>
-          </v-card-title>
-          <v-card-text>
-            <v-form ref="form" v-model="valid" lazy-validation>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12>
-                    <v-text-field
-                      v-model="username"
-                      :rules="usernameRules"
-                      :error-messages="error_messages"
-                      @update:error="toggle_error"
-                      @input="update_error_message"
-                      label="Username"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field
-                      v-model="email"
-                      :rules="emailRules"
-                      :error-messages="error_messages"
-                      @update:error="toggle_error"
-                      @input="update_error_message"
-                      label="Email"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6>
-                    <v-text-field
-                      v-model="password"
-                      :rules="passwordRules"
-                      :error-messages="error_messages"
-                      @update:error="toggle_error"
-                      @input="update_error_message"
-                      label="Password"
-                      type="password"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6>
-                    <v-text-field
-                      v-model="passwordCheck"
-                      :rules="passwordCheckRules"
-                      :error-messages="error_messages"
-                      @update:error="toggle_error"
-                      @input="update_error_message"
-                      label="Confirm Password"
-                      type="password"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="purple darken-1" flat @click="dialog = false">Close</v-btn>
-            <v-btn color="purple darken-1" flat :disabled="!valid" @click="submit()">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="confirmation" persistent max-width="290">
-        <v-card>
-          <v-card-title class="headline">Registration successful!</v-card-title>
-          <v-card-text>
-            New user account has been succesfully created, use it to log in
-            next time.
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="purple darken-1" flat="flat" @click="closeWindow()">Okay</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <div class="admin-btn-grp">
+      <v-btn block large depressed color="btn1" @click="activateDialog">
+        <v-icon left>person_add</v-icon>Register Account
+        <v-spacer/>
+      </v-btn>
+      <v-btn block large depressed color="btn1" @click="signOut">
+        <v-icon left>exit_to_app</v-icon>Logout
+        <v-spacer/>
+      </v-btn>
     </div>
-    <div class="logout">
-      <button class="button logout-button" @click="signOut()">
-        <img class="button-image" src="../assets/img/_ionicons_svg_ios-log-out.svg" alt>
-        <div class="button-text">Logout</div>
-      </button>
-    </div>
+    <RegistrationDialog/>
   </v-navigation-drawer>
 </template>
 
 <script>
+import RegistrationDialog from "@/components/RegistrationDialog.vue";
+import EventBus from "@/store/eventBus.js";
 export default {
+  components: {
+    RegistrationDialog
+  },
   data() {
     return {
-      dialog: false,
       adminName: "Insert admin name here",
       buttonInFocus: "button-in-focus",
-      buttonOutFocus: "button-out-focus",
-      valid: false,
-      error: false,
-      email: "",
-      username: "",
-      emailRules: [
-        v => !!v || "Email is required",
-        v => /.+@.+\..+/.test(v) || "Email must be valid"
-      ],
-      passwordCheckRules: [
-        v => !!v || "Confirmation password is required",
-        v => v == this.password || "password must match"
-      ],
-      password: "",
-      passwordCheck: "",
-      passwordRules: [v => !!v || "Password is required"],
-      usernameRules: [v => !!v || "Username is required"],
-      error_messages: [],
-      confirmation: false
+      buttonOutFocus: "button-out-focus"
     };
   },
+  props: ["adminname"],
   methods: {
-    closeWindow() {
-      this.confirmation = false;
-      this.dialog = false;
-      this.password = "";
-      this.passwordCheck = "";
-      this.username = "";
-      this.email = "";
-      this.valid = false;
-      this.error = false;
-    },
-    submit() {
-      const pass = this.$refs.form.validate();
-      if (pass) {
-        const email = this.email;
-        const password = this.password;
-        const username = this.username;
-
-        this.$store
-          .dispatch("user/register", {
-            email,
-            username,
-            password
-          })
-          .then(status => {
-            if (status === 1) {
-              this.confirmation = true;
-            } else {
-              this.error = true;
-              this.email = "";
-              this.password = "";
-              this.passwordCheck = "";
-              this.username = "";
-              this.error_messages.push("Invalid username or password!");
-            }
-          });
-      }
-    },
     changeToMyJobs: function() {
       if (
         this.$parent.refreshMessageListSingleton &&
@@ -225,72 +92,53 @@ export default {
         arrowIcon.classList.toggle("down");
       });
     },
-    toggle_error() {
-      this.error = !this.error;
-    },
-    update_error_message() {
-      this.error_messages.pop();
+    activateDialog() {
+      EventBus.$emit("openRegistrationDialog");
     }
   }
 };
 </script>
 
 <style scoped>
-#logo-bg {
-  background-color: #f7e8ff;
-  padding-top: 10px;
+.logo-main {
+  width: 100%;
+  height: 100%;
 }
 
-#logo-main {
-  width: 130px;
-  margin: auto;
-  padding-right: 4px;
-}
-
-#name-bg {
-  background-color: #dedede;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-#name-main {
+#name {
+  background-color: #a6b9f7;
+  opacity: 0.7;
+  padding-top: 19px;
+  padding-bottom: 19px;
   text-align: center;
 }
 
-.logout-button:focus {
-  outline: none;
-  background: #f0ddf5;
-}
-
-.register {
-  bottom: 45px;
+.admin-btn-grp {
+  bottom: 0;
   position: absolute;
   width: 100%;
 }
 
-.register > button {
+.admin-btn-grp > button {
   margin: 0;
 }
 
-.logout {
-  bottom: 0;
-  position: absolute;
-  background: #e0e0e0;
-  width: 100%;
-}
 .button-image {
   width: 30px;
   margin-top: 7px;
   float: left;
-  margin-left: 30px;
+  opacity: 0.35;
+  margin-left: 40px;
 }
 
 .button-text {
   text-align: left;
   padding: 10px;
-  margin-left: 60px;
-  font-size: 18px;
+  margin-left: 80px;
+  font-size: 15px;
   color: #000000;
+  opacity: 0.8;
+  font-family: "HelveticaNeueMedium";
 }
 
 .button-in-focus {
@@ -298,7 +146,7 @@ export default {
 }
 
 .button-out-focus {
-  background-color: #ffffff;
+  background-color: #f4f4f4;
 }
 
 .button {
@@ -311,10 +159,20 @@ export default {
 }
 
 .button:hover {
-  background: #fafafa;
+  background: #ececec;
 }
 
 .button:focus {
   outline: none;
+}
+
+.register {
+  bottom: 45px;
+  position: absolute;
+  width: 100%;
+}
+
+.register > button {
+  margin: 0;
 }
 </style>

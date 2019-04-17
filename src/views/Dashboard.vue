@@ -1,18 +1,22 @@
 <template>
   <div id="outerDiv">
     <div class="split right">
-      <message-content/>
+      <MessageContent v-show="items.length > 0"/>
+      <SplashMessage :message="splashMessage" v-show="items.length === 0"/>
     </div>
-    <navigation-bar/>
-    <message-list id="messagelist"/>
+    <Navigation-bar :adminname="adminName"/>
+    <MessageList id="messagelist"/>
   </div>
 </template>
+
+
 
 <script>
 import NavigationBar from "@/components/NavigationBar.vue";
 import MessageList from "@/components/MessageList.vue";
 import MessageContent from "@/components/MessageContent.vue";
 import EventBus from "@/store/eventBus.js";
+import SplashMessage from "@/components/SplashMessage.vue";
 
 export default {
   data() {
@@ -25,13 +29,16 @@ export default {
       selectedMsgNo: 0,
       refreshMessageListSingleton: true,
       timer: "",
-      jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs"
+      jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs",
+      adminName: "",
+      splashMessage: ""
     };
   },
   components: {
     NavigationBar,
     MessageList,
-    MessageContent
+    MessageContent,
+    SplashMessage
   },
   methods: {
     changeToNewJobs: function() {
@@ -62,11 +69,16 @@ export default {
         .then(response => {
           if (response !== 0) {
             this.items = [];
-            if (messageID == "0") {
+            if (messageID === "0") {
               if (response[0]) {
                 latestTicketRoute = "/" + jobLevel + "/" + response[0].ticketID;
               } else {
                 latestTicketRoute = "/" + jobLevel + "/0";
+                if (jobLevel === "newjobs") {
+                  this.splashMessage = "No New Job At The Moment...";
+                } else if (jobLevel === "myjobs") {
+                  this.splashMessage = "No Job At The Momment...";
+                }
               }
               this.$router.replace(latestTicketRoute);
             }
@@ -183,7 +195,6 @@ export default {
       for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].postID == this.$route.params.messageID) {
           found = true;
-          console.log("found it!");
         } else if (found) {
           if (this.items[i].postID) {
             this.$router.push(
@@ -211,25 +222,26 @@ export default {
     }
   },
   mounted() {
-    this.refreshMessageList();
-
     // Below line is to autorefresh message list every 2s
     // this.timer = setInterval(this.refreshMessageList, 2000)
 
     // 1. Check if the user has been authenticate
     this.$store.dispatch("user/authenticate").then(status => {
-      // 1.2 Redirect to login page if the user is not authenticated
-      if (status === 0) {
-        this.$router.replace("/login");
-      } else {
+      if (status === 1) {
+        this.refreshMessageList();
+        // 1.1 Render the user page if the user is authenticated
+        const adminName = this.$store.getters["user/getUsername"];
+        this.adminName = adminName;
         // Get the Twilio access token (assume that it will success)
         this.$store.dispatch("messages/initClient").then(status => {
           if (status === 1) {
             EventBus.$emit("refreshContent");
           }
         });
+      } else {
+        // 1.2 Redirect to login page if the user is not authenticated
+        this.$router.replace("/login");
       }
-      // 1.1 Render the user page if the user is authenticated
     });
   }
 };
@@ -237,7 +249,7 @@ export default {
 
 <style scoped>
 #messagelist {
-  margin-left: 175px;
+  margin-left: 250px;
 }
 #outerDiv {
   overflow: hidden;
@@ -245,21 +257,15 @@ export default {
 .split {
   height: 100%;
   position: fixed;
-  z-index: 1;
   top: 0;
   overflow-x: hidden;
-}
-
-/* Control the left side */
-.left {
-  left: 0;
-  width: 675px;
 }
 
 /* Control the right side */
 .right {
   right: 0;
-  width: calc(100% - 675px);
+  width: calc(100vw - 250px - 26%);
+  height: 100vh;
   background-color: white;
 }
 </style>

@@ -1,18 +1,19 @@
 <template>
-  <v-navigation-drawer fixed permanent absolute width="500">
+  <div class="search__container">
     <div id="search-bg" class="pb-0">
       <v-form>
-        <v-container class="py-0">
+        <v-container class="primary">
           <v-layout>
             <v-flex xs12 md12 class="pb-0 pt-0">
               <v-text-field
                 label="Search..."
                 append-icon="search"
                 class="pb-0"
+                color="accent"
                 single-line
                 flat
                 v-model="search"
-                background-color="#f7e8ff"
+                hide-details
               ></v-text-field>
             </v-flex>
           </v-layout>
@@ -33,8 +34,12 @@
             <v-container class="pa-0 ma-0">
               <v-layout fill-height class="pa-0">
                 <v-list-tile-content>
-                  <v-list-tile-title class="title" v-html="item.title"></v-list-tile-title>
-                  <v-list-tile-sub-title class="subtitle" v-html="item.subtitle"></v-list-tile-sub-title>
+                  <div id="message_title">
+                    <v-list-tile-title v-html="item.title"></v-list-tile-title>
+                  </div>
+                  <div id="message_details">
+                    <v-list-tile-title v-html="item.title" color="white"></v-list-tile-title>
+                  </div>
                 </v-list-tile-content>
               </v-layout>
             </v-container>
@@ -42,7 +47,7 @@
         </div>
       </template>
     </v-list>
-  </v-navigation-drawer>
+  </div>
 </template>
 
 <script>
@@ -78,6 +83,13 @@ export default {
 </script>
 
 <style scoped>
+.search__container {
+  overflow: hidden;
+  width: 26%;
+  min-width: 350px;
+  height: 100vh;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 11px;
@@ -97,19 +109,31 @@ export default {
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #808080;
+  background: #f7e8ff;
 }
 
 .items {
-  max-height: calc(100% - 62px);
-  overflow: auto;
+  padding: 0;
+  max-height: calc(100% - 64px);
+  overflow-x: hidden;
 }
+
 #search-bg {
   background-color: #f7e8ff;
-  padding-top: 10px;
 }
 
 .selected-class {
-  background-color: rgb(245, 245, 245);
+  background-color: #f4f4f4;
+}
+
+#message_title {
+  font-size: 20px;
+  color: #000000;
+  opacity: 0.75;
+  font-family: HelveticaNeueMedium;
+}
+#message_details {
+  font-size: 15px;
+  color: #8099ec;
 }
 </style>
