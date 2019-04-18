@@ -7,7 +7,7 @@
         </v-toolbar>
         <v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation>
-            <v-container grid-list-md>
+            <v-container>
               <v-layout wrap>
                 <v-flex xs12>
                   <v-text-field
@@ -58,14 +58,13 @@
               </v-layout>
             </v-container>
           </v-form>
+          <vue-recaptcha
+            ref="recaptchaRegister"
+            sitekey="6LdRL54UAAAAANhFg4AV5GyluUCG2Wf9a9MDN5hs"
+            @verify="onCaptchaClick"
+            @expired="onCaptchaExpired"
+          ></vue-recaptcha>
         </v-card-text>
-        <vue-recaptcha
-          class="recaptcha"
-          ref="recaptchaRegister"
-          sitekey="6LdRL54UAAAAANhFg4AV5GyluUCG2Wf9a9MDN5hs"
-          @verify="onCaptchaClick"
-          @expired="onCaptchaExpired"
-        ></vue-recaptcha>
         <v-card-actions class="buttons">
           <v-spacer></v-spacer>
           <v-btn color="purple darken-1" flat @click="dialog = false">Close</v-btn>
@@ -184,10 +183,6 @@ export default {
 </script>
 
 <style scoped>
-.recaptcha {
-  top: 0;
-  left: 30px;
-}
 
 .buttons {
   top: 0;
