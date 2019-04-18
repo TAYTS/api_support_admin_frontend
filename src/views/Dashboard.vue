@@ -68,111 +68,106 @@ export default {
       this.$store
         .dispatch("tickets/getTickets", { jobLevel })
         .then(response => {
-          if (response.length > 0) {
-            this.items = [];
-            if (messageID === "0") {
-              if (response[0]) {
-                latestTicketRoute = "/" + jobLevel + "/" + response[0].ticketID;
-              } else {
-                latestTicketRoute = "/" + jobLevel + "/0";
-                if (jobLevel === "newjobs") {
-                  this.splashMessage = "No New Job At The Moment...";
-                } else if (jobLevel === "myjobs") {
-                  this.splashMessage = "No Job At The Momment...";
-                }
+          this.items = [];
+          if (messageID === "0") {
+            if (response[0]) {
+              latestTicketRoute = "/" + jobLevel + "/" + response[0].ticketID;
+            } else {
+              latestTicketRoute = "/" + jobLevel + "/0";
+              if (jobLevel === "newjobs") {
+                this.splashMessage = "No New Job At The Moment...";
+              } else if (jobLevel === "myjobs") {
+                this.splashMessage = "No Job At The Momment...";
               }
-              this.$router.replace(latestTicketRoute);
             }
-            var i;
-            var headerCheck = {
-              Today: 0,
-              Yesterday: 0,
-              Older: 0,
-              twoWeeks: 0,
-              oneWeek: 0,
-              thisWeek: 0
-            };
-            var today = new Date();
-            var yesterday = new Date(
-              new Date().setDate(new Date().getDate() - 1)
-            );
-            var oneWeek = new Date(
-              new Date().setDate(new Date().getDate() - 7)
-            );
-            var twoWeeks = new Date(
-              new Date().setDate(new Date().getDate() - 14)
-            );
+            this.$router.replace(latestTicketRoute);
+          }
+          var i;
+          var headerCheck = {
+            Today: 0,
+            Yesterday: 0,
+            Older: 0,
+            twoWeeks: 0,
+            oneWeek: 0,
+            thisWeek: 0
+          };
+          var today = new Date();
+          var yesterday = new Date(
+            new Date().setDate(new Date().getDate() - 1)
+          );
+          var oneWeek = new Date(new Date().setDate(new Date().getDate() - 7));
+          var twoWeeks = new Date(
+            new Date().setDate(new Date().getDate() - 14)
+          );
 
-            for (i = 0; i < response.length; i++) {
-              var postDate = new Date(response[i].last_activity);
-              if (headerCheck["twoWeeks"] == 0 && postDate < twoWeeks) {
-                headerCheck["twoWeeks"] = 1;
-                this.items.push({
-                  header: "Older than two weeks"
-                });
-              }
-              if (
-                headerCheck["oneWeek"] == 0 &&
-                postDate < oneWeek &&
-                postDate > twoWeeks
-              ) {
-                headerCheck["oneWeek"] = 1;
-                this.items.push({
-                  header: "Last week"
-                });
-              }
-              if (
-                headerCheck["thisWeek"] == 0 &&
-                postDate < yesterday &&
-                postDate > oneWeek &&
-                !(
-                  postDate.getDate() == yesterday.getDate() &&
-                  postDate.getMonth() == yesterday.getMonth() &&
-                  postDate.getFullYear() == yesterday.getFullYear()
-                )
-              ) {
-                headerCheck["thisWeek"] = 1;
-                this.items.push({
-                  header: "This week"
-                });
-              }
-              if (
-                headerCheck["Today"] == 0 &&
-                postDate.getDate() == today.getDate() &&
-                postDate.getMonth() == today.getMonth() &&
-                postDate.getFullYear() == today.getFullYear()
-              ) {
-                headerCheck["Today"] = 1;
-                this.items.push({
-                  header: "Today"
-                });
-              }
-              if (
-                headerCheck["Yesterday"] == 0 &&
+          for (i = 0; i < response.length; i++) {
+            var postDate = new Date(response[i].last_activity);
+            if (headerCheck["twoWeeks"] == 0 && postDate < twoWeeks) {
+              headerCheck["twoWeeks"] = 1;
+              this.items.push({
+                header: "Older than two weeks"
+              });
+            }
+            if (
+              headerCheck["oneWeek"] == 0 &&
+              postDate < oneWeek &&
+              postDate > twoWeeks
+            ) {
+              headerCheck["oneWeek"] = 1;
+              this.items.push({
+                header: "Last week"
+              });
+            }
+            if (
+              headerCheck["thisWeek"] == 0 &&
+              postDate < yesterday &&
+              postDate > oneWeek &&
+              !(
                 postDate.getDate() == yesterday.getDate() &&
                 postDate.getMonth() == yesterday.getMonth() &&
                 postDate.getFullYear() == yesterday.getFullYear()
-              ) {
-                headerCheck["Yesterday"] = 1;
-                this.items.push({
-                  header: "Yesterday"
-                });
-              }
+              )
+            ) {
+              headerCheck["thisWeek"] = 1;
               this.items.push({
-                title: response[i].title,
-                subtitle: response[i].last_activity,
-                divider: true,
-                inset: true,
-                postID: response[i].ticketID,
-                category: response[i].category,
-                selected:
-                  response[i].ticketID ==
-                  (lastTicket == 0 ? response[0].ticketID : lastTicket)
+                header: "This week"
               });
             }
-          } else {
-            console.log("Error in fetching the tickets");
+            if (
+              headerCheck["Today"] == 0 &&
+              postDate.getDate() == today.getDate() &&
+              postDate.getMonth() == today.getMonth() &&
+              postDate.getFullYear() == today.getFullYear()
+            ) {
+              headerCheck["Today"] = 1;
+              this.items.push({
+                header: "Today"
+              });
+            }
+            if (
+              headerCheck["Yesterday"] == 0 &&
+              postDate.getDate() == yesterday.getDate() &&
+              postDate.getMonth() == yesterday.getMonth() &&
+              postDate.getFullYear() == yesterday.getFullYear()
+            ) {
+              headerCheck["Yesterday"] = 1;
+              this.items.push({
+                header: "Yesterday"
+              });
+            }
+            this.items.push({
+              title: response[i].title,
+              subtitle: response[i].last_activity,
+              divider: true,
+              inset: true,
+              postID: response[i].ticketID,
+              category: response[i].category,
+              selected:
+                response[i].ticketID ==
+                (lastTicket == 0 ? response[0].ticketID : lastTicket)
+            });
           }
+
           this.refreshHighlight();
           EventBus.$emit("refreshContent");
           this.refreshMessageListSingleton = true;
@@ -194,7 +189,7 @@ export default {
       // Todo: Improve code for effeciency
       var found = false;
       var done = false;
-      if (items.length != 0) {
+      if (this.items.length != 0) {
         for (var i = 0; i < this.items.length; i++) {
           if (this.items[i].postID == this.$route.params.messageID) {
             found = true;
@@ -220,6 +215,8 @@ export default {
           }
           if (!done) {
             this.$router.push("/" + this.$route.params.jobLevel + "/0");
+            this.items = [];
+            this.refreshMessageList;
           }
         }
       } else {
