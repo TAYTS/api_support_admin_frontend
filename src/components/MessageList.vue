@@ -4,7 +4,7 @@
       <v-form>
         <v-container class="primary">
           <v-layout>
-            <v-flex xs12 md12 class="pb-0 pt-0">
+            <v-flex xs9 md9 class="pb-0 pt-0">
               <v-text-field
                 label="Search..."
                 append-icon="search"
@@ -13,8 +13,20 @@
                 single-line
                 flat
                 v-model="search"
+                v-on:input="refreshContent"
                 hide-details
               ></v-text-field>
+            </v-flex>
+            <v-flex xs7 md7 class="pb-0 pt-0">
+              <v-select
+                :items="categories"
+                label="Filter"
+                class="pb-0"
+                flat
+                hide-details
+                v-on:input="refreshContent"
+                v-model="category"
+              ></v-select>
             </v-flex>
           </v-layout>
         </v-container>
@@ -51,22 +63,61 @@
 </template>
 
 <script>
+import EventBus from "@/store/eventBus.js";
 export default {
   data() {
     return {
       search: "",
+      category: "All",
+      lastTicketID: this.$route.params.messageID,
       adminName: "Insert admin name here",
       items: [],
       selectedClass: "selected-class",
-      lastIndex: 0
+      lastIndex: 0,
+      categories: [
+        "All",
+        "API DevOps",
+        "Chart as a Service",
+        "Recruiment Platform",
+        "Aesop",
+        "Travel Marketplace",
+        "Banking Lifesyle App",
+        "AR Car Visualizer",
+        "AR Car Manual",
+        "AR Gamification",
+        "AR Threatre",
+        "AR Menu",
+        "AI Wealth Manager",
+        "Multilingual Chatbot",
+        "AI Translator",
+        "Digital Butler",
+        "Video Analytics",
+        "Sentiment Analysis",
+        "ACNAPI MFA Login",
+        "Ticketing Platform",
+        "Smart Lock",
+        "Smart Home",
+        "Smart Parkiing",
+        "Smart Restaurant",
+        "Queuing System",
+        "IoT LED Wall",
+        "Others"
+      ]
     };
   },
   computed: {
     filteredItems: function() {
       return this.$parent.items.filter(item => {
-        if (this.search.length > 0) {
+        if (this.search.length > 0 || this.category != "All") {
           if (item.title) {
-            return item.title.toLowerCase().match(this.search.toLowerCase());
+            if (this.category != "All") {
+              return (
+                item.title.toLowerCase().match(this.search.toLowerCase()) &&
+                item.category.match(this.category)
+              );
+            } else {
+              return item.title.toLowerCase().match(this.search.toLowerCase());
+            }
           }
         } else {
           return true;
@@ -75,6 +126,27 @@ export default {
     }
   },
   methods: {
+    refreshContent() {
+      if (this.search.length == 0 && this.category == "All") {
+        this.$router.push(
+          "/" + this.$route.params.jobLevel + "/" + this.lastTicketID
+        );
+        this.$parent.showSplashFiltered = false;
+      }
+      else if (this.filteredItems[0]) {
+        this.$router.push(
+          "/" + this.$route.params.jobLevel + "/" + this.filteredItems[0].postID
+        );
+        this.lastTicketID = this.filteredItems[0].postID;
+        this.$parent.showSplashFiltered = false;
+      } else {
+        this.$router.push("/" + this.$route.params.jobLevel + "/0");
+        this.$parent.showSplashFiltered = true;
+        this.$parent.splashMessage = "No Search Results...";
+      }
+      EventBus.$emit("refreshContent");
+      this.$parent.refreshHighlight();
+    },
     openMessage: function(index, postID) {
       this.$parent.openMessage(index, postID);
     }
@@ -85,36 +157,13 @@ export default {
 <style scoped>
 .search__container {
   overflow: hidden;
-  width: 26%;
-  min-width: 350px;
+  width: 480px;
   height: 100vh;
-}
-
-/* width */
-::-webkit-scrollbar {
-  width: 11px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 4px grey;
-  border-radius: 10px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #d0d0d0;
-  border-radius: 20px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #f7e8ff;
 }
 
 .items {
   padding: 0;
-  max-height: calc(100% - 64px);
+  height: calc(100vh - 64px);
   overflow-x: hidden;
 }
 

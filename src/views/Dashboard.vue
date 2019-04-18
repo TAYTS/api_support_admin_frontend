@@ -1,8 +1,8 @@
 <template>
   <div id="outerDiv">
-    <div class="split right">
-      <MessageContent v-show="items.length > 0"/>
-      <SplashMessage :message="splashMessage" v-show="items.length === 0"/>
+    <div class="right">
+      <MessageContent v-show="items.length > 0 && !showSplashFiltered"/>
+      <SplashMessage :message="splashMessage" v-show="items.length === 0 || showSplashFiltered"/>
     </div>
     <Navigation-bar :adminname="adminName"/>
     <MessageList id="messagelist"/>
@@ -31,7 +31,8 @@ export default {
       timer: "",
       jobLevelIsNewJobs: this.$route.params.jobLevel == "newjobs",
       adminName: "",
-      splashMessage: ""
+      splashMessage: "",
+      showSplashFiltered: false
     };
   },
   components: {
@@ -163,6 +164,7 @@ export default {
                 divider: true,
                 inset: true,
                 postID: response[i].ticketID,
+                category: response[i].category,
                 selected:
                   response[i].ticketID ==
                   (lastTicket == 0 ? response[0].ticketID : lastTicket)
@@ -192,32 +194,36 @@ export default {
       // Todo: Improve code for effeciency
       var found = false;
       var done = false;
-      for (var i = 0; i < this.items.length; i++) {
-        if (this.items[i].postID == this.$route.params.messageID) {
-          found = true;
-        } else if (found) {
-          if (this.items[i].postID) {
-            this.$router.push(
-              "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
-            );
-            done = true;
-            break;
-          }
-        }
-      }
-      if (!done) {
-        for (var i = this.items.length - 2; i >= 0; i--) {
-          if (this.items[i].postID) {
-            this.$router.push(
-              "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
-            );
-            done = true;
-            break;
+      if (items.length != 0) {
+        for (var i = 0; i < this.items.length; i++) {
+          if (this.items[i].postID == this.$route.params.messageID) {
+            found = true;
+          } else if (found) {
+            if (this.items[i].postID) {
+              this.$router.push(
+                "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
+              );
+              done = true;
+              break;
+            }
           }
         }
         if (!done) {
-          this.$router.push("/" + this.$route.params.jobLevel + "/0");
+          for (var i = this.items.length - 2; i >= 0; i--) {
+            if (this.items[i].postID) {
+              this.$router.push(
+                "/" + this.$route.params.jobLevel + "/" + this.items[i].postID
+              );
+              done = true;
+              break;
+            }
+          }
+          if (!done) {
+            this.$router.push("/" + this.$route.params.jobLevel + "/0");
+          }
         }
+      } else {
+        this.$router.push("/" + this.$route.params.jobLevel + "/0");
       }
     }
   },
@@ -249,23 +255,25 @@ export default {
 
 <style scoped>
 #messagelist {
-  margin-left: 250px;
+  left: 250px;
+  top: 0;
+  z-index: 10;
+  position: absolute;
+  height: 100vh;
 }
 #outerDiv {
   overflow: hidden;
 }
-.split {
-  height: 100%;
-  position: fixed;
-  top: 0;
-  overflow-x: hidden;
-}
 
 /* Control the right side */
 .right {
-  right: 0;
-  width: calc(100vw - 250px - 26%);
   height: 100vh;
+  width: calc(100vw - 250px - 480px);
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: calc(250px + 480px);
+  overflow-x: hidden;
   background-color: white;
 }
 </style>
