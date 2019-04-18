@@ -186,7 +186,7 @@ export default {
 <style scoped>
 .recaptcha {
   top: 0;
-  left 30px;
+  left: 30px;
 }
 
 .buttons {
