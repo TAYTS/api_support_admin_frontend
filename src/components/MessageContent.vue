@@ -405,9 +405,9 @@ export default {
 }
 
 .email-button {
-  right: 0;
   position: absolute;
-  margin: 90px 30px 40px 30px;
+  top: 90px;
+  right: 30px;
 }
 
 .main__container {
