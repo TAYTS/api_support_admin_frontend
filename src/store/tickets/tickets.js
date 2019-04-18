@@ -98,6 +98,35 @@ const actions = {
         resolve(status);
       });
     }
+  },
+  emailUser(context, payload) {
+    const access_token = localStorage.getItem("access_token");
+    if (access_token) {
+      //change to access_token when login is working
+      return axios
+        .get("/tickets/email-user/" + payload["messageID"], {
+          headers: {
+            "X-CSRF-TOKEN": access_token //identifies account
+            //http only
+          }
+        })
+        .then(response => {
+          if (response.status === 200 && response.data.status === 1) {
+            return 1;
+          } else {
+            // Error when trying to get tickets
+            return 0;
+          }
+        })
+        .catch(() => {
+          return 0;
+        });
+      //end of axios, axios will return a promise to messagelist.vue
+    } else {
+      return new Promise(resolve => {
+        resolve(0);
+      });
+    }
   }
 };
 

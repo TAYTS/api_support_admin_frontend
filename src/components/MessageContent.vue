@@ -1,5 +1,13 @@
 <template>
   <div class="main__container">
+    <v-btn
+      v-if="!this.$parent.jobLevelIsNewJobs"
+      class="email-button"
+      color="#a6b9f7"
+      round
+      large
+      @click="emailUser()"
+    >E-mail User</v-btn>
     <div class="header__container">
       <h1>{{ messageHeader.title }}</h1>
       <h2>{{ messageHeader.sender }}</h2>
@@ -101,9 +109,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="snackbar" bottom>
+    <v-snackbar v-model="snackbar" :timeout="timeout" bottom>
       {{ snackbarText }}
       <v-btn dark flat @click="snackbar=false">Close</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="snackbarEmail" :timeout="timeout" top right>
+      {{ snackbarEmailText }}
+      <v-btn dark flat @click="snackbarEmail = false">Close</v-btn>
     </v-snackbar>
   </div>
 </template>
@@ -138,7 +150,9 @@ export default {
       messageReady: false,
       snackbar: false,
       timeout: 3000,
-      snackbarText: ""
+      snackbarText: "",
+      snackbarEmail: false,
+      snackbarEmailText: "Email is successfully sent."
     };
   },
   methods: {
@@ -322,6 +336,17 @@ export default {
             this.dialog = false;
           }
         });
+    },
+    emailUser() {
+      var messageID = this.$route.params.messageID;
+      this.$store.dispatch("tickets/emailUser", { messageID }).then(status => {
+        if (status == 1) {
+          this.snackbarEmail = true;
+        } else {
+          this.snackbar = true;
+          this.snackbarText = "Failed to email the user.";
+        }
+      });
     }
   },
   mounted() {
@@ -379,6 +404,12 @@ export default {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #808080;
+}
+
+.email-button {
+  position: absolute;
+  top: 90px;
+  right: 30px;
 }
 
 .main__container {
