@@ -50,7 +50,8 @@
                     <v-list-tile-title v-html="item.title"></v-list-tile-title>
                   </div>
                   <div id="message_details">
-                    <v-list-tile-title v-html="item.title" color="white"></v-list-tile-title>
+                    <v-list-tile-title v-html="item.category" color="white"></v-list-tile-title>
+                    <v-list-tile-title v-html="item.datetime" color="white"></v-list-tile-title>
                   </div>
                 </v-list-tile-content>
               </v-layout>

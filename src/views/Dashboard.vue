@@ -161,7 +161,7 @@ export default {
             }
             this.items.push({
               title: response[i].title,
-              subtitle: response[i].last_activity,
+              datetime: response[i].create_timestamp,
               divider: true,
               inset: true,
               postID: response[i].ticketID,

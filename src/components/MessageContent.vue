@@ -10,7 +10,8 @@
     >E-mail User</v-btn>
     <div class="header__container">
       <h1>{{ messageHeader.title }}</h1>
-      <h2>{{ messageHeader.sender }}</h2>
+      <h2>{{ messageHeader.category}}</h2>
+      <div>{{ messageHeader.sender }}</div>
       <div>{{ messageHeader.dateTime }}</div>
     </div>
     <div v-show="!messageReady" class="message-loader">
@@ -133,9 +134,10 @@ export default {
       id: this.$route.params.messageID,
       // Temporary data
       messageHeader: {
-        title: "title",
-        sender: "sender",
-        dateTime: "dateTime"
+        title: "",
+        sender: "",
+        dateTime: "",
+        category: ""
       },
       message: "",
       channel: null,
@@ -158,14 +160,13 @@ export default {
   methods: {
     refreshMessageContent: function() {
       this.id = this.$route.params.messageID;
-      // Replace all id's with $route statement if app is bugging out
       var messageID = this.$route.params.messageID;
       var jobLevel = this.$route.params.jobLevel;
       if (messageID == "0") {
-        // todo replace this with opacity white box
         this.messageHeader.title = "";
         this.messageHeader.sender = "";
         this.messageHeader.dateTime = "";
+        this.messageHeader.category = "";
       } else {
         this.$store
           .dispatch("tickets/getSingleTicket", { jobLevel, messageID })
@@ -174,6 +175,7 @@ export default {
               this.messageHeader.title = response.title;
               this.messageHeader.sender = response.sender;
               this.messageHeader.dateTime = response.dateTime;
+              this.messageHeader.category = response.category;
             } else {
               console.log("Error in fetching the tickets");
             }
