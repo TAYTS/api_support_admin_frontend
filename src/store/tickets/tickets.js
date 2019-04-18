@@ -99,8 +99,7 @@ const actions = {
       });
     }
   },
-  emailUser({ commit }, payload){
-    let status = 0;
+  emailUser(context, payload) {
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
       //change to access_token when login is working
@@ -112,20 +111,20 @@ const actions = {
           }
         })
         .then(response => {
-          
           if (response.status === 200 && response.data.status === 1) {
             return 1;
           } else {
             // Error when trying to get tickets
             return 0;
           }
-        }); //end of axios, axios will return a promise to messagelist.vue
-      //axios.get is a get request
+        })
+        .catch(() => {
+          return 0;
+        });
+      //end of axios, axios will return a promise to messagelist.vue
     } else {
-      // Invalid credential
-      status = 0;
       return new Promise(resolve => {
-        resolve(status);
+        resolve(0);
       });
     }
   }

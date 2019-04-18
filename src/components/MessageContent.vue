@@ -109,12 +109,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="snackbar" bottom>
+    <v-snackbar v-model="snackbar" :timeout="timeout" bottom>
       {{ snackbarText }}
       <v-btn dark flat @click="snackbar=false">Close</v-btn>
     </v-snackbar>
-    <v-snackbar v-model="snackbarEmail" top right>
-      Email is successful
+    <v-snackbar v-model="snackbarEmail" :timeout="timeout" top right>
+      {{ snackbarEmailText }}
       <v-btn dark flat @click="snackbarEmail = false">Close</v-btn>
     </v-snackbar>
   </div>
@@ -151,7 +151,8 @@ export default {
       snackbar: false,
       timeout: 3000,
       snackbarText: "",
-      snackbarEmail: false
+      snackbarEmail: false,
+      snackbarEmailText: "Email is successfully sent."
     };
   },
   methods: {
@@ -342,7 +343,8 @@ export default {
         if (status == 1) {
           this.snackbarEmail = true;
         } else {
-          console.log("Error in fetching emailing user");
+          this.snackbar = true;
+          this.snackbarText = "Failed to email the user.";
         }
       });
     }
