@@ -87,9 +87,6 @@ export default {
         } else {
           alert("Unable to logout");
         }
-        // Handle the arrow animation
-        const arrowIcon = document.querySelector(".arrow-icon");
-        arrowIcon.classList.toggle("down");
       });
     },
     activateDialog() {
