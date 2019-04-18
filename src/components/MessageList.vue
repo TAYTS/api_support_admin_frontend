@@ -132,8 +132,7 @@ export default {
           "/" + this.$route.params.jobLevel + "/" + this.lastTicketID
         );
         this.$parent.showSplashFiltered = false;
-      }
-      else if (this.filteredItems[0]) {
+      } else if (this.filteredItems[0]) {
         this.$router.push(
           "/" + this.$route.params.jobLevel + "/" + this.filteredItems[0].postID
         );
@@ -150,6 +149,26 @@ export default {
     openMessage: function(index, postID) {
       this.$parent.openMessage(index, postID);
     }
+  },
+  mounted() {
+    EventBus.$on("removeFilter", () => {
+      this.search = "";
+      this.category = "All";
+    });
+    EventBus.$on("refreshFilter", () => {
+      if (this.filteredItems[0] && this.search.length != 0 || this.category != "All") {
+        this.filteredItems;
+        this.refreshContent();
+      }
+      else if (
+        !this.filteredItems[0] &&
+        (this.search.length != 0 || this.category != "All")
+      ) {
+        this.$router.push("/" + this.$route.params.jobLevel + "/0");
+        this.$parent.showSplashFiltered = true;
+        this.$parent.splashMessage = "No Search Results...";
+      }
+    });
   }
 };
 </script>

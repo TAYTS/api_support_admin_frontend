@@ -158,7 +158,6 @@ export default {
   methods: {
     refreshMessageContent: function() {
       this.id = this.$route.params.messageID;
-
       // Replace all id's with $route statement if app is bugging out
       var messageID = this.$route.params.messageID;
       var jobLevel = this.$route.params.jobLevel;
@@ -197,7 +196,6 @@ export default {
             this.$parent.nextItem();
             // refreshes the current list
             this.$parent.refreshMessageList();
-            this.refreshMessageContent();
           } else {
             console.log("Error in fetching the tickets");
           }

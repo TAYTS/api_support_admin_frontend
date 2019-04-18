@@ -46,11 +46,15 @@ export default {
       this.lastMyJobs = this.$route.params.messageID;
       this.$router.replace("/newjobs/" + this.lastNewJobs);
       this.refreshMessageList();
+      this.showSplashFiltered = false;
+      EventBus.$emit("removeFilter");
     },
     changeToMyJobs: function() {
       this.lastNewJobs = this.$route.params.messageID;
       this.$router.replace("/myjobs/" + this.lastMyJobs);
       this.refreshMessageList();
+      this.showSplashFiltered = false;
+      EventBus.$emit("removeFilter");
     },
     openMessage: function(index, postID) {
       this.$router.push("/" + this.$route.params.jobLevel + "/" + postID);
@@ -167,9 +171,9 @@ export default {
                 (lastTicket == 0 ? response[0].ticketID : lastTicket)
             });
           }
-
           this.refreshHighlight();
           EventBus.$emit("refreshContent");
+          EventBus.$emit("refreshFilter");
           this.refreshMessageListSingleton = true;
         });
     },
