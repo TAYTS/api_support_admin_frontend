@@ -68,7 +68,7 @@ export default {
       this.$store
         .dispatch("tickets/getTickets", { jobLevel })
         .then(response => {
-          if (response !== 0) {
+          if (response.length > 0) {
             this.items = [];
             if (messageID === "0") {
               if (response[0]) {
