@@ -67,8 +67,8 @@
     >
     <v-dialog class="upload-dialog" v-model="dialog" persistent max-width="600px" lazy>
       <v-card>
-        <v-toolbar dark color="accent">
-          <v-toolbar-title class="title text-xs-center">Confirm Upload</v-toolbar-title>
+        <v-toolbar color="accent2">
+          <v-toolbar-title class="headline text-xs-center">Confirm Upload</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-form>
@@ -101,10 +101,10 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red lighten-2" :disabled="uploading" @click="cancelUpload">Cancel</v-btn>
+          <v-btn color="red lighten-3" :disabled="uploading" @click="cancelUpload">Cancel</v-btn>
           <v-spacer></v-spacer>
           <v-btn
-            color="accent"
+            color="accent2"
             :loading="uploading"
             :disabled="uploading"
             @click.prevent="confirmUpload"
