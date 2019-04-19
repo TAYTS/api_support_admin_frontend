@@ -7,16 +7,15 @@
         </v-list-tile>
       </v-list>
     </v-toolbar>
-    <div id="name">
-      <b>{{ adminname }}</b>
-    </div>
+    <AlienAvatar class="avatar"/>
+    <div id="name">{{ adminname }}</div>
     <div>
       <button
         v-bind:class="[
           $parent.jobLevelIsNewJobs ? buttonInFocus : buttonOutFocus
         ]"
         class="button"
-        @click="changeToNewJobs()"
+        @click="changeToNewJobs"
       >
         <img class="button-image" src="../assets/img/_ionicons_svg_ios-document.svg" alt>
         <div class="button-text">New Jobs</div>
@@ -26,7 +25,7 @@
           $parent.jobLevelIsNewJobs ? buttonOutFocus : buttonInFocus
         ]"
         class="button"
-        @click="changeToMyJobs()"
+        @click="changeToMyJobs"
       >
         <img class="button-image" src="../assets/img/_ionicons_svg_md-briefcase.svg" alt>
         <div class="button-text">My Jobs</div>
@@ -48,10 +47,13 @@
 
 <script>
 import RegistrationDialog from "@/components/RegistrationDialog.vue";
+import AlienAvatar from "@/components/AlienAvatar.vue";
 import EventBus from "@/store/eventBus.js";
+
 export default {
   components: {
-    RegistrationDialog
+    RegistrationDialog,
+    AlienAvatar
   },
   data() {
     return {
@@ -104,10 +106,14 @@ export default {
 
 #name {
   background-color: #a6b9f7;
-  opacity: 0.7;
-  padding-top: 19px;
-  padding-bottom: 19px;
+  padding: 5px 0;
   text-align: center;
+  font-size: 18px;
+}
+
+.avatar {
+  height: 28vh;
+  background: #a6b9f7;
 }
 
 .admin-btn-grp {
