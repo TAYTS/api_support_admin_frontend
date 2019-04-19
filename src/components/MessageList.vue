@@ -29,11 +29,15 @@
         </v-flex>
       </v-toolbar-items>
     </v-toolbar>
-    <v-list three-line class="items">
+    <v-list three-line class="items overflow-x-hidden">
       <template v-for="(item, index) in filteredItems">
-        <v-subheader v-if="item.header" :key="item.header">{{ item.header }}</v-subheader>
+        <v-divider v-if="index >0" :key="index"></v-divider>
+        <v-subheader
+          class="accent1 subheading"
+          v-if="item.header"
+          :key="item.header"
+        >{{ item.header }}</v-subheader>
         <div v-else-if="item.divider" :key="index">
-          <v-divider></v-divider>
           <v-list-tile
             v-bind:class="[item.selected ? selectedClass : '']"
             v-if="item.title"

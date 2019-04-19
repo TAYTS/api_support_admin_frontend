@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <router-view />
+    <router-view/>
   </v-app>
 </template>
 
@@ -38,26 +38,7 @@ v-app {
   height: 100%;
 }
 
-/* width */
 ::-webkit-scrollbar {
-  width: 11px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  /* box-shadow: inset 0 0 4px grey;*/
-  /* border-radius: 10px;  */
-  background: white;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #d0d0d0;
-  border-radius: 20px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #f7e8ff;
+  display: none !important;
 }
 </style>

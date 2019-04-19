@@ -103,9 +103,8 @@ export default {
           var twoWeeks = new Date(
             new Date().setDate(new Date().getDate() - 14)
           );
-
           for (i = 0; i < response.length; i++) {
-            var postDate = new Date(response[i].last_activity);
+            var postDate = new Date(response[i].create_timestamp);
             if (headerCheck["twoWeeks"] == 0 && postDate < twoWeeks) {
               headerCheck["twoWeeks"] = 1;
               this.items.push({
