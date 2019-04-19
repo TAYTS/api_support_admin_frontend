@@ -9,10 +9,13 @@
       @click="emailUser()"
     >E-mail User</v-btn>
     <div class="header__container">
-      <h1>{{ messageHeader.title }}</h1>
-      <h2>{{ messageHeader.category}}</h2>
+      <div class="ticket-header">
+        <h2>{{ messageHeader.title }}</h2>
+        <span>{{ messageHeader.dateTime }}</span>
+      </div>
+      <hr>
+      <h3>{{ messageHeader.category}}</h3>
       <div>{{ messageHeader.sender }}</div>
-      <div>{{ messageHeader.dateTime }}</div>
     </div>
     <div v-show="!messageReady" class="message-loader">
       <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
@@ -29,7 +32,7 @@
         @download-media="downdloadMedia(message.index)"
       ></MessageBubble>
     </div>
-    <div class="action__container">
+    <div v-show="messageReady" class="action__container">
       <v-btn
         v-if="this.$parent.jobLevelIsNewJobs"
         color="#a6b9f7"
@@ -384,31 +387,9 @@ export default {
 </script>
 
 <style scoped>
-/* width */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 2px grey;
-  border-radius: 10px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #d0d0d0;
-  border-radius: 20px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #808080;
-}
-
 .email-button {
   position: absolute;
-  top: 90px;
+  top: 70px;
   right: 30px;
 }
 
@@ -417,33 +398,46 @@ export default {
   width: 100%;
   right: 0;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .header__container {
   width: 100%;
-  height: 20%;
-  background-color: white;
-  color: #8099ec;
+  flex: 1;
+  background-color: #bccdf9;
   font-family: sans-serif;
   font-size: 20px;
-  padding: 0 10px;
-  border-bottom: 2px solid #a6a6a6;
+  padding: 15px;
+  border-bottom: 1px solid #ccc;
+}
+
+.ticket-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+hr {
+  border: 0.5px solid #aaa;
 }
 
 .message-loader {
   width: 100%;
-  height: 80%;
+  flex: 8;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f4f4f4;
 }
 
 .messages__container {
   margin: 0;
-  padding: 10px;
+  padding: 10px 15px;
   background-color: #f4f4f4;
-  height: 60%;
-  overflow: auto;
+  overflow-x: hidden;
+  flex: 5;
 }
 
 .action__container {
@@ -452,6 +446,7 @@ export default {
   padding: 15px;
   background-color: #f4f4f4;
   text-align: center;
+  flex: 1;
 }
 
 .file-upload {

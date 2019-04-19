@@ -31,7 +31,7 @@
     </v-toolbar>
     <v-list three-line class="items overflow-x-hidden">
       <template v-for="(item, index) in filteredItems">
-        <v-divider v-if="index >0" :key="index"></v-divider>
+        <v-divider v-if="index > 0" :key="item.postID"></v-divider>
         <v-subheader
           class="accent1 subheading"
           v-if="item.header"
@@ -58,6 +58,7 @@
               </v-layout>
             </v-container>
           </v-list-tile>
+          <v-divider v-if="index === filteredItems.length-1" :key="item.postID"></v-divider>
         </div>
       </template>
     </v-list>
@@ -182,7 +183,7 @@ export default {
   overflow: hidden;
   width: 480px;
   height: 100vh;
-  border-right: 1px outset #f4f4f4;
+  border-right: 1px solid #ccc;
 }
 
 .items {
@@ -197,12 +198,10 @@ export default {
 
 #message_title {
   font-size: 20px;
-  color: #000000;
-  opacity: 0.75;
-  font-family: HelveticaNeueMedium;
 }
+
 #message_details {
-  font-size: 15px;
+  font-size: 16px;
   color: #8099ec;
 }
 </style>
