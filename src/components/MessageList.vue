@@ -1,37 +1,34 @@
 <template>
   <div class="search__container">
-    <div id="search-bg" class="pb-0">
-      <v-form>
-        <v-container class="primary">
-          <v-layout>
-            <v-flex xs9 md9 class="pb-0 pt-0">
-              <v-text-field
-                label="Search..."
-                append-icon="search"
-                class="pb-0"
-                color="accent"
-                single-line
-                flat
-                v-model="search"
-                v-on:input="refreshContent"
-                hide-details
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs7 md7 class="pb-0 pt-0">
-              <v-select
-                :items="categories"
-                label="Filter"
-                class="pb-0"
-                flat
-                hide-details
-                v-on:input="refreshContent"
-                v-model="category"
-              ></v-select>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-form>
-    </div>
+    <v-toolbar flat color="primary">
+      <v-toolbar-items>
+        <v-flex xs12 md5 class="pa-0">
+          <v-text-field
+            label="Search..."
+            append-icon="search"
+            color="accent"
+            class="ma-2"
+            single-line
+            flat
+            v-model="search"
+            @input="refreshContent"
+            hide-details
+          ></v-text-field>
+        </v-flex>
+        <v-flex xs12 md7 class="pa-0">
+          <v-select
+            :items="categories"
+            label="Filter"
+            class="ma-2"
+            flat
+            hide-details
+            color="accent"
+            @input="refreshContent"
+            v-model="category"
+          ></v-select>
+        </v-flex>
+      </v-toolbar-items>
+    </v-toolbar>
     <v-list three-line class="items">
       <template v-for="(item, index) in filteredItems">
         <v-subheader v-if="item.header" :key="item.header">{{ item.header }}</v-subheader>
@@ -157,11 +154,13 @@ export default {
       this.category = "All";
     });
     EventBus.$on("refreshFilter", () => {
-      if (this.filteredItems[0] && this.search.length != 0 || this.category != "All") {
+      if (
+        (this.filteredItems[0] && this.search.length != 0) ||
+        this.category != "All"
+      ) {
         this.filteredItems;
         this.refreshContent();
-      }
-      else if (
+      } else if (
         !this.filteredItems[0] &&
         (this.search.length != 0 || this.category != "All")
       ) {
@@ -179,16 +178,13 @@ export default {
   overflow: hidden;
   width: 480px;
   height: 100vh;
+  border-right: 1px outset #f4f4f4;
 }
 
 .items {
   padding: 0;
   height: calc(100vh - 64px);
   overflow-x: hidden;
-}
-
-#search-bg {
-  background-color: #f7e8ff;
 }
 
 .selected-class {
