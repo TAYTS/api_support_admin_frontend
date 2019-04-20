@@ -68,7 +68,12 @@
         <v-card-actions class="buttons">
           <v-spacer></v-spacer>
           <v-btn color="purple darken-1" flat @click="dialog = false">Close</v-btn>
-          <v-btn color="purple darken-1" flat :disabled="!valid" @click="submit()">Submit</v-btn>
+          <v-btn
+            color="purple darken-1"
+            flat
+            :disabled="!valid || this.recaptchaToken == ''"
+            @click="submit()"
+          >Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -127,7 +132,7 @@ export default {
     },
     onCaptchaExpired: function() {
       this.recaptchaToken = "";
-      this.$refs.recaptchaLogin.reset();
+      this.$refs.recaptchaRegister.reset();
     },
     closeWindow() {
       this.confirmation = false;
@@ -156,13 +161,15 @@ export default {
           .then(status => {
             if (status === 1) {
               this.confirmation = true;
+              this.onCaptchaExpired();
             } else {
               this.error = true;
               this.email = "";
               this.password = "";
               this.passwordCheck = "";
               this.username = "";
-              this.error_messages.push("Invalid username or password!");
+              this.onCaptchaExpired();
+              this.error_messages.push("Account already exists");
             }
           });
       }
@@ -183,7 +190,6 @@ export default {
 </script>
 
 <style scoped>
-
 .buttons {
   top: 0;
   margin-top: 0;
