@@ -1,9 +1,21 @@
 <template>
   <div class="main__container">
+    <v-btn
+      v-if="!this.$parent.jobLevelIsNewJobs"
+      class="email-button"
+      color="#a6b9f7"
+      round
+      large
+      @click="emailUser()"
+    >E-mail User</v-btn>
     <div class="header__container">
-      <h1>{{ messageHeader.title }}</h1>
-      <h2>{{ messageHeader.sender }}</h2>
-      <div>{{ messageHeader.dateTime }}</div>
+      <div class="ticket-header">
+        <h2>{{ messageHeader.title }}</h2>
+        <span>{{ messageHeader.dateTime }}</span>
+      </div>
+      <hr>
+      <h3>{{ messageHeader.category}}</h3>
+      <div>{{ messageHeader.sender }}</div>
     </div>
     <div v-show="!messageReady" class="message-loader">
       <v-progress-circular :size="120" :width="10" indeterminate color="primary"></v-progress-circular>
@@ -20,7 +32,7 @@
         @download-media="downdloadMedia(message.index)"
       ></MessageBubble>
     </div>
-    <div class="action__container">
+    <div v-show="messageReady" class="action__container">
       <v-btn
         v-if="this.$parent.jobLevelIsNewJobs"
         color="#a6b9f7"
@@ -55,8 +67,8 @@
     >
     <v-dialog class="upload-dialog" v-model="dialog" persistent max-width="600px" lazy>
       <v-card>
-        <v-toolbar dark color="accent">
-          <v-toolbar-title class="title text-xs-center">Confirm Upload</v-toolbar-title>
+        <v-toolbar color="accent2">
+          <v-toolbar-title class="headline text-xs-center">Confirm Upload</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <v-form>
@@ -89,10 +101,10 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red lighten-2" :disabled="uploading" @click="cancelUpload">Cancel</v-btn>
+          <v-btn color="red lighten-3" :disabled="uploading" @click="cancelUpload">Cancel</v-btn>
           <v-spacer></v-spacer>
           <v-btn
-            color="accent"
+            color="accent2"
             :loading="uploading"
             :disabled="uploading"
             @click.prevent="confirmUpload"
@@ -101,9 +113,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="snackbar" bottom>
+    <v-snackbar v-model="snackbar" :timeout="timeout" bottom>
       {{ snackbarText }}
       <v-btn dark flat @click="snackbar=false">Close</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="snackbarEmail" :timeout="timeout" top right>
+      {{ snackbarEmailText }}
+      <v-btn dark flat @click="snackbarEmail = false">Close</v-btn>
     </v-snackbar>
   </div>
 </template>
@@ -121,9 +137,10 @@ export default {
       id: this.$route.params.messageID,
       // Temporary data
       messageHeader: {
-        title: "title",
-        sender: "sender",
-        dateTime: "dateTime"
+        title: "",
+        sender: "",
+        dateTime: "",
+        category: ""
       },
       message: "",
       channel: null,
@@ -138,29 +155,30 @@ export default {
       messageReady: false,
       snackbar: false,
       timeout: 3000,
-      snackbarText: ""
+      snackbarText: "",
+      snackbarEmail: false,
+      snackbarEmailText: "Email is successfully sent."
     };
   },
   methods: {
     refreshMessageContent: function() {
       this.id = this.$route.params.messageID;
-
-      // Replace all id's with $route statement if app is bugging out
       var messageID = this.$route.params.messageID;
       var jobLevel = this.$route.params.jobLevel;
       if (messageID == "0") {
-        // todo replace this with opacity white box
         this.messageHeader.title = "";
         this.messageHeader.sender = "";
         this.messageHeader.dateTime = "";
+        this.messageHeader.category = "";
       } else {
         this.$store
           .dispatch("tickets/getSingleTicket", { jobLevel, messageID })
           .then(response => {
-            if (response !== 0) {
+            if (response.title) {
               this.messageHeader.title = response.title;
               this.messageHeader.sender = response.sender;
               this.messageHeader.dateTime = response.dateTime;
+              this.messageHeader.category = response.category;
             } else {
               console.log("Error in fetching the tickets");
             }
@@ -183,7 +201,6 @@ export default {
             this.$parent.nextItem();
             // refreshes the current list
             this.$parent.refreshMessageList();
-            this.refreshMessageContent();
           } else {
             console.log("Error in fetching the tickets");
           }
@@ -322,6 +339,17 @@ export default {
             this.dialog = false;
           }
         });
+    },
+    emailUser() {
+      var messageID = this.$route.params.messageID;
+      this.$store.dispatch("tickets/emailUser", { messageID }).then(status => {
+        if (status == 1) {
+          this.snackbarEmail = true;
+        } else {
+          this.snackbar = true;
+          this.snackbarText = "Failed to email the user.";
+        }
+      });
     }
   },
   mounted() {
@@ -359,26 +387,10 @@ export default {
 </script>
 
 <style scoped>
-/* width */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 2px grey;
-  border-radius: 10px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #d0d0d0;
-  border-radius: 20px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #808080;
+.email-button {
+  position: absolute;
+  top: 70px;
+  right: 30px;
 }
 
 .main__container {
@@ -386,33 +398,46 @@ export default {
   width: 100%;
   right: 0;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .header__container {
   width: 100%;
-  height: 20%;
-  background-color: white;
-  color: #8099ec;
+  flex: 1;
+  background-color: #bccdf9;
   font-family: sans-serif;
   font-size: 20px;
-  padding: 0 10px;
-  border-bottom: 2px solid #a6a6a6;
+  padding: 15px;
+  border-bottom: 1px solid #ccc;
+}
+
+.ticket-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+hr {
+  border: 0.5px solid #aaa;
 }
 
 .message-loader {
   width: 100%;
-  height: 80%;
+  flex: 8;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f4f4f4;
 }
 
 .messages__container {
   margin: 0;
-  padding: 10px;
+  padding: 10px 15px;
   background-color: #f4f4f4;
-  height: 60%;
-  overflow: auto;
+  overflow-x: hidden;
+  flex: 5;
 }
 
 .action__container {
@@ -421,6 +446,7 @@ export default {
   padding: 15px;
   background-color: #f4f4f4;
   text-align: center;
+  flex: 1;
 }
 
 .file-upload {
