@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <router-view />
+    <router-view/>
   </v-app>
 </template>
 
@@ -36,5 +36,9 @@ body {
 v-app {
   width: 100%;
   height: 100%;
+}
+
+::-webkit-scrollbar {
+  display: none !important;
 }
 </style>

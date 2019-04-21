@@ -6,37 +6,32 @@ const state = {
 };
 
 const actions = {
-  getTickets({ commit }, payload) {
-    let status = 0;
+  getTickets(context, payload) {
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
-      //change to access_token when login is working
       return axios
         .get("/tickets/retrieve-tickets/" + payload["jobLevel"], {
           headers: {
-            "X-CSRF-TOKEN": access_token //identifies account
-            //http only
+            "X-CSRF-TOKEN": access_token
           }
         })
         .then(response => {
           if (response.status === 200) {
             return response.data;
           } else {
-            // Error when trying to get tickets
             return 0;
           }
-        }); //end of axios, axios will return a promise to messagelist.vue
-      //axios.get is a get request
+        })
+        .catch(() => {
+          return 0;
+        });
     } else {
-      // Invalid credential
-      status = 0;
       return new Promise(resolve => {
-        resolve(status);
+        resolve(0);
       });
     }
   },
-  getSingleTicket({ commit }, payload) {
-    let status = 0;
+  getSingleTicket(context, payload) {
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
       //change to access_token when login is working
@@ -48,8 +43,7 @@ const actions = {
             payload["messageID"],
           {
             headers: {
-              "X-CSRF-TOKEN": access_token //identifies account
-              //http only
+              "X-CSRF-TOKEN": access_token
             }
           }
         )
@@ -57,45 +51,65 @@ const actions = {
           if (response.status === 200) {
             return response.data;
           } else {
-            // Error when trying to get tickets
             return 0;
           }
-        }); //end of axios, axios will return a promise to messagelist.vue
-      //axios.get is a get request
+        })
+        .catch(() => {
+          return 0;
+        });
     } else {
-      // Invalid credential
-      status = 0;
       return new Promise(resolve => {
-        resolve(status);
+        resolve(0);
       });
     }
   },
-  moveToMyJobs({ commit }, payload) {
-    let status = 0;
+  moveToMyJobs(context, payload) {
     const access_token = localStorage.getItem("access_token");
     if (access_token) {
-      //change to access_token when login is working
       return axios
         .get("/tickets/move-to-my-jobs/" + payload["messageID"], {
           headers: {
-            "X-CSRF-TOKEN": access_token //identifies account
-            //http only
+            "X-CSRF-TOKEN": access_token
           }
         })
         .then(response => {
           if (response.status === 200 && response.data.status === 1) {
             return 1;
           } else {
-            // Error when trying to get tickets
             return 0;
           }
-        }); //end of axios, axios will return a promise to messagelist.vue
-      //axios.get is a get request
+        })
+        .catch(() => {
+          return 0;
+        });
     } else {
-      // Invalid credential
-      status = 0;
       return new Promise(resolve => {
-        resolve(status);
+        resolve(0);
+      });
+    }
+  },
+  emailUser(context, payload) {
+    const access_token = localStorage.getItem("access_token");
+    if (access_token) {
+      return axios
+        .get("/tickets/email-user/" + payload["messageID"], {
+          headers: {
+            "X-CSRF-TOKEN": access_token
+          }
+        })
+        .then(response => {
+          if (response.status === 200 && response.data.status === 1) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })
+        .catch(() => {
+          return 0;
+        });
+    } else {
+      return new Promise(resolve => {
+        resolve(0);
       });
     }
   },
