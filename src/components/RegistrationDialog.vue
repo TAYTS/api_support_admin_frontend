@@ -59,17 +59,19 @@
                     required
                   ></v-text-field>
                 </v-flex>
+                <v-flex xs12>
+                  <vue-recaptcha
+                    ref="recaptchaRegister"
+                    sitekey="6LdRL54UAAAAANhFg4AV5GyluUCG2Wf9a9MDN5hs"
+                    @verify="onCaptchaClick"
+                    @expired="onCaptchaExpired"
+                  ></vue-recaptcha>
+                </v-flex>
               </v-layout>
             </v-container>
           </v-form>
-          <vue-recaptcha
-            ref="recaptchaRegister"
-            sitekey="6LdRL54UAAAAANhFg4AV5GyluUCG2Wf9a9MDN5hs"
-            @verify="onCaptchaClick"
-            @expired="onCaptchaExpired"
-          ></vue-recaptcha>
         </v-card-text>
-        <v-card-actions class="buttons">
+        <v-card-actions>
           <v-spacer/>
           <v-spacer/>
           <v-btn color="red lighten-3" @click="dialog = false">Close</v-btn>
@@ -197,8 +199,4 @@ export default {
 </script>
 
 <style scoped>
-.buttons {
-  top: 0;
-  margin-top: 0;
-}
 </style>
