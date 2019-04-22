@@ -108,7 +108,7 @@ export default {
     }, 10);
   },
   methods: {
-    onCaptchaClick: function(recaptchaToken) {
+    onCaptchaClick(recaptchaToken) {
       const pass = this.$refs.form.validate();
       if (pass) {
         const email = this.email;
