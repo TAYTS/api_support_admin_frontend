@@ -61,10 +61,18 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <vue-recaptcha
+      ref="recaptchaLogin"
+      sitekey="6LdUL54UAAAAAMAh2UefbbeTtmJGd3fRk02dP9QK"
+      @verify="onCaptchaClick"
+      @expired="onCaptchaExpired"
+      size="invisible"
+    ></vue-recaptcha>
   </div>
 </template>
 
 <script>
+import VueRecaptcha from "vue-recaptcha";
 export default {
   data: () => {
     return {
@@ -74,14 +82,19 @@ export default {
       email: "",
       emailRules: [
         v => !!v || "Email is required",
-        v => /.+@.+\..+/.test(v) || "Email must be valid"
+        v =>
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+            v
+          ) || "Email must be valid"
       ],
       password: "",
       passwordRules: [v => !!v || "Password is required"],
       remember: false,
-      error_messages: []
+      error_messages: [],
+      recaptchaToken: ""
     };
   },
+  components: { VueRecaptcha },
   mounted() {
     const logo = document.querySelector(".logo-main");
     const form = document.querySelector(".form__container");
@@ -95,7 +108,7 @@ export default {
     }, 10);
   },
   methods: {
-    submit() {
+    onCaptchaClick(recaptchaToken) {
       const pass = this.$refs.form.validate();
       if (pass) {
         const email = this.email;
@@ -105,7 +118,8 @@ export default {
           .dispatch("user/login", {
             email,
             password,
-            remember
+            remember,
+            recaptchaToken
           })
           .then(status => {
             if (status === 1) {
@@ -114,10 +128,17 @@ export default {
               this.error = true;
               this.email = "";
               this.password = "";
+              this.onCaptchaExpired();
               this.error_messages.push("Invalid username or password!");
             }
           });
       }
+    },
+    submit() {
+      this.$refs.recaptchaLogin.execute();
+    },
+    onCaptchaExpired: function() {
+      this.$refs.recaptchaLogin.reset();
     },
     toggle_error() {
       this.error = !this.error;
