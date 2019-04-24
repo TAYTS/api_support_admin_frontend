@@ -3,7 +3,7 @@
     <v-btn
       v-if="!this.$parent.jobLevelIsNewJobs"
       class="email-button"
-      color="#a6b9f7"
+      color="accent2"
       round
       large
       @click="emailUser()"
