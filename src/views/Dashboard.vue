@@ -79,9 +79,9 @@ export default {
             } else {
               latestTicketRoute = "/" + jobLevel + "/0";
               if (jobLevel === "newjobs") {
-                this.splashMessage = "No New Job At The Moment...";
+                this.splashMessage = "No new job at the moment...";
               } else if (jobLevel === "myjobs") {
-                this.splashMessage = "No Job At The Momment...";
+                this.splashMessage = "No job at the moment...";
               }
             }
             this.$router.replace(latestTicketRoute);
