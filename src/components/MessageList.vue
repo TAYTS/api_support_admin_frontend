@@ -144,7 +144,7 @@ export default {
       } else {
         this.$router.push("/" + this.$route.params.jobLevel + "/0");
         this.$parent.showSplashFiltered = true;
-        this.$parent.splashMessage = "No Search Results...";
+        this.$parent.splashMessage = "No search results...";
       }
       EventBus.$emit("refreshContent");
       this.$parent.refreshHighlight();
@@ -171,7 +171,7 @@ export default {
       ) {
         this.$router.push("/" + this.$route.params.jobLevel + "/0");
         this.$parent.showSplashFiltered = true;
-        this.$parent.splashMessage = "No Search Results...";
+        this.$parent.splashMessage = "No search results...";
       }
     });
   }
